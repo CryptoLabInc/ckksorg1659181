@@ -23,7 +23,40 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "/ckksorg1659181/publications/";
               },
-            },{id: "post-a-post-with-plotly-js",
+            },{id: "post-grafting-improving-performance-and-usability-of-homomorphic-encryption",
+        
+          title: "Grafting: Improving Performance and Usability of Homomorphic Encryption",
+        
+        description: "TL;DR: Grafting is a new approach for managing a CKKS ciphertext modulus. With so-called sprouts, we dedicate a few machine words to scaling and use word-sized primes for the remaining ciphertext modulus improving performance. With universal sprouts, we can represent any bit size up to the word size using powers-of-two and introduce arbitrary scaling for RNS-CKKS improving usability for parameter and circuit design.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/ckksorg1659181/blog/2025/Johannes/";
+          
+        },
+      },{id: "post-a-post-with-images",
+        
+          title: "a post with images",
+        
+        description: "this is what included images could look like",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/ckksorg1659181/blog/2025/images/";
+          
+        },
+      },{id: "post-a-post-with-math",
+        
+          title: "a post with math",
+        
+        description: "an example of a blog post with some math",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/ckksorg1659181/blog/2025/math/";
+          
+        },
+      },{id: "post-a-post-with-plotly-js",
         
           title: "a post with plotly.js",
         
@@ -342,17 +375,6 @@ ninja.data = [{
             window.location.href = "/ckksorg1659181/blog/2015/disqus-comments/";
           
         },
-      },{id: "post-a-post-with-math",
-        
-          title: "a post with math",
-        
-        description: "an example of a blog post with some math",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/ckksorg1659181/blog/2015/math/";
-          
-        },
       },{id: "post-a-post-with-code",
         
           title: "a post with code",
@@ -362,17 +384,6 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/ckksorg1659181/blog/2015/code/";
-          
-        },
-      },{id: "post-a-post-with-images",
-        
-          title: "a post with images",
-        
-        description: "this is what included images could look like",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/ckksorg1659181/blog/2015/images/";
           
         },
       },{id: "post-a-post-with-formatting-and-links",
