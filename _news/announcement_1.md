@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-CKKS.org comes alive!
+CKKS.org is resleeved!
