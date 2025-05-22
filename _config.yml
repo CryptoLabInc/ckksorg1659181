@@ -7,7 +7,7 @@ first_name:
 middle_name: 
 last_name: CryptoLab Inc
 contact_note: >
-  You can even add a little note about which of these is the best way to reach you.
+  Maintainers: <a href="https://keewoolee.github.io/">Keewoo Lee</a> (keewoole@gmail.com), <a href="https://perso.ens-lyon.fr/damien.stehle/">Damien Stehlé</a> (damien.stehle@cryptolab.co.kr)
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
 footer_text: >
 keywords: # add your own keywords or leave empty
@@ -45,7 +45,7 @@ rss_icon: true
 # -----------------------------------------------------------------------------
 
 navbar_fixed: true
-footer_fixed: false
+footer_fixed: true
 search_enabled: true
 socials_in_search: true
 posts_in_search: true
@@ -119,13 +119,13 @@ disqus_shortname: al-folio # put your disqus shortname
 # External sources.
 # If you have blog posts published on medium.com or other external sources,
 # you can display them in your blog by adding a link to the RSS feed.
-external_sources:
-  - name: medium.com
-    rss_url: https://medium.com/@al-folio/feed
-  - name: Google Blog
-    posts:
-      - url: https://blog.google/technology/ai/google-gemini-update-flash-ai-assistant-io-2024/
-        published_date: 2024-05-14
+# external_sources:
+#   - name: medium.com
+#     rss_url: https://medium.com/@al-folio/feed
+#   - name: Google Blog
+#     posts:
+#       - url: https://blog.google/technology/ai/google-gemini-update-flash-ai-assistant-io-2024/
+#         published_date: 2024-05-14
 
 # -----------------------------------------------------------------------------
 # Newsletter
