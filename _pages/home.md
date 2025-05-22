@@ -20,6 +20,6 @@ latest_posts:
 
 This page hosts resources on the CKKS Fully Homomorphic Encryption Scheme.
 
-**About FHE**: Fully Homomorphic Encryption (FHE) allows anyone to arbitrarily process encrypted data without ever having to decrypt it. Only the secret key holder can decrypt it. 
+**About FHE**: Fully Homomorphic Encryption (FHE) allows anyone to arbitrarily process encrypted data without ever having to decrypt it. Only the secret key holder can decrypt. 
 
-**About CKKS**: CKKS is a prominent FHE scheme that natively processes real-valued and complex-valued data. For example, it is a good fit for training and inference in machine learning while preserving data confidentiality.
+**About CKKS**: CKKS is a prominent FHE scheme that natively processes real-valued and complex-valued data. It is a good fit for training and inference in machine learning while preserving data confidentiality.
