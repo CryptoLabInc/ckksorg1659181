@@ -45,8 +45,8 @@ ninja.data = [{
             window.location.href = "/ckksorg1659181/blog/2025/Johannes/";
           
         },
-      },{id: "news-ckks-org-comes-alive",
-          title: 'CKKS.org comes alive!',
+      },{id: "news-ckks-org-is-resleeved",
+          title: 'CKKS.org is resleeved!',
           description: "",
           section: "News",},{
         id: 'social-email',
