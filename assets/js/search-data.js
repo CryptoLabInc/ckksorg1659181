@@ -23,6 +23,13 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "/ckksorg1659181/publications/";
               },
+            },{id: "dropdown-software",
+              title: "software",
+              description: "",
+              section: "Dropdown",
+              handler: () => {
+                window.location.href = "/ckksorg1659181/software/";
+              },
             },{id: "post-bootstrapping-discrete-data-with-ckks",
         
           title: "Bootstrapping Discrete Data with CKKS",
@@ -31,18 +38,18 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/ckksorg1659181/blog/2025/Jaehyung/";
+            window.location.href = "/ckksorg1659181/blog/2025/bootstrapping-discrete-data-with-ckks/";
           
         },
       },{id: "post-grafting-improving-performance-and-usability-of-homomorphic-encryption",
         
           title: "Grafting: Improving Performance and Usability of Homomorphic Encryption",
         
-        description: "TL;DR: Grafting is a new approach for managing a CKKS ciphertext modulus. With so-called sprouts, we dedicate a few machine words to scaling and use word-sized primes for the remaining ciphertext modulus improving performance. With universal sprouts, we can represent any bit size up to the word size using powers-of-two and introduce arbitrary scaling for RNS-CKKS improving usability for parameter and circuit design.",
+        description: "TL;DR: Grafting is a new approach for managing a CKKS ciphertext modulus. With so-called sprouts, we dedicate a few machine words to scaling and use word-sized primes for the remaining ciphertext modulus improving performance. With universal sprouts, we can represent any bit size up to the word size using powers-of-two and introduce arbitrary scaling for RNS-CKKS easing parameter and circuit design.",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/ckksorg1659181/blog/2025/Johannes/";
+            window.location.href = "/ckksorg1659181/blog/2025/grafting/";
           
         },
       },{id: "news-ckks-org-is-resleeved",
@@ -54,6 +61,13 @@ ninja.data = [{
         section: 'Socials',
         handler: () => {
           window.open("mailto:%79%6F%75@%65%78%61%6D%70%6C%65.%63%6F%6D", "_blank");
+        },
+      },{
+        id: 'social-linkedin',
+        title: 'LinkedIn',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://www.linkedin.com/in/company/ckks-org", "_blank");
         },
       },{
         id: 'social-rss',
