@@ -16,21 +16,14 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/ckksorg1659181/blog/";
           },
-        },{id: "dropdown-publications",
-              title: "publications",
-              description: "",
-              section: "Dropdown",
-              handler: () => {
-                window.location.href = "/ckksorg1659181/publications/";
-              },
-            },{id: "dropdown-software",
-              title: "software",
-              description: "",
-              section: "Dropdown",
-              handler: () => {
-                window.location.href = "/ckksorg1659181/software/";
-              },
-            },{id: "post-bootstrapping-discrete-data-with-ckks",
+        },{id: "nav-software",
+          title: "software",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/ckksorg1659181/software/";
+          },
+        },{id: "post-bootstrapping-discrete-data-with-ckks",
         
           title: "Bootstrapping Discrete Data with CKKS",
         
