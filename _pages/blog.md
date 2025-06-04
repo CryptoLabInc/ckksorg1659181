@@ -142,6 +142,8 @@ pagination:
       <p>{{ post.description }}</p>
       <p class="post-meta">
         {{ post.date | date: '%B %d, %Y' }}
+        <br>
+        {% if post.author %}by {{ post.author }} {% endif %}
         {% if post.external_source %}
         &nbsp; &middot; &nbsp; {{ post.external_source }}
         {% endif %}
