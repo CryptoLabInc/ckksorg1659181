@@ -2,7 +2,7 @@
 layout: post
 title: >
   Bootstrapping Discrete Data with CKKS
-date: 2025-05-09 11:12:00-0400
+date: 2025-06-09 11:12:00-0400
 description: >
   TL;DR: Recently, a new paradigm called discrete CKKS, which picks the best aspects of CKKS and other exact schemes has been suggested. To be more specific, it uses CKKS (a.k.a. the approximate homomorphic scheme) to compute over discrete data. In this article, we discuss the recent discrete bootstrapping in BKSS24 specifically designed for discrete CKKS.
 author: Jaehyung Kim
