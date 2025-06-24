@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://CryptoLabInc.github.io/ckksorg1659181/sitemap.xml
+Sitemap: https://ckks.org/sitemap.xml

@@ -7,21 +7,21 @@ ninja.data = [{
     title: "home",
     section: "Navigation",
     handler: () => {
-      window.location.href = "/ckksorg1659181/";
+      window.location.href = "/";
     },
   },{id: "nav-blog",
           title: "blog",
           description: "",
           section: "Navigation",
           handler: () => {
-            window.location.href = "/ckksorg1659181/blog/";
+            window.location.href = "/blog/";
           },
         },{id: "nav-software",
           title: "software",
           description: "",
           section: "Navigation",
           handler: () => {
-            window.location.href = "/ckksorg1659181/software/";
+            window.location.href = "/software/";
           },
         },{id: "post-bootstrapping-discrete-data-with-ckks",
         
@@ -31,7 +31,7 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/ckksorg1659181/blog/2025/bootstrapping-discrete-data-with-ckks/";
+            window.location.href = "/blog/2025/bootstrapping-discrete-data-with-ckks/";
           
         },
       },{id: "post-grafting-improving-performance-and-usability-of-homomorphic-encryption",
@@ -42,7 +42,7 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/ckksorg1659181/blog/2025/grafting/";
+            window.location.href = "/blog/2025/grafting/";
           
         },
       },{id: "news-ckks-org-is-resleeved",
@@ -67,6 +67,6 @@ ninja.data = [{
         title: 'RSS Feed',
         section: 'Socials',
         handler: () => {
-          window.open("/ckksorg1659181/feed.xml", "_blank");
+          window.open("/feed.xml", "_blank");
         },
       },];
