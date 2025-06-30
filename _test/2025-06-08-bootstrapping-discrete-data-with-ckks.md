@@ -14,7 +14,7 @@ toc:
 ---
 
 - Written by [Jaehyung Kim](https://jaehyungkim0.github.io/) (Stanford University)
-- Based on [https://ia.cr/2024/1637](https://ia.cr/2024/1637) (Asiacrypt 2024)
+- Based on [https://ia.cr/2024/1637](https://ia.cr/2024/1637)
 
 _TL;DR: Recently, a new paradigm called discrete CKKS, which picks the best aspects of CKKS and other exact schemes has been suggested. To be more specific, it uses CKKS (a.k.a. the approximate homomorphic scheme) to compute over discrete data. In this article, we discuss the recent discrete bootstrapping in [BKSS24](https://ia.cr/2024/1637) specifically designed for discrete CKKS._
 

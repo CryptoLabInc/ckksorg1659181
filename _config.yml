@@ -149,6 +149,10 @@ collections:
     output: true
   projects:
     output: true
+  test:
+    defaults:
+      layout: post
+    output: true
 
 # -----------------------------------------------------------------------------
 # Jekyll settings
