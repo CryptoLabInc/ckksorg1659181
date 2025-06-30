@@ -48,7 +48,22 @@ ninja.data = [{
       },{id: "news-ckks-org-is-resleeved",
           title: 'CKKS.org is resleeved!',
           description: "",
-          section: "News",},{
+          section: "News",},{id: "test-grafting-improving-performance-and-usability-of-homomorphic-encryption",
+          title: 'Grafting: Improving Performance and Usability of Homomorphic Encryption',
+          description: "TL;DR: Grafting is a new approach for managing a CKKS ciphertext modulus. With so-called sprouts, we dedicate a few machine words to scaling and use word-sized primes for the remaining ciphertext modulus improving performance. With universal sprouts, we can represent any bit size up to the word size using powers-of-two and introduce arbitrary scaling for RNS-CKKS easing parameter and circuit design.",
+          section: "Test",handler: () => {
+              window.location.href = "/test/2025-06-08-grafting/";
+            },},{id: "test-bootstrapping-discrete-data-with-ckks",
+          title: 'Bootstrapping Discrete Data with CKKS',
+          description: "TL;DR: Recently, a new paradigm called discrete CKKS, which picks the best aspects of CKKS and other exact schemes has been suggested. To be more specific, it uses CKKS (a.k.a. the approximate homomorphic scheme) to compute over discrete data. In this article, we discuss the recent discrete bootstrapping in BKSS24 specifically designed for discrete CKKS.",
+          section: "Test",handler: () => {
+              window.location.href = "/test/2025-06-08-bootstrapping-discrete-data-with-ckks/";
+            },},{id: "test-low-communication-threshold-fully-homomorphic-encryption",
+          title: 'Low Communication Threshold Fully Homomorphic Encryption',
+          description: "TL;DR: We propose a solution based on fully homomorphic encryption for privately delegating computation over data from multiple clients to a trusted server. Our construction ensures that every client&#39;s data remains private to other participants (server and other clients) even if all but one clients collude against the non-colluding client. It is the first to achieve low communication between all parties, as we also prove that prior low communication solutions to this problem are insecure.",
+          section: "Test",handler: () => {
+              window.location.href = "/test/2025-06-13-threshold/";
+            },},{
         id: 'social-email',
         title: 'email',
         section: 'Socials',
