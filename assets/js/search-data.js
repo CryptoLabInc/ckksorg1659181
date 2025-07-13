@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/software/";
           },
-        },{id: "post-bootstrapping-discrete-data-with-ckks",
+        },{id: "post-low-communication-threshold-fully-homomorphic-encryption",
+        
+          title: "Low Communication Threshold Fully Homomorphic Encryption",
+        
+        description: "TL;DR: We propose a solution based on fully homomorphic encryption for privately delegating computation over data from multiple clients to a trusted server. Our construction ensures that every client&#39;s data remains private to other participants (server and other clients) even if all but one clients collude against the non-colluding client. It is the first to achieve low communication between all parties, as we also prove that prior low communication solutions to this problem are insecure.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/threshold/";
+          
+        },
+      },{id: "post-bootstrapping-discrete-data-with-ckks",
         
           title: "Bootstrapping Discrete Data with CKKS",
         
@@ -62,7 +73,7 @@ ninja.data = [{
           title: 'Low Communication Threshold Fully Homomorphic Encryption',
           description: "TL;DR: We propose a solution based on fully homomorphic encryption for privately delegating computation over data from multiple clients to a trusted server. Our construction ensures that every client&#39;s data remains private to other participants (server and other clients) even if all but one clients collude against the non-colluding client. It is the first to achieve low communication between all parties, as we also prove that prior low communication solutions to this problem are insecure.",
           section: "Test",handler: () => {
-              window.location.href = "/test/2025-06-13-threshold/";
+              window.location.href = "/test/2025-07-13-threshold/";
             },},{
         id: 'social-email',
         title: 'email',
