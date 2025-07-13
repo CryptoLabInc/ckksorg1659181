@@ -2,7 +2,7 @@
 layout: post
 title: >
   Low Communication Threshold Fully Homomorphic Encryption
-date: 2025-06-13 00:00:00-0400
+date: 2025-07-13 00:00:00-0400
 description: >
   TL;DR: We propose a solution based on fully homomorphic encryption for privately delegating computation over data from multiple clients to a trusted server. Our construction ensures that every client's data remains private to other participants (server and other clients) even if all but one clients collude against the non-colluding client. It is the first to achieve low communication between all parties, as we also prove that prior low communication solutions to this problem are insecure.
 author: Alain Passelègue
