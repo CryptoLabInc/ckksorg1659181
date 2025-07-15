@@ -23,4 +23,4 @@ Enabling encrypted statistical analysis, HEaaN.Stat SDK facilitates collaborativ
 
 ### [HEaaN Private AI Homomorphic Encryption Library](https://hub.docker.com/r/cryptolabinc/heaan) {#heaan-private-ai}
 
-Fully Homomorphic Encryption Library with CKKS scheme ([Documentation](https://heaan.it/docs/heaan/namespaces.html)). This is not updated anymore. Please refer to [CODE.HEAAN](https://heaan.io/) for up-to-date binaries including GPU implementation. 
+Fully Homomorphic Encryption Library with CKKS scheme ([Documentation](https://cryptolab1.gabia.io/docs/heaan/namespaces.html)). This is not updated anymore. Please refer to [CODE.HEAAN](https://heaan.io/) for up-to-date binaries including GPU implementation. 
