@@ -74,6 +74,11 @@ ninja.data = [{
           description: "TL;DR: We propose a solution based on fully homomorphic encryption for privately delegating computation over data from multiple clients to a trusted server. Our construction ensures that every client&#39;s data remains private to other participants (server and other clients) even if all but one clients collude against the non-colluding client. It is the first to achieve low communication between all parties, as we also prove that prior low communication solutions to this problem are insecure.",
           section: "Test",handler: () => {
               window.location.href = "/test/2025-07-13-threshold/";
+            },},{id: "test-ciphertext-ciphertext-matrix-multiplication-fast-for-large-matrices",
+          title: 'Ciphertext-Ciphertext Matrix Multiplication: Fast for Large Matrices',
+          description: "TL;DR: We propose fast ciphertext-ciphertext matrix multiplication (CC-MM) algorithms for large matrices. Our algorithms consist of plaintext matrix multiplications (PP-MM) and ciphertext matrix transpose algorithms (C-MT). We introduce and utilize new fast C-MT algorithms for large matrices. By leveraging high-performance BLAS libraries to accelerate PP-MM, we implement large-scale CC-MM with substantial performance improvements.",
+          section: "Test",handler: () => {
+              window.location.href = "/test/2025-07-14-ccmm/";
             },},{
         id: 'social-email',
         title: 'email',
