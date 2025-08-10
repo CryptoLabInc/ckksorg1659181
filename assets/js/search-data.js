@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/software/";
           },
-        },{id: "post-low-communication-threshold-fully-homomorphic-encryption",
+        },{id: "post-ciphertext-ciphertext-matrix-multiplication-fast-for-large-matrices",
+        
+          title: "Ciphertext-Ciphertext Matrix Multiplication: Fast for Large Matrices",
+        
+        description: "TL;DR: We propose fast ciphertext-ciphertext matrix multiplication (CC-MM) algorithms for large matrices. Our algorithms consist of plaintext matrix multiplications (PP-MM) and ciphertext matrix transpose algorithms (C-MT). We introduce and utilize new fast C-MT algorithms for large matrices. By leveraging high-performance BLAS libraries to accelerate PP-MM, we implement large-scale CC-MM with substantial performance improvements.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/ccmm/";
+          
+        },
+      },{id: "post-low-communication-threshold-fully-homomorphic-encryption",
         
           title: "Low Communication Threshold Fully Homomorphic Encryption",
         
@@ -78,7 +89,7 @@ ninja.data = [{
           title: 'Ciphertext-Ciphertext Matrix Multiplication: Fast for Large Matrices',
           description: "TL;DR: We propose fast ciphertext-ciphertext matrix multiplication (CC-MM) algorithms for large matrices. Our algorithms consist of plaintext matrix multiplications (PP-MM) and ciphertext matrix transpose algorithms (C-MT). We introduce and utilize new fast C-MT algorithms for large matrices. By leveraging high-performance BLAS libraries to accelerate PP-MM, we implement large-scale CC-MM with substantial performance improvements.",
           section: "Test",handler: () => {
-              window.location.href = "/test/2025-07-14-ccmm/";
+              window.location.href = "/test/2025-08-10-ccmm/";
             },},{
         id: 'social-email',
         title: 'email',
