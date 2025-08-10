@@ -27,7 +27,7 @@ Recall that CKKS is defined over the complex plane $\mathbb{C}$. We consider a f
 
 <div class="row mt-3">
     <div class="col-sm-7 mt-3 mt-md-0 mx-auto d-block">
-        {% include figure.liquid loading="eager" path="assets/img/blog/250509_Jaehyung/1.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.liquid loading="eager" path="assets/img/blog/2506_Jaehyung/1.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
 
@@ -63,7 +63,7 @@ In terms of functionality, the discrete variant of CKKS extends the capability o
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/blog/250509_Jaehyung/2.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.liquid loading="eager" path="assets/img/blog/2506_Jaehyung/2.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
 

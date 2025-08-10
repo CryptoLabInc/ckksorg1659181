@@ -30,7 +30,7 @@ For example, in the figure below, two parties (blue and teal pawns) respectively
 
 <div class="row mt-3">
     <div class="col-sm-7 mt-3 mt-md-0 mx-auto d-block">
-        {% include figure.liquid loading="eager" path="assets/img/blog/250713_Alain/1.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.liquid loading="eager" path="assets/img/blog/2507_Alain/1.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
 
@@ -78,7 +78,7 @@ Looking back at our first example, the ciphertext $ct_f$ evaluated homomorphical
 
 <div class="row mt-3">
     <div class="col-sm-7 mt-3 mt-md-0 mx-auto d-block">
-        {% include figure.liquid loading="eager" path="assets/img/blog/250713_Alain/2.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.liquid loading="eager" path="assets/img/blog/2507_Alain/2.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
 
