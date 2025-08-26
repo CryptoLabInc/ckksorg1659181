@@ -87,7 +87,7 @@ ninja.data = [{
               window.location.href = "/test/2025-07-13-threshold/";
             },},{id: "test-neujeans-fast-private-cnn-inference-by-fusing-convolutions-and-bootstrapping-in-fhe",
           title: 'NeuJeans: Fast Private CNN Inference by Fusing Convolutions and Bootstrapping in FHE',
-          description: "TL;DR: NeuJeans introduces a new “Coefficients-in-Slot” (CinS) encoding for CKKS homomorphic encryption, enabling convolutional neural networks to run several times faster on encrypted data. By restructuring convolution execution and fusing it with bootstrapping, NeuJeans cuts latency to seconds for large models like ResNet on ImageNet.",
+          description: "TL;DR: NeuJeans introduces a new “Coefficients-in-Slot” (CinS) encoding for CKKS. It rethinks how convolutions are laid out and fuses them with bootstrapping, cutting latency on big models like ResNet running over ImageNet.",
           section: "Test",handler: () => {
               window.location.href = "/test/2025-08-07-NueJeans/";
             },},{id: "test-ciphertext-ciphertext-matrix-multiplication-fast-for-large-matrices",
