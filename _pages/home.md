@@ -4,6 +4,12 @@ title: home
 permalink: /
 subtitle: 
 
+profile:
+  align: right
+  image: prof_pic.png
+  image_circular: false # crops the image to make it circular
+  more_info: 
+
 selected_papers: false # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
 
@@ -18,7 +24,8 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-This page hosts resources on the CKKS Fully Homomorphic Encryption Scheme.
+
+<span style='font-size:1.5em'>**CKKS.org**</span>&nbsp;&nbsp;hosts resources on the CKKS Fully Homomorphic Encryption Scheme.
 
 **About FHE**: Fully Homomorphic Encryption (FHE) allows anyone to arbitrarily process encrypted data without ever having to decrypt it. Only the secret key holder can decrypt. 
 

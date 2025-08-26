@@ -5,14 +5,14 @@
 title: CKKS.org # the website title (if blank, full name will be used instead)
 first_name: 
 middle_name: 
-last_name: CryptoLab Inc
+last_name: 
 contact_note: >
   Maintainers: <a href="https://keewoolee.github.io/">Keewoo Lee</a> (keewoole@gmail.com), <a href="https://perso.ens-lyon.fr/damien.stehle/">Damien Stehlé</a> (damien.stehle@cryptolab.co.kr)
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
 footer_text: >
 keywords: # add your own keywords or leave empty
 lang: en # the language of your site (for example: en, fr, cn, ru, etc.)
-icon: # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
+icon: favicon.png # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
 
 url: https://ckks.org # the base hostname & protocol for your site
 baseurl: # the subpath of your site, e.g. /blog/. Leave blank for root
