@@ -90,6 +90,11 @@ ninja.data = [{
           description: "TL;DR: NeuJeans introduces a new “Coefficients-in-Slot” (CinS) encoding for CKKS. It rethinks how convolutions are laid out and fuses them with bootstrapping, cutting latency on big models like ResNet running over ImageNet.",
           section: "Test",handler: () => {
               window.location.href = "/test/2025-08-07-NueJeans/";
+            },},{id: "test-convergent-evolution-why-secure-homomorphic-encryption-will-resemble-high-performance-gpu-computing",
+          title: 'Convergent Evolution: Why Secure Homomorphic Encryption Will Resemble High-Performance GPU Computing',
+          description: "TL;DR: TODO",
+          section: "Test",handler: () => {
+              window.location.href = "/test/2025-08-07-convergent-evolution/";
             },},{id: "test-ciphertext-ciphertext-matrix-multiplication-fast-for-large-matrices",
           title: 'Ciphertext-Ciphertext Matrix Multiplication: Fast for Large Matrices',
           description: "TL;DR: We propose fast ciphertext-ciphertext matrix multiplication (CC-MM) algorithms for large matrices. Our algorithms consist of plaintext matrix multiplications (PP-MM) and ciphertext matrix transpose algorithms (C-MT). We introduce and utilize new fast C-MT algorithms for large matrices. By leveraging high-performance BLAS libraries to accelerate PP-MM, we implement large-scale CC-MM with substantial performance improvements.",
