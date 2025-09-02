@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/software/";
           },
-        },{id: "post-ciphertext-ciphertext-matrix-multiplication-fast-for-large-matrices",
+        },{id: "post-neujeans-fast-private-cnn-inference-by-fusing-convolutions-and-bootstrapping-in-fhe",
+        
+          title: "NeuJeans: Fast Private CNN Inference by Fusing Convolutions and Bootstrapping in FHE",
+        
+        description: "TL;DR: NeuJeans introduces a new “Coefficients-in-Slot” (CinS) encoding for CKKS. It rethinks how convolutions are laid out and fuses them with bootstrapping, cutting latency on big models like ResNet running over ImageNet.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/NueJeans/";
+          
+        },
+      },{id: "post-ciphertext-ciphertext-matrix-multiplication-fast-for-large-matrices",
         
           title: "Ciphertext-Ciphertext Matrix Multiplication: Fast for Large Matrices",
         
