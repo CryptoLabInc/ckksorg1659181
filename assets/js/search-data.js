@@ -100,6 +100,11 @@ ninja.data = [{
           description: "TL;DR: We propose fast ciphertext-ciphertext matrix multiplication (CC-MM) algorithms for large matrices. Our algorithms consist of plaintext matrix multiplications (PP-MM) and ciphertext matrix transpose algorithms (C-MT). We introduce and utilize new fast C-MT algorithms for large matrices. By leveraging high-performance BLAS libraries to accelerate PP-MM, we implement large-scale CC-MM with substantial performance improvements.",
           section: "Test",handler: () => {
               window.location.href = "/test/2025-08-10-ccmm/";
+            },},{id: "test-high-precision-ckks-bootstrap-from-discrete-ckks-and-evalround",
+          title: 'High Precision CKKS Bootstrap: From Discrete CKKS and EvalRound+',
+          description: "TL;DR: Recently, a new CKKS bootstrapping paradigm has been suggested, which takes particular advantage of high-precision real/complex-valued computation. In this article, we discuss the recent CKKS bootstrapping technique in [CKSS25](https://ia.cr/2025/????), utilizing the [Discrete CKKS](https://ckks.org/blog/2025/bootstrapping-discrete-data-with-ckks) and [Grafting](https://ckks.org/blog/2025/grafting) from the first two blogposts.",
+          section: "Test",handler: () => {
+              window.location.href = "/test/2025-09-01-high_prec_bootstrap/";
             },},{
         id: 'social-email',
         title: 'email',
