@@ -103,7 +103,7 @@ ninja.data = [{
               window.location.href = "/test/2025-08-07-NueJeans/";
             },},{id: "test-convergent-evolution-why-secure-homomorphic-encryption-will-resemble-high-performance-gpu-computing",
           title: 'Convergent Evolution: Why Secure Homomorphic Encryption Will Resemble High-Performance GPU Computing',
-          description: "TL;DR: TODO",
+          description: "TL;DR: Fully Homomorphic Encryption (FHE) programming hits a fundamental Turing Barrier where secure computation forbids the dynamic branching that makes conventional software work, forcing it into a parallel-first paradigm surprisingly similar to the high-performance GPU model. This means the future of FHE isn&#39;t a magic compiler, but a hybrid architecture where a trusted client orchestrates complex logic, while an untrusted server executes simple, branchless secure kernels on encrypted data across a well-defined offloading boundary. Ultimately, developers must stop trying to translate old optimization habits and start redefining problems from the ground up, because in the world of FHE, performance isn&#39;t about pruning—it&#39;s about parallelism.",
           section: "Test",handler: () => {
               window.location.href = "/test/2025-08-07-convergent-evolution/";
             },},{id: "test-ciphertext-ciphertext-matrix-multiplication-fast-for-large-matrices",
