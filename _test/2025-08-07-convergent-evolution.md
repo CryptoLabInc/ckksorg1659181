@@ -113,7 +113,9 @@ $$\mathrm{Enc}(r) = \mathrm{Enc}(\text{cond}) \cdot \mathrm{Enc}(r_a) + (1 - \ma
 
 The combinatorial blow-up caused by encrypted control flow affects not only runtime performance but also the **compilation process itself**. For every secret-dependent branch, the FHE-aware compiler must **materialize all possible subroutines** into encrypted circuits. In the worst case, $N$ nested conditions yield a circuit size of $O(2^N)$.
 
-Projects based on [LLVM](https://llvm.org/)-based FHE Intermediate Representations (IRs) such as **HEIR**[^1] confirm that, beyond a certain branching complexity, compilers frequently hit **out-of-memory (OOM) errors** — *before execution even begins*. This demonstrates that directly translating branch-heavy business logic is infeasible. **Problem redefinition is not an optimization choice — it is a requirement for tractable FHE compilation**.
+Recent experiments with [LLVM](https://llvm.org/)-based FHE Intermediate Representations (IRs) such as HEIR[^1] highlight this challange. While research explores sophisticated optimizations to avoid naive full unrolling (e.g., by hoisting common code from both branches), these techniques can only mitigate the overhead for shared computational paths. For genuinely divergent logic, the compiler must still materialize a circuit whose complexity grows exponentially with the number of secret-dependent branches.
+
+It is therefore an expected and observable outcome that beyond a certain branching complexity, this exponential growth will cause the compiler to exhaust system resources, leading to **out-of-memory (OOM) errors**—*before execution even begins*. This demonstrates that directly translating branch-heavy business logic is infeasible. **Problem redefinition is not an optimization choice — it is a requirement for tractable FHE compilation**.
 
 <br />
 <div class="row mt-3">
@@ -236,7 +238,7 @@ In this context, `N` represents the total number of vectors in the dataset, `d` 
     </div>
 </div>
 <div class="caption">
-    Figure 6. Algorithmic Paradigms: Adaptive Sorting vs. Data-Oblivious Sorting
+    Figure 6. Pruning vs. Parallelism
 </div>
 
 **Key Insight:** In FHE, **brute force is the baseline**, not the fallback. Performance gains come from **parallelizing fixed workloads**, not pruning.
@@ -246,7 +248,7 @@ In this context, `N` represents the total number of vectors in the dataset, `d` 
 
 | **Work** | **Core Idea / Contribution** | **Scope / Applicability** | **Limitations & Implications** |
 |-----------|-----------------------------|--------------------------|-------------------------------|
-| **HEIR**[^1] | Unified IR for FHE compilation | Expressive across CKKS, BFV, TFHE backends | Enforces strict **loop unrolling**; secret-dependent branching disallowed → Confirms **Turing Barrier** |
+| **HEIR**[^1] | MLIR-based compiler for FHE | Expressive across CKKS, BFV, TFHE backends | Optimizations can reduce overhead for shared paths, but cannot solve the core combinatorial explosion for divergent logic. Confirms **Turing Barrier** |
 | **PBS Optimization**[^2] | PBS circuit optimization for TFHE | Efficient for fixed LUT-based non-linearities | Limited to **local patterns**; cannot eliminate control-flow explosion |
 | **Private Inference**[^3] | GPU-friendly framework for private inference | Works for **fixed-depth, small models** | Not scalable to adaptive branching; dynamic paths remain insecure |
 | **OptORAMa**[^9] | Near-optimal oblivious memory | Provably tight asymptotics | $\Omega(\log n)$ overhead unavoidable; secure random access is inherently expensive |
@@ -272,15 +274,17 @@ Recent progress expands FHE’s reach but validates the central thesis: **genera
 <br />
 ## 8. Conclusion: The Path to FHE-Native Development
 
-The theoretical Turing completeness of Fully Homomorphic Encryption (FHE) may suggest that any software can be made private with a magical compiler. In reality, secure computation faces a fundamental **Turing Barrier**: the dynamic, branching-based optimizations that make conventional software efficient become the very conduits that leak secrets under encryption. The future of FHE, therefore, will not come from directly translating existing algorithms, but from redefining problems from first principles.
+The theoretical Turing completeness of Fully Homomorphic Encryption (FHE) may suggest that any software can be privatized with a magical compiler. In reality, secure computation faces a fundamental **Turing Barrier**: the dynamic, branching-based optimizations that make conventional software efficient become the very conduits that leak secrets under encryption. The future of FHE, therefore, depends not on translating legacy code, but on redefining problems from first principles.
 
-The next challenge is addressing FHE’s dominant performance bottleneck: **memory I/O**. Optimizing individual operations in isolation offers limited benefits; for any non-trivial business logic, **the cumulative overhead of sequential IR-level kernels quickly makes applications impractical**. Inspired by high-performance GPU computing, the solution lies in shifting from fine-grained primitives to a hierarchy of fused kernels. **By developing a comprehensive library of coarse-grained, scenario-optimized kernels, we can minimize data movement, exploit massive parallelism, and unlock practical performance at scale**.
+The most pressing challenge is FHE’s dominant performance bottleneck: memory I/O. Optimizing individual operations in isolation is insufficient; for any non-trivial business logic, the cumulative overhead of sequential IR-level kernels quickly makes applications impractical. Inspired by high-performance GPU computing, **the solution is to move from fine-grained primitives toward a hierarchy of fused, coarse-grained kernels—reducing data movement, exploiting massive parallelism, and unlocking practical performance**.
 
-Building these kernels solves the ecosystem’s chicken-and-egg problem: practical, coarse-grained kernels must come first to create immediate value, attract developers, and enable a sustainable FHE ecosystem. To support this, **I envision a lightweight orchestration framework where the trusted host performs simple runtime scheduling—dispatching a fused kernel when available, or falling back to a sequence of basic kernels when necessary**. Since scheduling decisions depend only on the public sequence of API calls, not the encrypted data, this mechanism remains inherently secure.
+Building these kernels also solves the ecosystem’s chicken-and-egg problem: useful, coarse-grained kernels must come first to create immediate value, attract developers, and enable sustainable growth. **A lightweight orchestration framework can manage this efficiently, where the trusted host performs simple runtime scheduling—dispatching fused kernels when available and falling back to basic ones otherwise**. Since scheduling depends only on the public sequence of API calls, it remains inherently secure.
 
-Beyond the kernel ecosystem, the next long-term challenge is to formalize the **offloading boundary between the trusted host and the secure executor**. Unlike the pragmatic, API-driven model of GPU computing, the FHE boundary is a security contract that must be explicit and rigorously defined. Establishing this contract elevates FHE development from a collection of clever hacks to a true engineering discipline.
+Beyond kernels, the next step is to formalize the offloading boundary between the trusted host and the secure executor. Unlike GPU computing, where offloading is pragmatic and API-driven, **FHE’s boundary is a security contract that must be explicit and rigorously defined**. Establishing this foundation transforms FHE development from a set of clever hacks into a true engineering discipline.
 
-Ultimately, this journey leads to a **truly FHE-native programming model**. Compilers will no longer act as magical translators for legacy code, but as **policy enforcers** that guide developers toward secure, parallel-first problem formulations. By combining fused, optimized kernels with explicit host-device boundaries, we can unlock scalable, high-performance, and secure computation—transforming FHE from a theoretical promise into a practical reality.
+Ultimately, this leads to a **truly FHE-native programming model**. Compilers will evolve from magical translators into **policy enforcers**, guiding developers toward parallel-first problem formulations. By combining optimized fused kernels with explicit host-device boundaries, we can unlock scalable, secure, and high-performance computation—turning FHE from a theoretical promise into a practical reality.
+
+Looking further ahead, inspiration can be drawn from **quantum computing**, where developers also work within strict constraints, composing algorithms from a limited set of gates while carefully managing entanglement. Similarly, **tomorrow’s FHE developers will think less like conventional software engineers and more like quantum algorithm designers—crafting solutions** in a fundamentally constrained, parallel-first universe.
 
 <br />
 <h2 style="text-align:center; font-size:2em;">Stop translating. Start redefining.</h2>
