@@ -2,7 +2,7 @@
 layout: post
 title: >
   Convergent Evolution: Why Secure Homomorphic Encryption Will Resemble High-Performance GPU Computing
-date: 2025-08-07 00:00:00-0400
+date: 2025-09-08 00:00:00-0400
 description: >
   TL;DR: Fully Homomorphic Encryption (FHE) programming hits a fundamental Turing Barrier where secure computation forbids the dynamic branching that makes conventional software work, forcing it into a parallel-first paradigm surprisingly similar to the high-performance GPU model. This means the future of FHE isn't a magic compiler, but a hybrid architecture where a trusted client orchestrates complex logic, while an untrusted server executes simple, branchless secure kernels on encrypted data across a well-defined offloading boundary. Ultimately, developers must stop trying to translate old optimization habits and start redefining problems from the ground up, because in the world of FHE, performance isn't about pruning—it's about parallelism.
 author: Sunchul Jung
@@ -113,7 +113,7 @@ $$\mathrm{Enc}(r) = \mathrm{Enc}(\text{cond}) \cdot \mathrm{Enc}(r_a) + (1 - \ma
 
 The combinatorial blow-up caused by encrypted control flow affects not only runtime performance but also the **compilation process itself**. For every secret-dependent branch, the FHE-aware compiler must **materialize all possible subroutines** into encrypted circuits. In the worst case, $N$ nested conditions yield a circuit size of $O(2^N)$.
 
-Recent experiments with [LLVM](https://llvm.org/)-based FHE Intermediate Representations (IRs) such as HEIR[^1] highlight this challange. While research explores sophisticated optimizations to avoid naive full unrolling (e.g., by hoisting common code from both branches), these techniques can only mitigate the overhead for shared computational paths. For genuinely divergent logic, the compiler must still materialize a circuit whose complexity grows exponentially with the number of secret-dependent branches.
+Recent experiments with [LLVM](https://llvm.org/)-based FHE Intermediate Representations (IRs) such as HEIR [^1] highlight this challange. While research explores sophisticated optimizations to avoid naive full unrolling (e.g., by hoisting common code from both branches), these techniques can only mitigate the overhead for shared computational paths. For genuinely divergent logic, the compiler must still materialize a circuit whose complexity grows exponentially with the number of secret-dependent branches.
 
 It is therefore an expected and observable outcome that beyond a certain branching complexity, this exponential growth will cause the compiler to exhaust system resources, leading to **out-of-memory (OOM) errors**—*before execution even begins*. This demonstrates that directly translating branch-heavy business logic is infeasible. **Problem redefinition is not an optimization choice — it is a requirement for tractable FHE compilation**.
 
