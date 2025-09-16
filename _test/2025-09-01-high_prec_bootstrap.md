@@ -4,7 +4,7 @@ title: >
   Leveraging Discrete CKKS to Bootstrap in High Precision
 date: 2025-09-01 11:12:00-0400
 description: >
-  TL;DR: In CKSS25, a new high-precision CKKS bootstrapping method was introduced. It leverages a novel Integer Cleaning strategy inspired by the Discrete CKKS technique and is implemented using the Grafting technique. We highlight its main building blocks and discuss its efficiency.
+  TL;DR: We introduce a new high-precision CKKS bootstrapping method. It leverages a novel Integer Cleaning strategy inspired by the Discrete CKKS technique and is implemented using the Grafting technique. We highlight its main building blocks and discuss its efficiency.
 author: Hyeongmin Choe
 tags: 
 categories: 
@@ -16,7 +16,7 @@ toc:
 - Written by [Hyeongmin Choe](https://hmchoe0528.github.io) (CryptoLab)
 - Based on [https://ia.cr/2025/????](https://ia.cr/2025/????) (CCS 2025)
 
-_TL;DR: In CKSS25, a new high-precision CKKS bootstrapping method was introduced. It leverages a novel Integer Cleaning strategy inspired by the Discrete CKKS technique and is implemented using the Grafting technique. We highlight its main building blocks and discuss its efficiency._
+_TL;DR: We introduce a new high-precision CKKS bootstrapping method. It leverages a novel Integer Cleaning strategy inspired by the Discrete CKKS technique and is implemented using the Grafting technique. We highlight its main building blocks and discuss its efficiency._
 
 ---
 
@@ -27,7 +27,7 @@ CKKS bootstrapping aims to refresh ciphertexts by increasing their modulus while
 However, bootstrapping introduces an approximation error.
 Most existing implementations achieve _5–25 bits_ of precision, where the bit-precision can be defined as the negative base-2 logarithm of the worst-case error, measured across many runs. 
 
-Some advanced applications, however, require much smaller error to support stronger security properties such as _Circuit Privacy_ and _IND-CPA-D_ Security. 
+Some advanced applications, however, require much smaller error to support stronger security properties such as _Circuit Privacy_ and _IND-CPA-D Security_. 
 It is also important for Threshold-FHE (see [this blogpost](https://ckks.org/blog/2025/threshold/)). 
 These are often achieved via noise flooding—adding large noise relative to the error before decryption—which blinds the secret-dependent error terms but also the lower bits of the message. 
 To retain precision after flooding, the pre-flooding precision must be higher, typically _64–80 bits_ or more. 
@@ -43,26 +43,32 @@ To retain precision after flooding, the pre-flooding precision must be higher, t
 Supporting such high precision securely and efficiently is a key challenge in CKKS bootstrapping. 
 In LLK+22[^1], a high-accuracy polynomial approximation for modular reduction $$x \mapsto (x \bmod q)$$ was introduced.
 This approximation enables high-precision CKKS bootstrapping, though it incurs enormous modulus consumption.
+Note that larger modulus consumption during bootstrapping leaves fewer levels available for subsequent computations, 
+which necessitates more frequent bootstrappings and thus significantly increases the overall cost.
 BCC+22[^2] introduced Meta-BTS, which achieves high precision by performing multiple sequential low-precision bootstrapping, 
-at the cost of increased latency linear in the target precision. 
-This approach also requires slightly higher modulus consumption.
+at the cost of increasing latency linearly in the target precision. 
+This approach also consumes slightly more modulus.
 
 <br />
 ## EvalRound+ Paradigm for High Precision
 
-We follow the **EvalRound+** paradigm as the first building block of high-precision CKKS bootstrapping.  
+We follow the **EvalRound+** paradigm as the first building block of high-precision CKKS bootstrapping.
 It differs slightly from the traditional CKKS bootstrapping. 
 Let's first recall the traditional CKKS bootstrapping pipeline:
 
 $$\text{ModRaise} \rightarrow \text{CoeffsToSlots} \rightarrow \text{EvalMod} \rightarrow \text{SlotsToCoeffs}.$$
 
+Assume a ciphertext encrypting a message $$m$$ (or the coefficient vector of a polynomial) under modulus $$q_0$$.
+In the ModRaise step, the ciphertext modulus is extended from $$q_0$$ to a larger modulus $$Q$$, which introduces an extra integer polynomial $$I$$ multiplied by $$q0$$.
+As a result, the ciphertext encrypts $$m + q_0I$$, so an EvalMod step is needed to reduce the message modulo $$q_0$$ and recover $$m$$.
+To enable this modular reduction on the encrypted message, the ciphertext is first transformed from the coefficient domain to the slot domain via CoeffsToSlots. 
+After EvalMod the result is mapped back to the coefficient domain using SlotsToCoeffs.
 Alternatively, one can place SlotsToCoeffs at the beginning. 
 Here, we focus on the ModRaise-first variant, as the technical details are equivalent.
 
-The _EvalRound+_ paradigm, introduced in SSKM24[^3], replaces EvalMod with a subroutine called EvalRound and branches into two parallel tracks.
-EvalRound was originally defined in KPK+22[^4] as $$\text{EvalRound} = \text{Id} - \text{EvalMod}.$$
+The _EvalRound+_ paradigm[^3], replaces EvalMod with a subroutine called EvalRound and branches into two parallel tracks.
+EvalRound[^4] is $$\text{EvalRound} = \text{Id} - \text{EvalMod}.$$
 That is, while EvalMod extracts the message $$m$$ from $$m + q_0 I$$, EvalRound extracts $$q_0 I$$. 
-Here, the message $$m$$ is a plaintext, encoding a complex vector with a scale factor.
 
 The EvalRound+ procedure begins with ModRaise and then splits into two tracks:
 - the first track applies the standard CoeffsToSlots algorithm, and
@@ -75,9 +81,9 @@ subtracting them yields a ciphertext encrypting $$m$$, which is then passed thro
 Although the dual-track structure increases latency, it reduces modulus consumption, since only the second track dictates the modulus consumption and CoeffsToSlots* consumes much less modulus than the usual CoeffsToSlots algorithm.
 
 To enable high-precision bootstrapping, one can upgrade CoeffsToSlots, EvalRound, and SlotsToCoeffs to their high-precision versions. 
-Each requires larger scale factors, increasing modulus consumption. 
-By contrast, CoeffsToSlots* can remain low-precision and consumes significantly less modulus compared to the other bootstrapping components. 
-This marks a key distinction from standard CKKS bootstrapping, where the high-precision CoeffsToSlots contributes to overall modulus consumption.
+Each requires larger scale factors (which is used for encodings to scale the real/complex messages) increasing modulus consumption. 
+By contrast, CoeffsToSlots* can remain low-precision and consume significantly less modulus compared to the other bootstrapping components. 
+This marks a key distinction from traditional CKKS bootstrapping, where high-precision CoeffsToSlots contributes to overall modulus consumption.
 
 The main challenge is that high-precision bootstrapping still requires substantial modulus.
 In particular, EvalMod and EvalRound rely on polynomial approximations of $$(x \bmod q)$$ and $$(x - (x \bmod q))$$, respectively. 
@@ -88,7 +94,7 @@ Since scale factors grow as $$\Theta(t)$$, overall modulus consumption typically
 ## Integer Cleaning from Discrete CKKS
 
 Let’s take a closer look at the EvalRound procedure. 
-When treating $$q_0$$ as a new scale factor, EvalRound maps $$(I+m/q_0) \mapsto I$$.
+When treating $$q_0$$ as a new scale factor, EvalRound maps $$(I+m/q_0)$$ to $$I$$.
 More precisely, an erroneous integer $$I + \varepsilon$$ is mapped to a (much less) erroneous integer $$I + \varepsilon'$$ where $$\varepsilon := m/q_0$$ and $$\varepsilon' \ll \varepsilon$$. 
 As it _cleans_ a noisy integer, we may call this functionality **Integer Cleaning**. 
 
@@ -99,41 +105,35 @@ The process involves:
 
 1. **Digit Extraction**: Decompose the noisy integer $$I+\varepsilon$$ into base-$$\beta$$ digits:
   For $$I = \sum_{i=0}^{\ell} I_i \beta^i,$$ each noisy digit $$I_i + \varepsilon_i$$ is extracted and stored separately. This can be done by either:
-   - via Direct polynomial approximation, mapping $$I \in [-K, K] \mapsto I_i \in [0, \beta)$$, or
-   - mapping $$I$$ into $$\exp(2i\pi I / \beta^\gamma)$$, the complex $$\beta^\gamma$$-th roots of unity (as in CKKL24[^5]), and decomposing the digits via interpolation (as in BKSS24[^6]).
+   - via Direct polynomial approximation, mapping $$I$$ into $$I_i \in [0, \beta)$$, or
+   - mapping $$I$$ into $$\exp(2i\pi I / \beta^\ell)$$, the complex $$\beta^\ell$$-th roots of unity (as in CKKL24[^5]), and decomposing the digits via interpolation (as in BKSS24[^6]).
 2. **Iterative Digit Cleaning**: Apply low-degree polynomials iteratively to each noisy digit $$I_i$$, to refine its precision:
    - ($$\beta = 2$$) $$h_1(x) = 3x^2 - 2x^3$$ from CKK20[^8], or
    - ($$\beta = 3$$) $$\frac{1}{3}(\bar{x}^2 + 4x - 2x^2\bar{x})$$ from BKSS24[^6].
    
-   These polynomials quadratically clean the bits or trits, refining a $$t$$-bit precision to around $$2t$$-bit.
+   These polynomials quadratically clean the bits or trits (ternary digits), refining a $$t$$-bit precision to around $$2t$$-bit.
    In the end, it returns the cleaned digits $$I_i + \varepsilon'_i$$ with $$\varepsilon'_i \ll \varepsilon_i$$. 
    Note that for each iteration, the scale factor must be large enough to support the cleaned digit, which roughly squares after each iteration. 
    This implies that early iterations (and Digit Extraction) can use much smaller scale factors (e.g., 25–35 bits) than the desired integer cleaning precision. 
 3. **Recombination**: Combine the cleaned digits $$I_i + \varepsilon'_i$$ to reconstruct the cleaned integer $$I + \varepsilon'$$. 
-  This requires only integer multiplications and additions, with no extra modulus consumption.  
+  This requires only integer multiplications and additions, with no extra modulus consumption. 
 
 
-Suppose the input $$I + \varepsilon$$ to the the Integer Cleaning algorithm has $$t$$-bit precision (i.e., $$|\varepsilon| \leq 2^{-t}$$).
+Suppose the input $$I + \varepsilon$$ to the Integer Cleaning algorithm has $$t$$-bit precision (i.e., $$|\varepsilon| \leq 2^{-t}$$).
 Then, with $$\text{iter}$$ iterations of Digit Cleaning, the algorithm outputs an integer with $$\Theta(2^{\text{iter}} \cdot t)$$ bits of precision.
 
 <br />
 ## Grafting
 
-When the high precision Integer Cleaning algorithm is integrated into the EvalRound+ paradigm, the small scale factors used in the first digit-cleaning step can also be used in CoeffsToSlots*, yielding substantial modulus savings. 
-
-However, the small scale factors typically introduce many small RNS factors, which can degrade performance. 
-In CKKS, the ciphertext modulus is usually tied to scale factors, so smaller scale factors naturally increase the number of RNS moduli and slow down the homomorphic computations.
-
-**Grafting**[^9], however, breaks this coupling and constructs the ciphertext modulus as a product of mostly word-size factors, independent of the scale factors. 
-This keeps the number of RNS moduli constant, regardless of the scale factor sizes.  
-As a result, Grafting enables the use of small scale factors _without performance degradation_, leading to a modulus-efficient and high-performance bootstrapping. 
+We leverage Grafting[^9] to efficiently support heterogeneous (i.e., small) scale factors without incurring additional RNS moduli or performance loss. 
+This allows our implementation to achieve modulus-efficient and high-performance bootstrapping. 
 For further details on RNS-CKKS and Grafting, see [this blogpost](https://ckks.org/blog/2025/grafting).
 
 <br />
 ## Putting It All Together
 
 The new CKKS bootstrapping proposed in CKSS25[^7] is built on the EvalRound+ paradigm with the Integer Cleaning strategy and employs the Grafting technique.
-We note that the Integer Cleaning parts can be further optimized using the **Thrfity** approach; we leave the details to CKSS25[^7].
+We note that the Integer Cleaning parts can be further optimized using a so-called **Thrifty** approach detailed in the paper.
 
 <div class="row mt-3">
     <div class="col-sm-7 mt-3 mt-md-0 mx-auto d-block">
