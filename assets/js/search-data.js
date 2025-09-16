@@ -119,14 +119,9 @@ ninja.data = [{
               window.location.href = "/test/2025-09-01-NueJeans/";
             },},{id: "test-leveraging-discrete-ckks-to-bootstrap-in-high-precision",
           title: 'Leveraging Discrete CKKS to Bootstrap in High Precision',
-          description: "TL;DR: In CKSS25, a new high-precision CKKS bootstrapping method was introduced. It leverages a novel Integer Cleaning strategy inspired by the Discrete CKKS technique and is implemented using the Grafting technique. We highlight its main building blocks and discuss its efficiency.",
+          description: "TL;DR: We introduce a new high-precision CKKS bootstrapping method. It leverages a novel Integer Cleaning strategy inspired by the Discrete CKKS technique and is implemented using the Grafting technique. We highlight its main building blocks and discuss its efficiency.",
           section: "Test",handler: () => {
               window.location.href = "/test/2025-09-01-high_prec_bootstrap/";
-            },},{id: "test-high-precision-ckks-bootstrap-from-discrete-ckks-and-evalround",
-          title: 'High Precision CKKS Bootstrap: From Discrete CKKS and EvalRound+',
-          description: "TL;DR: Recently, a new CKKS bootstrapping paradigm has been suggested, which takes particular advantage of high-precision real/complex-valued computation. In this article, we discuss the recent CKKS bootstrapping technique in [CKSS25](https://ia.cr/2025/????), utilizing the [Discrete CKKS](https://ckks.org/blog/2025/bootstrapping-discrete-data-with-ckks) and [Grafting](https://ckks.org/blog/2025/grafting) from the first two blogposts.",
-          section: "Test",handler: () => {
-              window.location.href = "/test/2025-09-01-high_prec_bootstrap_old/";
             },},{id: "test-convergent-evolution-why-secure-homomorphic-encryption-will-resemble-high-performance-gpu-computing",
           title: 'Convergent Evolution: Why Secure Homomorphic Encryption Will Resemble High-Performance GPU Computing',
           description: "TL;DR: Fully Homomorphic Encryption (FHE) programming hits a fundamental Turing Barrier where secure computation forbids the dynamic branching that makes conventional software work, forcing it into a parallel-first paradigm surprisingly similar to the high-performance GPU model. This means the future of FHE isn&#39;t a magic compiler, but a hybrid architecture where a trusted client orchestrates complex logic, while an untrusted server executes simple, branchless secure kernels on encrypted data across a well-defined offloading boundary. Ultimately, developers must stop trying to translate old optimization habits and start redefining problems from the ground up, because in the world of FHE, performance isn&#39;t about pruning—it&#39;s about parallelism.",
