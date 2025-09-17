@@ -99,17 +99,16 @@ More precisely, an erroneous integer $$I + \varepsilon$$ is mapped to a (much le
 As it _cleans_ a noisy integer, we may call this functionality **Integer Cleaning**. 
 
 To reduce modulus consumption in high-precision bootstrapping, 
-CKSS25[^7] introduces a novel Integer Cleaning algorithm based on this idea. 
-
+we introduce a novel Integer Cleaning algorithm based on this idea. 
 The process involves:
 
 1. **Digit Extraction**: Decompose the noisy integer $$I+\varepsilon$$ into base-$$\beta$$ digits:
   For $$I = \sum_{i=0}^{\ell} I_i \beta^i,$$ each noisy digit $$I_i + \varepsilon_i$$ is extracted and stored separately. This can be done by either:
-   - via Direct polynomial approximation, mapping $$I$$ into $$I_i \in [0, \beta)$$, or
+   - using direct polynomial approximation, mapping $$I$$ into $$I_i \in [0, \beta)$$, or
    - mapping $$I$$ into $$\exp(2i\pi I / \beta^\ell)$$, the complex $$\beta^\ell$$-th roots of unity (as in CKKL24[^5]), and decomposing the digits via interpolation (as in BKSS24[^6]).
 2. **Iterative Digit Cleaning**: Apply low-degree polynomials iteratively to each noisy digit $$I_i$$, to refine its precision:
-   - ($$\beta = 2$$) $$h_1(x) = 3x^2 - 2x^3$$ from CKK20[^8], or
-   - ($$\beta = 3$$) $$\frac{1}{3}(\bar{x}^2 + 4x - 2x^2\bar{x})$$ from BKSS24[^6].
+   - ($$\beta = 2$$) $$h_1(x) = 3x^2 - 2x^3$$ from CKK20[^7], or
+   - ($$\beta = 3$$) $$\frac{1}{3}(\bar{x}^2 + 4x - 2x^2\bar{x})$$ from BKSS24[^6].  
    
    These polynomials quadratically clean the bits or trits (ternary digits), refining a $$t$$-bit precision to around $$2t$$-bit.
    In the end, it returns the cleaned digits $$I_i + \varepsilon'_i$$ with $$\varepsilon'_i \ll \varepsilon_i$$. 
@@ -125,14 +124,14 @@ Then, with $$\text{iter}$$ iterations of Digit Cleaning, the algorithm outputs a
 <br />
 ## Grafting
 
-We leverage Grafting[^9] to efficiently support heterogeneous (i.e., small) scale factors without incurring additional RNS moduli or performance loss. 
+We leverage Grafting[^8] to efficiently support heterogeneous (i.e., small) scale factors without incurring additional RNS moduli or performance loss. 
 This allows our implementation to achieve modulus-efficient and high-performance bootstrapping. 
 For further details on RNS-CKKS and Grafting, see [this blogpost](https://ckks.org/blog/2025/grafting).
 
 <br />
 ## Putting It All Together
 
-The new CKKS bootstrapping proposed in CKSS25[^7] is built on the EvalRound+ paradigm with the Integer Cleaning strategy and employs the Grafting technique.
+The new CKKS bootstrapping is built on the EvalRound+ paradigm with the Integer Cleaning strategy and employs the Grafting technique.
 We note that the Integer Cleaning parts can be further optimized using a so-called **Thrifty** approach detailed in the paper.
 
 <div class="row mt-3">
@@ -163,9 +162,8 @@ In summary, the new bootstrapping method, combining EvalRound+, Integer Cleaning
 [^4]: S. Kim, M. Park, J. Kim, T. Kim, and C. Min. ["EvalRound Algorithm in CKKS Bootstrapping."](https://ia.cr/2022/1256) Asiacrypt 2022. 
 [^5]: H. Chung, H. Kim, Y. Kim, and Y. Lee. ["Amortized Large Look-up Table Evaluation with Multivariate Polynomials for Homomorphic Encryption."](https://ia.cr/2024/274) ePrint Archive 2024. 
 [^6]: Y. Bae, J. Kim, D. Stehlé, and E. Suvanto. ["Bootstrapping Small Integers With CKKS."](https://ia.cr/2024/1637) Asiacrypt 2024. 
-[^7]: H. Choe, J. Kim, D. Stehlé, and E. Suvanto. ["Leveraging Discrete CKKS to Bootstrap in High Precision."](https://ia.cr/2025/????) ACM CCS 2025. 
-[^8]: J. H. Cheon, D. Kim, and D. Kim. ["Efficient Homomorphic Comparison Methods with Optimal Complexity."](https://ia.cr/2019/1234) Asiacrypt 2020. 
-[^9]: J. H. Cheon, H. Choe, M. Kang, J. Kim, S. Kim, J. Mono, and T. Noh. ["Grafting: Decoupled Scale Factors and Modulus in RNS-CKKS."](https://ia.cr/2024/1014) ACM CCS 2025. 
+[^7]: J. H. Cheon, D. Kim, and D. Kim. ["Efficient Homomorphic Comparison Methods with Optimal Complexity."](https://ia.cr/2019/1234) Asiacrypt 2020. 
+[^8]: J. H. Cheon, H. Choe, M. Kang, J. Kim, S. Kim, J. Mono, and T. Noh. ["Grafting: Decoupled Scale Factors and Modulus in RNS-CKKS."](https://ia.cr/2024/1014) ACM CCS 2025. 
 
 
 
