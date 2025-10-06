@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/software/";
           },
-        },{id: "post-convergent-evolution-why-secure-homomorphic-encryption-will-resemble-high-performance-gpu-computing",
+        },{id: "post-leveraging-discrete-ckks-to-bootstrap-in-high-precision",
+        
+          title: "Leveraging Discrete CKKS to Bootstrap in High Precision",
+        
+        description: "TL;DR: We introduce a new high-precision CKKS bootstrapping method. It leverages a novel Integer Cleaning strategy inspired by the Discrete CKKS technique and is implemented using the Grafting technique. We highlight its main building blocks and discuss its efficiency.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/high_prec_bootstrap/";
+          
+        },
+      },{id: "post-convergent-evolution-why-secure-homomorphic-encryption-will-resemble-high-performance-gpu-computing",
         
           title: "Convergent Evolution: Why Secure Homomorphic Encryption Will Resemble High-Performance GPU Computing",
         

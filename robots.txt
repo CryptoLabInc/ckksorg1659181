@@ -1,4 +1,4 @@
 User-agent: *
-Disallow:
+Disallow: /test/
 
 Sitemap: https://ckks.org/sitemap.xml
