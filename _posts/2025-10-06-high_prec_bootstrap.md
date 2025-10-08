@@ -59,7 +59,7 @@ Let's first recall the traditional CKKS bootstrapping pipeline:
 $$\text{ModRaise} \rightarrow \text{CoeffsToSlots} \rightarrow \text{EvalMod} \rightarrow \text{SlotsToCoeffs}.$$
 
 Assume a ciphertext encrypting a message $$m$$ (or the coefficient vector of a polynomial) under modulus $$q_0$$.
-In the ModRaise step, the ciphertext modulus is extended from $$q_0$$ to a larger modulus $$Q$$, which introduces an extra integer polynomial $$I$$ multiplied by $$q0$$.
+In the ModRaise step, the ciphertext modulus is extended from $$q_0$$ to a larger modulus $$Q$$, which introduces an extra integer polynomial $$I$$ multiplied by $$q_0$$.
 As a result, the ciphertext encrypts $$m + q_0I$$, so an EvalMod step is needed to reduce the message modulo $$q_0$$ and recover $$m$$.
 To enable this modular reduction on the encrypted message, the ciphertext is first transformed from the coefficient domain to the slot domain via CoeffsToSlots. 
 After EvalMod the result is mapped back to the coefficient domain using SlotsToCoeffs.
