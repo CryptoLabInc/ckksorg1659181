@@ -138,6 +138,11 @@ ninja.data = [{
           description: "TL;DR: Fully Homomorphic Encryption (FHE) programming hits a fundamental Turing Barrier where secure computation forbids the dynamic branching that makes conventional software work, forcing it into a parallel-first paradigm surprisingly similar to the high-performance GPU model. This means the future of FHE isn&#39;t a magic compiler, but a hybrid architecture where a trusted client orchestrates complex logic, while an untrusted server executes simple, branchless secure kernels on encrypted data across a well-defined offloading boundary. Ultimately, developers must stop trying to translate old optimization habits and start redefining problems from the ground up, because in the world of FHE, performance isn&#39;t about pruning—it&#39;s about parallelism.",
           section: "Test",handler: () => {
               window.location.href = "/test/2025-09-08-convergent-evolution/";
+            },},{id: "test-a-novel-asymmetric-bsgs-polynomial-evaluation-algorithm-under-homomorphic-encryption",
+          title: 'A Novel Asymmetric BSGS Polynomial Evaluation Algorithm under Homomorphic Encryption',
+          description: "TL;DR: Recently, a new polynomial evaluation algorithm under homomorphic encryption has been proposed, called the Asymmetric BSGS Algorithm. It is a generalization and specialization of the original Baby-Step Giant-Step algorithm in the leveled FHE computation model. Leveraging the observation that there is a difference in multiplicative depth between the baby-step set and the giant-step set, this algorithm significantly reduces the number of modulus and key switches required for dense polynomial evaluation from $$O(\sqrt{d})$$ to $$O(d^{1/t})$$, by adjusting the set decomposition method and relaxing the control of noise growth and ciphertext size in some calculations.",
+          section: "Test",handler: () => {
+              window.location.href = "/test/2025-10-08-asymmetric-BSGS-algorithm/";
             },},{
         id: 'social-email',
         title: 'email',
