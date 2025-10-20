@@ -2,7 +2,7 @@
 layout: post
 title: >
   A Novel Asymmetric BSGS Polynomial Evaluation Algorithm under Homomorphic Encryption
-date: 2025-10-08
+date: 2025-10-19
 description: >
   TL;DR: Recently, a new polynomial evaluation algorithm under homomorphic encryption has been proposed, called the Asymmetric BSGS Algorithm. It is a generalization and specialization of the original Baby-Step Giant-Step algorithm in the leveled FHE computation model. Leveraging the observation that there is a difference in multiplicative depth between the baby-step set and the giant-step set, this algorithm significantly reduces the number of modulus and key switches required for dense polynomial evaluation from $$O(\sqrt{d})$$ to $$O(d^{1/t})$$, by adjusting the set decomposition method and relaxing the control of noise growth and ciphertext size in some calculations.
 author: Qingfeng Wang
@@ -11,10 +11,10 @@ categories:
 related_posts:
 pretty_table: true
 # toc:
-#   sidebar: right
+# sidebar: right
 ---
 
-- Written by [Qingfeng Wang](https://orcid.org/0009-0004-6490-7717)
+- Written by [Qingfeng Wang](https://orcid.org/0009-0004-6490-7717) (Institute of Information Engineering, Chinese Academy of Sciences)
 - Based on [https://doi.org/10.1145/3708821.3710822](https://dl.acm.org/doi/10.1145/3708821.3710822) (ASIACCS 2025)
 
 *TL;DR: Recently, a new polynomial evaluation algorithm under homomorphic encryption has been proposed, called the Asymmetric BSGS Algorithm. It is a generalization and specialization of the original Baby-Step Giant-Step algorithm in the leveled FHE computation model. Leveraging the observation that there is a difference in multiplicative depth between the baby-step set and the giant-step set, this algorithm significantly reduces the number of modulus and key switches required for dense polynomial evaluation from $$O(\sqrt{d})$$ to $$O(d^{1/t})$$, by adjusting the set decomposition method and relaxing the control of noise growth and ciphertext size in some calculations.*
@@ -38,7 +38,7 @@ where each $$f^{(j)}(X)=\sum_{i = 0}^{k-1}f_{jk + i}X^{i}$$ is a polynomial of d
 
 Given a value $$x$$, pre-compute $$S_1 := \{1,x,\cdots,x^{k-1}\}$$ (which we call the baby-step set) and $$S_2 := \{1,z,\cdots,z^{m-1}\}$$ (which we call the giant-step set), where $$z := x^k$$. Then the computation of all $$y_j := f^{(j)}(x)$$ is merely a linear combination of the elements in $$S_1$$, and this can be efficiently computed in leveled FHE. Finally, by multiplying the $$y_j$$ with the elements in $$S_2$$ and then summing them up, the computation of $$f(x)$$ can be completed.
 
-The above-mentioned algorithm takes $$3\sqrt{d}$$ non-scalar multiplications: computing $$S_1$$, computing $$S_2$$, and the final multiplication and accumulation each take $$\sqrt{d}$$ non-scalar multiplications. If we use Horner's rule, the computation of $$S_2$$ can be omitted, but at the cost of increasing the multiplication depth to the order of $$\sqrt{d}$$. The recursive variant of the BSGS algorithm, the Peterson-Stockmeyer algorithm, only requires $$\sqrt{2d}+O(\log d)$$ non-scalar multiplications and has a multiplicative depth of logarithmic order.
+The above-mentioned algorithm takes $$3\sqrt{d}$$ non-scalar multiplications: computing $$S_1$$, computing $$S_2$$, and the final multiplication and accumulation each take $$\sqrt{d}$$ non-scalar multiplications. If we use Horner's rule, the computation of $$S_2$$ can be omitted, but at the cost of increasing the multiplication depth to the order of $$\sqrt{d}$$. The recursive variant of the BSGS algorithm, the Paterson-Stockmeyer algorithm, only requires $$\sqrt{2d}+O(\log d)$$ non-scalar multiplications and has a multiplicative depth of logarithmic order.
 
 It has been proven that **a general polynomial evaluation algorithm requires at least $$\sqrt{d}$$ non-scalar multiplications**[^1], so it seems that there is no way to further improve the performance. 
 
@@ -49,11 +49,11 @@ We need to emphasize that there are significant differences between the leveled 
 
 However, in the leveled FHE computation model, homomorphic multiplication consists of three distinct operations with different purposes.
 
-1. **Tensor product**: A ciphertext $$\mathbf{ct} \in \mathcal{R}_q[\mathbf{s}]$$ is a polynomial over the cyclotomic ring $$\mathcal{R}_q$$ with respect to the variable $$\mathbf{s} \in \mathcal{R}_q$$, and its (noisy) plaintext is its evaluation $$\mathbf{ct}(\mathbf{s}) = \textbf{m}+\textbf{e} \in \mathcal{R}_q$$, with the plaintext encoding being ignored. *According to the homomorphic relationship between polynomials and their evaluations*, multiplying two ciphertexts in $$\mathcal{R}_q[\mathbf{s}]$$ realizes the multiplication of the encrypted plaintexts in $$\mathcal{R}_q$$. Using the Double-CRT technique, the tensor product can be completed in linear time.
-2. **Modulus switching**: Since when performing the tensor product, the ciphertext noise $$\mathbf{e} \in \mathcal{R}_q$$ is also multiplied, and its growth rate is proportional to the norm of $$\mathbf{e}$$. By computing the division in the cyclotomic field $$\mathcal{K}\supset\mathcal{R}$$ and then rounding to $$\mathcal{R}$$ to discard the lower-order bits of the noise $$\mathbf{e}$$, the noise growth can be effectively controlled. And modulus switching endows ciphertexts with levels. However, *division and rounding over $$\mathcal{K}$$ cannot be computed in NTT form within Double-CRT*, and we have to perform a large number of NTT/iNTT operations.
-3. **Relinearization**: Because polynomial multiplication over $$\mathcal{R}_q[\mathbf{s}]$$ will increase the degree of the ciphertext, we need use key switching to linearize the ciphertext polynomial. Similarly, *since key switching requires digit decomposition over the cyclotomic ring $$\mathcal{R}$$, which cannot be achieved in NTT form*, a large number of NTT/iNTT operations are also required.
+1. **Tensor product**: A ciphertext $$\mathbf{ct} \in \mathcal{R}_q[\mathbf{S}]$$ is a polynomial over the cyclotomic ring $$\mathcal{R}_q$$ with respect to the variable $$\mathbf{s} \in \mathcal{R}_q$$, and its (noisy) plaintext is its evaluation $$\mathbf{ct}(\mathbf{s}) = \textbf{m}+\textbf{e} \in \mathcal{R}_q$$. Multiplying two ciphertexts then realizes the multiplication of the two underlying plaintexts. In a typical setting, the asymptotic complexity of the tensor product is linear, and its cost accounts for less than 5% of that of homomorphic multiplication in practice.
+2. **Modulus switching**: Since when performing the tensor product, the ciphertext noise $$\mathbf{e} \in \mathcal{R}_q$$ is also multiplied, and its growth rate is proportional to the norm of $$\mathbf{e}$$. By computing the division in the cyclotomic field $$\mathcal{K}\supset\mathcal{R}$$ and then rounding to $$\mathcal{R}$$ to discard the lower-order bits of the noise $$\mathbf{e}$$, the noise growth can be effectively controlled. And modulus switching endows ciphertexts with levels. The asymptotic complexity of modulus switching is quasi-linear, and its cost usually accounts for about 20%.
+3. **Relinearization**: Because polynomial multiplication over $$\mathcal{R}_q[\mathbf{S}]$$ will increase the degree of the ciphertext, we need use key switching to linearize the ciphertext polynomial. This is also a quasi-linear step, and it is usually the most costly one, especially when the ciphertext size increases.
 
-Now, let's consider what is special about implementing the BSGS algorithm in leveled FHEs. Due to the excessive multiplication depth, Horner's rule is disabled. Given the ciphertext of $$x$$, using a binary-tree approach to pre-compute the ciphertexts of $$S_1$$ and $$S_2$$ requires $$\sqrt{d}$$ standard homomorphic multiplications respectively. In the process of multiplying the $$y_j$$ with the elements in $$S_2$$ and accumulating, the lazy technique, *which takes advantage of the commutativity and associativity between the above-mentioned three operations and addition*, can be used to combine some modulus and key switches. Altogether, approximately $$2\sqrt{d}+1$$ modulus and key switches are required.
+Now, let's consider what is special about implementing the BSGS algorithm in leveled FHEs. Horner’s rule would imply depth proportional to the square root of the degree, so is excluded. Given the ciphertext of $$x$$, using a binary-tree approach to pre-compute the ciphertexts of $$S_1$$ and $$S_2$$ requires $$\sqrt{d}$$ standard homomorphic multiplications respectively. In the process of multiplying the $$y_j$$ with the elements in $$S_2$$ and accumulating, the lazy technique, *which takes advantage of the commutativity and associativity between the above-mentioned three operations and addition*, can be used to combine some modulus and key switches. Altogether, approximately $$2\sqrt{d}$$ modulus and key switches are required.
 
 The figure below shows the homomorphic evaluation process of a 32-degree polynomial, where $$k = m = 6$$. 
 
@@ -65,7 +65,7 @@ The figure below shows the homomorphic evaluation process of a 32-degree polynom
 
 We observe that **the ciphertexts of $$S_1$$ have a much shallower ciphertext level than those of $$S_2$$**. Specifically, the multiplicative depth of the ciphertexts of $$S_1$$ is $$\ell_1=\left\lceil \log (k - 1) \right\rceil$$, and the multiplicative depth of the ciphertexts of $$S_2$$ is $$\ell_2=\left\lceil \log (km - k) \right\rceil$$. The difference between the two is $$\ell_2-\ell_1\approx\frac{1}{2}\cdot\log d$$, which is half of the overall multiplicative depth. We note that the noise control for the ciphertexts of set $$S_1$$ does not actually need to be so strict. **As long as the multiplicative depth of $$S_1$$ is not greater than that of $$S_2$$**, the multiplicative depth of the final calculation result will not change.
 
-How can we make full use of this difference in multiplicative depth? It is easy to think that during the construction of $$S_1$$, given $$t = \ell_2-\ell_1+1$$ ciphertexts located at most at the $$\ell_1$$-th layer, *calculate their continuous tensor products without performing modulus switching*. At this time, the depth of the calculated $$S_1$$ will not exceed $$\ell_2$$, and the computational efficiency is significantly improved.
+How can we make full use of this difference in multiplicative depth? It is easy to think that during the construction of $$S_1$$, given $$t = \ell_2-\ell_1+1$$ ciphertexts located at most at the $$\ell_1$$-th layer, *evaluate their tensor products without performing modulus switching*. At this time, the depth of the calculated $$S_1$$ will not exceed $$\ell_2$$, and the computational efficiency is significantly improved.
 
 Since the size of $$S_2$$ is $$\sqrt{d}$$, the overall number of modulus switches is still $$O(\sqrt{d})$$, but this is sufficient to provide us with an optimization direction. To achieve improvement in asymptotic complexity, we suggest:
 
@@ -148,31 +148,29 @@ This provides a description of the high-level abstraction of the asymmetric BSGS
 
 ### 3.3 Specific Implementation
 
-Due to the fact that *different leveled FHEs adopt different error-correcting codes and SIMD packing methods*, there are subtle differences in the specific implementation of the asymmetric BSGS algorithm.
+Due to the fact that *different leveled FHEs adopt different encoding strategies*, there are subtle differences in the specific implementation of the asymmetric BSGS algorithm.
 
 * **BGV uses LSB encoding and NTT packing**, with explicit ciphertext levels and modulus switching. The asymmetric BSGS algorithm fully adheres to the description in the previous subsection.
 * **CKKS uses fixed-point number encoding and DFT packing**, with explicit ciphertext levels, and modulus switching is replaced by rescaling. The asymmetric BSGS algorithm also fully follows the description in the previous subsection, and its computational accuracy is close to that of the original BSGS algorithm.
-* **BFV uses MSB encoding and NTT packing**, and modulus switching is implicitly performed during the tensor product, making it difficult to actively relax the noise control. We suggest that in step 2, first convert all the BFV ciphertexts in $$S_1^{(j)}$$ to BGV ciphertexts[^2], then calculate the continuous tensor products and convert $$\bar{S}_1$$ and $$\hat{S}_1$$ back to BFV ciphertexts.
+* **BFV uses MSB encoding and NTT packing**, and modulus switching is implicitly performed during the tensor product, making it difficult to actively relax the noise control. We suggest that in step 2, first convert all the BFV ciphertexts in $$S_1^{(j)}$$ to BGV ciphertexts[^2], then calculate the tensor products and convert $$\bar{S}_1$$ and $$\hat{S}_1$$ back to BFV ciphertexts.
 
 ### 3.4 Complexity Analysis
 
-The following table compares the asymptotic complexity of the asymmetric BSGS algorithm with that of the original BSGS algorithm and its recursive variant (Peterson-Stockmeyer algorithm).
+The following table compares the asymptotic complexity of the asymmetric BSGS algorithm with that of the original BSGS algorithm and its recursive variant (Paterson-Stockmeyer algorithm).
 
 Recently, a literature[^3] proposed an automorphism-based polynomial evaluation algorithm with a computational complexity of only $$O(\log d)$$. However, this algorithm depends on a specific algebraic structure and can only support polynomial evaluations of limited degrees, so it is excluded here.
 
 | Algorithm                     | Scalar Mult. | Addition | Tensor Product                | Key Switching                 | Modulus Switching             | Multiplicative Depth     |
 | ----------------------------- | --------------------- | -------- | ----------------------------- | ----------------------------- | ----------------------------- | ------------------------ |
-| Original BSGS Algorithm       | $$O(d)$$                | $$O(d)$$   | $$\approx 3\sqrt{d}$$           | $$\approx 2\sqrt{d}+1$$         | $$\approx 2\sqrt{d}+1$$         | $$\lceil\log d\rceil + 1$$ |
-| Peterson-Stockmeyer Algorithm | $$O(d)$$                | $$O(d)$$   | $$\approx \sqrt{2d}+O(\log d)$$ | $$\approx \sqrt{2d}+O(\log d)$$ | $$\approx \sqrt{2d}+O(\log d)$$ | $$\lceil\log d\rceil$$     |
+| Original BSGS Algorithm       | $$O(d)$$                | $$O(d)$$   | $$\approx 3\sqrt{d}$$           | $$\approx 2\sqrt{d}$$         | $$\approx 2\sqrt{d}$$         | $$\lceil\log d\rceil + 1$$ |
+| Paterson-Stockmeyer Algorithm | $$O(d)$$                | $$O(d)$$   | $$\approx \sqrt{2d}+O(\log d)$$ | $$\approx \sqrt{2d}+O(\log d)$$ | $$\approx \sqrt{2d}+O(\log d)$$ | $$\lceil\log d\rceil$$     |
 | Asymmetric BSGS Algorithm     | $$O(d)$$                | $$O(d)$$   | $$O(\sqrt{d})$$                 | $$O(d^{1/t})$$                  | $$O(d^{1/t})$$                  | $$\lceil\log d\rceil + 1$$ |
 
 <br />
 
-To keep the description concise, we ignored the influence of the constant $$t$$ in the asymptotic complexity of the asymmetric BSGS algorithm. However, we note that as $$t$$ increases, there is a marginal effect.
+To keep the description concise, we ignored the influence of the constant $$t$$ in the asymptotic complexity of the asymmetric BSGS algorithm. However, we note that as $$t$$ increases, there is a factor of $$t$$ hidden in the complexity of key switching and modulus switching, and a factor of $$2^{t - 1}$$ hidden in the complexity of tensor products. Therefore, there is a turning point at which increasing $$t$$ further will instead increase the overall computational cost. Our experiments show that for polynomials of degree less than 65536, setting $$t = 4$$ performs best in most cases.
 
-Roughly speaking, there is a factor of $$t$$ hidden in the complexity of key switching and modulus switching, and a factor of $$2^{t - 1}$$ hidden in the complexity of tensor products. Therefore, there is a turning point at which increasing $$t$$ further will instead increase the overall computational cost. Our experiments show that for polynomials of degree less than 65536, setting $$t = 4$$ performs best in most cases.
-
-The figure below shows the exact number of modulus switches and key switches in the asymmetric BSGS algorithm with different parameters. Although it performs worse than the Peterson-Stockmeyer algorithm for polynomials of low degrees, as the degree of the polynomial increases, the number of modulus and key switches is only a fraction of that in the Peterson-Stockmeyer algorithm.
+The figure below shows the exact number of modulus switches and key switches in the asymmetric BSGS algorithm with different parameters. Although it performs worse than the Paterson-Stockmeyer algorithm for polynomials of low degrees, as the degree of the polynomial increases, the number of modulus and key switches is only a fraction of that in the Paterson-Stockmeyer algorithm.
 
 <div class="row mt-3">
     <div class="col-sm-11 mt-3 mt-md-0 mx-auto d-block">
@@ -195,7 +193,7 @@ All homomorphic computing tasks that rely on high-degree dense polynomial evalua
 
 By leveraging the difference in multiplicative depth existing in the original BSGS algorithm, adjusting the set decomposition, and relaxing the control over noise growth and ciphertext size in some calculations, the asymmetric BSGS algorithm decreases the number of modulus and key switches from $$O(\sqrt{d})$$ to $$O(d^{1/t})$$, with $$t$$ being a small integer.
 
-Due to the marginal effect, we recommend choosing $$t = 4$$ to achieve the best overall practical performance for $$d \le 65536$$. One of the future works is to mitigate the negative impact of the constant $$t$$ on the asymptotic complexity, so as to further increase the value of $$t$$.
+To balance the positive and negative impacts, we recommend choosing $$t = 4$$ to achieve the best overall practical performance for $$d \le 65536$$. One of the future works is to mitigate the negative impact of the constant $$t$$ on the asymptotic complexity, so as to further increase the value of $$t$$.
 
 <br />
 ## 6. References
