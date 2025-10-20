@@ -142,7 +142,7 @@ ninja.data = [{
           title: 'A Novel Asymmetric BSGS Polynomial Evaluation Algorithm under Homomorphic Encryption',
           description: "TL;DR: Recently, a new polynomial evaluation algorithm under homomorphic encryption has been proposed, called the Asymmetric BSGS Algorithm. It is a generalization and specialization of the original Baby-Step Giant-Step algorithm in the leveled FHE computation model. Leveraging the observation that there is a difference in multiplicative depth between the baby-step set and the giant-step set, this algorithm significantly reduces the number of modulus and key switches required for dense polynomial evaluation from $$O(\sqrt{d})$$ to $$O(d^{1/t})$$, by adjusting the set decomposition method and relaxing the control of noise growth and ciphertext size in some calculations.",
           section: "Test",handler: () => {
-              window.location.href = "/test/2025-10-08-asymmetric-BSGS-algorithm/";
+              window.location.href = "/test/2025-10-19-asymmetric-BSGS-algorithm/";
             },},{
         id: 'social-email',
         title: 'email',
