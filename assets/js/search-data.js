@@ -140,9 +140,9 @@ ninja.data = [{
               window.location.href = "/test/2025-09-08-convergent-evolution/";
             },},{id: "test-a-novel-asymmetric-bsgs-polynomial-evaluation-algorithm-under-homomorphic-encryption",
           title: 'A Novel Asymmetric BSGS Polynomial Evaluation Algorithm under Homomorphic Encryption',
-          description: "TL;DR: Recently, a new polynomial evaluation algorithm under homomorphic encryption has been proposed, called the Asymmetric BSGS Algorithm. It is a generalization and specialization of the original Baby-Step Giant-Step algorithm in the leveled FHE computation model. Leveraging the observation that there is a difference in multiplicative depth between the baby-step set and the giant-step set, this algorithm significantly reduces the number of modulus and key switches required for dense polynomial evaluation from $$O(\sqrt{d})$$ to $$O(d^{1/t})$$, by adjusting the set decomposition method and relaxing the control of noise growth and ciphertext size in some calculations.",
+          description: "TL;DR: We introduce a new polynomial evaluation algorithm under homomorphic encryption, namely the Asymmetric BSGS Algorithm. It is a generalization and specialization of the original Baby-Step Giant-Step algorithm in the leveled FHE computation model. Leveraging the observation that there is a difference in multiplicative depth between the baby-step set and the giant-step set, this algorithm significantly reduces the number of modulus and key switches required for dense polynomial evaluation from $$O(\sqrt{d})$$ to $$O(d^{1/t})$$, by adjusting the set decomposition method and relaxing the control of noise growth and ciphertext size in some calculations. Here, $$d$$ is the polynomial degree and $$t$$ is a small constant which, according to our experiments, is recommended to be chosen as $$4$$.",
           section: "Test",handler: () => {
-              window.location.href = "/test/2025-10-19-asymmetric-BSGS-algorithm/";
+              window.location.href = "/test/2025-10-26-asymmetric-BSGS-algorithm/";
             },},{
         id: 'social-email',
         title: 'email',
