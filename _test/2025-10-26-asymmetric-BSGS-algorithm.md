@@ -157,12 +157,12 @@ Due to the fact that *different leveled FHEs adopt different encoding strategies
 
 The following table compares the asymptotic complexity of the asymmetric BSGS algorithm with that of the original BSGS algorithm and its recursive variant (Paterson-Stockmeyer algorithm).
 
-Recently, a literature[^3] proposed an automorphism-based polynomial evaluation algorithm with a computational complexity of only $$O(\log d)$$. However, this algorithm depends on a specific algebraic structure and can only support polynomial evaluations of limited degrees, so it is excluded here.
+A recent article[^3] proposed an automorphism-based polynomial evaluation algorithm with a computational complexity of only $$O(\log d)$$. However, this algorithm depends on a specific algebraic structure and can only support polynomial evaluations of limited degrees, so it is excluded here.
 
 | Algorithm                     | Scalar Mult. | Addition | Tensor Product                | Key Switching                 | Modulus Switching             | Multiplicative Depth     |
 | ----------------------------- | --------------------- | -------- | ----------------------------- | ----------------------------- | ----------------------------- | ------------------------ |
 | Original BSGS Algorithm       | $$O(d)$$                | $$O(d)$$   | $$\approx 3\sqrt{d}$$           | $$\approx 2\sqrt{d}$$         | $$\approx 2\sqrt{d}$$         | $$\lceil\log d\rceil + 1$$ |
-| Paterson-Stockmeyer Algorithm | $$O(d)$$                | $$O(d)$$   | $$\sqrt{2d}+O(\log d)$$ | $$\approx \sqrt{2d}$$ | $$\approx \sqrt{2d}$$ | $$\lceil\log d\rceil$$     |
+| Paterson-Stockmeyer Algorithm | $$O(d)$$                | $$O(d)$$   | $$\approx \sqrt{2d}$$ | $$\approx \sqrt{2d}$$ | $$\approx \sqrt{2d}$$ | $$\lceil\log d\rceil$$     |
 | Asymmetric BSGS Algorithm     | $$O(d)$$                | $$O(d)$$   | $$O(\sqrt{d})$$                 | $$O(d^{1/t})$$                  | $$O(d^{1/t})$$                  | $$\lceil\log d\rceil + 1$$ |
 
 <br />
@@ -187,7 +187,7 @@ The asymmetric BSGS algorithm is universal and can handle the evaluation tasks o
 All homomorphic computing tasks that rely on high-degree dense polynomial evaluation will benefit from this, including leveled FHE bootstrapping and LWE amortized bootstrapping. For example, we obtain the following accelerations:
 
 * $$2.9\times$$ improvement in throughput for the bootstrapping of BGV presented in paper[^4].
-* $$3.5\times$$ increase in latency for a recent amortized bootstrapping for LWE ciphertext presented in paper[^5].
+* $$3.5\times$$ decrease in latency for a recent amortized bootstrapping for LWE ciphertext presented in paper[^5].
 
 <br />
 ## 5. References
