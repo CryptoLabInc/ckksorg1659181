@@ -154,6 +154,11 @@ ninja.data = [{
           description: "TL;DR: We introduce a new polynomial evaluation algorithm under homomorphic encryption, namely the Asymmetric BSGS Algorithm. It is a generalization and specialization of the original Baby-Step Giant-Step algorithm in the leveled FHE computation model. Leveraging the observation that there is a difference in multiplicative depth between the baby-step set and the giant-step set, this algorithm significantly reduces the number of modulus and key switches required for dense polynomial evaluation from $$O(\sqrt{d})$$ to $$O(d^{1/t})$$, by adjusting the set decomposition method and relaxing the control of noise growth and ciphertext size in some calculations. Here, $$d$$ is the polynomial degree and $$t$$ is a small constant which, according to our experiments, is recommended to be chosen as $$4$$.",
           section: "Test",handler: () => {
               window.location.href = "/test/2025-10-26-asymmetric-BSGS-algorithm/";
+            },},{id: "test-homomorphic-encryption-for-data-science",
+          title: 'Homomorphic Encryption for Data Science',
+          description: "TL;DR: We introduce a new high-precision CKKS bootstrapping method. It leverages a novel Integer Cleaning strategy inspired by the Discrete CKKS technique and is implemented using the Grafting technique. We highlight its main building blocks and discuss its efficiency.",
+          section: "Test",handler: () => {
+              window.location.href = "/test/2025-11-01-HE4DS/";
             },},{
         id: 'social-email',
         title: 'email',
