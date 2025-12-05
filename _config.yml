@@ -7,7 +7,7 @@ first_name:
 middle_name: 
 last_name: 
 contact_note: >
-  Maintainers: <a href="https://keewoolee.github.io/">Keewoo Lee</a> (keewoole@gmail.com), <a href="https://perso.ens-lyon.fr/damien.stehle/">Damien Stehlé</a> (damien.stehle@cryptolab.co.kr)
+  Editors: <a href="https://hmchoe0528.github.io/">Hyeongmin Choe</a> (hyeongmin.choe@uni.lu), <a href="https://keewoolee.github.io/">Keewoo Lee</a> (keewoo.lee@ethereum.org), <a href="https://perso.ens-lyon.fr/damien.stehle/">Damien Stehlé</a> (damien.stehle@cryptolab.co.kr)
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
 footer_text: >
 keywords: # add your own keywords or leave empty
