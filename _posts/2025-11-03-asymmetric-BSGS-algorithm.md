@@ -10,6 +10,7 @@ tags:
 categories:
 related_posts:
 pretty_table: true
+giscus_comments: true
 # toc:
 # sidebar: right
 ---

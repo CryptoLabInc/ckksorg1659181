@@ -11,6 +11,7 @@ categories:
 related_posts: false
 toc:
   sidebar: right
+giscus_comments: true
 ---
 
 - Written by [Alain Passelègue](https://perso.ens-lyon.fr/alain.passelegue/index.html)
