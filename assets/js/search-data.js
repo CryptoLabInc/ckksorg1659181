@@ -165,6 +165,11 @@ ninja.data = [{
           description: "TL;DR: We introduce a new high-precision CKKS bootstrapping method. It leverages a novel Integer Cleaning strategy inspired by the Discrete CKKS technique and is implemented using the Grafting technique. We highlight its main building blocks and discuss its efficiency.",
           section: "Test",handler: () => {
               window.location.href = "/test/2025-11-01-HE4DS/";
+            },},{id: "test-dphe-protecting-server-privacy-in-ckks-based-protocols",
+          title: 'DPHE: Protecting Server Privacy in CKKS-based Protocols',
+          description: "TL;DR: In this paper, we investigate methods for protecting server privacy in CKKS-based protocols. Unlike exact homomorphic encryption schemes, formally defining security notions for the server is challenging in CKKS-based protocols due to the approximate nature of CKKS. We address this by introducing a new security notion called Differentially Private Homomorphic Encryption, which is motivated by differential privacy. Based on this notion, we construct a general compiler that transforms CKKS-based protocols into DPHE protocols. We also present the first zero-knowledge argument of knowledge for CKKS ciphertexts to protect server privacy against malicious clients.",
+          section: "Test",handler: () => {
+              window.location.href = "/test/2025-12-01-DPHE/";
             },},{
         id: 'social-email',
         title: 'email',
