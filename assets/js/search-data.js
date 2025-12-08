@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/software/";
           },
-        },{id: "post-a-novel-asymmetric-bsgs-polynomial-evaluation-algorithm-under-homomorphic-encryption",
+        },{id: "post-homomorphic-encryption-for-data-science",
+        
+          title: "Homomorphic Encryption for Data Science",
+        
+        description: "TL;DR: We introduce a new high-precision CKKS bootstrapping method. It leverages a novel Integer Cleaning strategy inspired by the Discrete CKKS technique and is implemented using the Grafting technique. We highlight its main building blocks and discuss its efficiency.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/HE4DS/";
+          
+        },
+      },{id: "post-a-novel-asymmetric-bsgs-polynomial-evaluation-algorithm-under-homomorphic-encryption",
         
           title: "A Novel Asymmetric BSGS Polynomial Evaluation Algorithm under Homomorphic Encryption",
         
