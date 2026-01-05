@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/software/";
           },
-        },{id: "post-homomorphic-encryption-for-data-science",
+        },{id: "post-dphe-protecting-server-privacy-in-ckks-based-protocols",
+        
+          title: "DPHE: Protecting Server Privacy in CKKS-based Protocols",
+        
+        description: "TL;DR: We investigate methods for protecting server privacy in CKKS-based protocols. Unlike exact homomorphic encryption schemes, formally defining security notions for the server is challenging in CKKS-based protocols due to the approximate nature of CKKS. We address this by introducing a new security notion called Differentially Private Homomorphic Encryption, which is motivated by differential privacy. Based on this notion, we construct a general compiler that transforms CKKS-based protocols into DPHE protocols. We also present the first zero-knowledge argument of knowledge for CKKS ciphertexts to protect server privacy against malicious clients.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/DPHE/";
+          
+        },
+      },{id: "post-homomorphic-encryption-for-data-science",
         
           title: "Homomorphic Encryption for Data Science",
         
