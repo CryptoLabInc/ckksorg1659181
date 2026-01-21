@@ -4,7 +4,7 @@ title: >
   Verifiable Computation for CKKS
 date: 2026-01-01 11:12:00+0200
 description: >
-  Homomorphic Encryption (HE) enables computation over encrypted data but, by itself, provides no guarantees that the computation was honestly executed. One can build "Verifiable HE" (vHE) using SNARKs, but efficiently combining HE and SNARKs in practice is a major challenge. This work introduces a blueprint for building verifiable HE schemes and its efficient instantiation for CKKS. Our first step is to introduce a "proof-friendly" version of CKKS, which is more amenable to proof systems, while being only slightly slower than typical RNS CKKS implementations. We then show how the problem of proving proof-friendly HE schemes can be reduced to just two sets of arithmetic relations (containing equalities and inequalities), which, if satisfied, imply the correct execution of the HE evaluation. We design Polynomial Interactive Oracle Proofs (PIOPs) for efficiently proving these relations, and we show how they can be instantiated using standard proof components. Our final construction demonstrates the feasibility of building SNARKs for proving computation of full-fledged HE schemes, opening the path for building practical verifiable HE schemes. 
+  TL;DR: Homomorphic Encryption (HE) enables computation over encrypted data but, by itself, provides no guarantees that the computation was honestly executed. One can build "Verifiable HE" (vHE) using SNARKs, but efficiently combining HE and SNARKs in practice is a major challenge. This work introduces a blueprint for building verifiable HE schemes and its efficient instantiation for CKKS. Our first step is to introduce a "proof-friendly" version of CKKS, which is more amenable to proof systems, while being only slightly slower than typical RNS CKKS implementations. We then show how the problem of proving proof-friendly HE schemes can be reduced to just two sets of arithmetic relations (containing equalities and inequalities), which, if satisfied, imply the correct execution of the HE evaluation. We design Polynomial Interactive Oracle Proofs (PIOPs) for efficiently proving these relations, and we show how they can be instantiated using standard proof components. Our final construction demonstrates the feasibility of building SNARKs for proving computation of full-fledged HE schemes, opening the path for building practical verifiable HE schemes. 
 author: Daniele Cozzo
 tags: 
 categories: 
@@ -310,11 +310,16 @@ The next challenge is of course practical: to show that our framework is really 
 
 [1] I. Cascudo, A. Costache, D. Cozzo, D. Fiore, A. Guimaraes and E. Soria-Vazquez. "Verifiable Computation for Approximate Homomorphic Encryption Schemes." CRYPTO 2025.
 
-[2] S. Goldwasser, Y. T. Kalai, and G. N. Rothblum. "Delegating computation: interactive proofs for muggles." Journal of the ACM 2015.
+[2] S. Goldwasser, Y. T. Kalai, and G. N. Rothblum. "Delegating Computation: Interactive Proofs for Muggles." Journal of the ACM 2015.
 
-[3] A. Golovnev, J. Lee, S. T. V. Setty, J. Thaler, and R. S. Wahby. "Brakedown: Linear-time and field-agnostic SNARKs for R1CS." CRYPTO 2023.
+[3] A. Golovnev, J. Lee, S. T. V. Setty, J. Thaler, and R. S. Wahby. "Brakedown: Linear-time and Field-agnostic SNARKs for R1CS." CRYPTO 2023.
 
-[4] C. Knabenhans, A. Viand, and A. Hithnawi. "Towards robust fhe for the real world." Real World Crypto 2024.
+[4] C. Knabenhans, A. Viand, and A. Hithnawi. "Towards Robust FHE for the Real World." Real World Crypto 2024.
 
-[5] S. T. V. Setty, J. Thaler, and R. S. Wahby. "Unlocking the lookup singularity with Lasso." EUROCRYPT 2024.
+[5] S. T. V. Setty, J. Thaler, and R. S. Wahby. "Unlocking the Lookup Singularity with Lasso." EUROCRYPT 2024.
 
+<!-- For direct linking, you can also use "[^1]" in the main body and "[^1]:” in the references:
+In this blogpost, we introduce our recent result [^1] ... 
+
+[^1]: I. Cascudo, A. Costache, D. Cozzo, D. Fiore, A. Guimaraes and E. Soria-Vazquez. "Verifiable Computation for Approximate Homomorphic Encryption Schemes." CRYPTO 2025.
+ -->
