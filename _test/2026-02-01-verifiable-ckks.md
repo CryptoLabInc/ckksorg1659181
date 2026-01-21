@@ -48,11 +48,11 @@ It is natural then to combine SNARKs and HE to achieve both privacy and integrit
 
  2) Virtually all HE schemes require so-called *ciphertexts maintenance* operations (such as rescaling). These operations entail non-algebraic operations, for instance real division and rounding. In contrast, SNARKs shine at proving algebraic statements. Even worse, operations like rescaling cause the underlying algebraic structure to change during the computation, something that cannot be easily processed by traditional SNARKs.
 
-Naively, general-purpose SNARKs can prove ciphertext arithmetic and maintenance operations by emulating them. This is unfortunately unreasonably costly for the prover, as shown by a recent survey by Knabenhans, Viand, and Hithnawi[^4].
+Naively, general-purpose SNARKs can prove ciphertext arithmetic and maintenance operations by emulating them. This is unfortunately unreasonably costly for the prover, as shown by a recent survey by Knabenhans, Viand, and Hithnawi [4].
 
 This motivates the research line of designing SNARKs *specifically tailored to HE operations*.
 
-In this blogpost, we introduce our recent result[^1] that represents the state-of-the-art in this direction. Our work is a blueprint for constructing vHE schemes that can scale with large computations and have practical proving times.
+In this blogpost, we introduce our recent result [1] that represents the state-of-the-art in this direction. Our work is a blueprint for constructing vHE schemes that can scale with large computations and have practical proving times.
 
 <br />
 ## The blueprint
@@ -100,7 +100,7 @@ $$R_{q} = \prod_{i=0}^L R_{p_i} = \prod_{i=0}^L \left( \prod_{j=0}^{k-1} R_{i,j}
 
 with each $$R_{i,j} = \mathbb{Z}_{p_i}[X]/(X^d - \zeta^{(2j+1)})$$ being a field of size $p_i^d$. 
 
-The value $d$ will be chosen appropriately so as to guarantee soundness security. For brevity, we omit a detailed discussion on choosing the value $d$, but note that typical choices for $d$ would be $d=2$, or $d=4$. We refer to [^1] for details on efficient arithmetic over the rings these choices entail.
+The value $d$ will be chosen appropriately so as to guarantee soundness security. For brevity, we omit a detailed discussion on choosing the value $d$, but note that typical choices for $d$ would be $d=2$, or $d=4$. We refer to [1] for details on efficient arithmetic over the rings these choices entail.
 
 ### Algorithms
 Now that we have set up the underlying ring $R_q$, we are ready to describe the main algorithms for our proof-friendly CKKS. In more detail, we present a modified version of the CKKS scheme. At a high level, these modifications aim to get around of the hurdles which makes CKKS incompatible with SNARKs, namely the fact that the ring changes during the computation. In our version of CKKS, the algorithms will always work on the same underlying ring $R_q$. The trick that makes this possible is a modification of the CRT map underlying the RNS version of CKKS, which we show now.
@@ -286,15 +286,15 @@ The framework we propose reduces the problem of proving CKKS operations to the p
 
 Our CCC<sup>+</sup>25, instantiation of the framework consists of the following components:
 
-- Arithmetic circuit relations are proven with a "custom" version of the GKR protocol[^2] over rings. This variant crucially takes advantage of the particular structure of the circuit induced by our previous arithmetization, which results in a GKR circuit of constant depth (consisting of only $4$ layers), independent of the size or depth of the HE circuit.
-- Range checks are proven using lookup arguments, i.e., a proof that convinces the verifier that a value belongs to a table of values $T_B$. For example, this table may include values within a certain range $B$. However, since CKKS requires to check large bounds (e.g., $B$ can have between $50$ and $300$ bits, depending on the level), and the ring dimension is concretely large (typically $N \in \{2^{13}, 2^{17}\}$) the public table $T_B$ would be too large to even represent. To overcome this issue, we rely on the recent decomposition technique of Lasso[^5], that consists in splitting a large table into smaller ones, so that one can efficiently perform look-ups into them.
-- The last component for building a succinct argument is a polynomial commitment for *multilinear* polynomials over $R_q$, since those are used to encode the messages sent by the prover in our PIOPs. First, we use the splitting (1) of $R_q$ into the product of finite fields to reduce the problem of designing a PC for multilinear polynomials over $R_q$ into that of designing PCs for multilinear polynomials over finite fields. The second contribution here is to use a field-agnostic PC, Brakedown[^3], and modify it in such a way that we can use the limited algebraic structure of our fields to gain in efficiency.
+- Arithmetic circuit relations are proven with a "custom" version of the GKR protocol [2] over rings. This variant crucially takes advantage of the particular structure of the circuit induced by our previous arithmetization, which results in a GKR circuit of constant depth (consisting of only $4$ layers), independent of the size or depth of the HE circuit.
+- Range checks are proven using lookup arguments, i.e., a proof that convinces the verifier that a value belongs to a table of values $T_B$. For example, this table may include values within a certain range $B$. However, since CKKS requires to check large bounds (e.g., $B$ can have between $50$ and $300$ bits, depending on the level), and the ring dimension is concretely large (typically $N \in \{2^{13}, 2^{17}\}$) the public table $T_B$ would be too large to even represent. To overcome this issue, we rely on the recent decomposition technique of Lasso [5], that consists in splitting a large table into smaller ones, so that one can efficiently perform look-ups into them.
+- The last component for building a succinct argument is a polynomial commitment for *multilinear* polynomials over $R_q$, since those are used to encode the messages sent by the prover in our PIOPs. First, we use the splitting (1) of $R_q$ into the product of finite fields to reduce the problem of designing a PC for multilinear polynomials over $R_q$ into that of designing PCs for multilinear polynomials over finite fields. The second contribution here is to use a field-agnostic PC, Brakedown [3], and modify it in such a way that we can use the limited algebraic structure of our fields to gain in efficiency.
 
 <br />
 ## Future work
 <div style="margin-top: 1.5em;"></div>
 
-The relevance of our framework is mainly on the abstraction level. We are able to provide a blueprint for constructing vHE schemes where verification is asymptotically fast and the prover can potentially scale up well with the size of the circuit. Our blueprint is realized in a modular way by combining specific building blocks. We instantiate these by modifying and optimizing recent constructions from proof systems literature. We demonstrate that our building blocks can be practically instantiated. Compared to previous literature, our results for small (depth-1) circuits indicate similar performance levels as [^4], which was the state of the art on concrete performance for verifiable RNS HE schemes. However, contrary to [^4], we verify full-featured RNS-based leveled HE schemes, including key switching and rescaling operations, which enables our solution to scale to larger circuits. In contrast, the performance in the previous approach[^4] would deteriorate exponentially with the circuit depth. 
+The relevance of our framework is mainly on the abstraction level. We are able to provide a blueprint for constructing vHE schemes where verification is asymptotically fast and the prover can potentially scale up well with the size of the circuit. Our blueprint is realized in a modular way by combining specific building blocks. We instantiate these by modifying and optimizing recent constructions from proof systems literature. We demonstrate that our building blocks can be practically instantiated. Compared to previous literature, our results for small (depth-1) circuits indicate similar performance levels as [4], which was the state of the art on concrete performance for verifiable RNS HE schemes. However, contrary to [4], we verify full-featured RNS-based leveled HE schemes, including key switching and rescaling operations, which enables our solution to scale to larger circuits. In contrast, the performance in the previous approach [4] would deteriorate exponentially with the circuit depth. 
 
 The interested reader can also check online the recordings of our talks: 
 - For an FHE introduction check the [talk at FHE.org](https://www.youtube.com/watch?v=nAdAs56TxvE)
@@ -308,8 +308,13 @@ The next challenge is of course practical: to show that our framework is really 
 ## References
 <div style="margin-top: 1.5em;"></div>
 
-[^1]: I. Cascudo, A. Costache, D. Cozzo, D. Fiore, A. Guimaraes and E. Soria-Vazquez. "Verifiable Computation for Approximate Homomorphic Encryption Schemes." CRYPTO 2025.
-[^2]: S. Goldwasser, Y. T. Kalai, and G. N. Rothblum. "Delegating computation: interactive proofs for muggles." Journal of the ACM 2015.
-[^3]: A. Golovnev, J. Lee, S. T. V. Setty, J. Thaler, and R. S. Wahby. "Brakedown: Linear-time and field-agnostic SNARKs for R1CS." CRYPTO 2023.
-[^4]: C. Knabenhans, A. Viand, and A. Hithnawi. "Towards robust fhe for the real world." Real World Crypto 2024.
-[^5]: S. T. V. Setty, J. Thaler, and R. S. Wahby. "Unlocking the lookup singularity with Lasso." EUROCRYPT 2024.
+[1] I. Cascudo, A. Costache, D. Cozzo, D. Fiore, A. Guimaraes and E. Soria-Vazquez. "Verifiable Computation for Approximate Homomorphic Encryption Schemes." CRYPTO 2025.
+
+[2] S. Goldwasser, Y. T. Kalai, and G. N. Rothblum. "Delegating computation: interactive proofs for muggles." Journal of the ACM 2015.
+
+[3] A. Golovnev, J. Lee, S. T. V. Setty, J. Thaler, and R. S. Wahby. "Brakedown: Linear-time and field-agnostic SNARKs for R1CS." CRYPTO 2023.
+
+[4] C. Knabenhans, A. Viand, and A. Hithnawi. "Towards robust fhe for the real world." Real World Crypto 2024.
+
+[5] S. T. V. Setty, J. Thaler, and R. S. Wahby. "Unlocking the lookup singularity with Lasso." EUROCRYPT 2024.
+
