@@ -192,6 +192,11 @@ ninja.data = [{
           description: "TL;DR: We investigate methods for protecting server privacy in CKKS-based protocols. Unlike exact homomorphic encryption schemes, formally defining security notions for the server is challenging in CKKS-based protocols due to the approximate nature of CKKS. We address this by introducing a new security notion called Differentially Private Homomorphic Encryption, which is motivated by differential privacy. Based on this notion, we construct a general compiler that transforms CKKS-based protocols into DPHE protocols. We also present the first zero-knowledge argument of knowledge for CKKS ciphertexts to protect server privacy against malicious clients.",
           section: "Test",handler: () => {
               window.location.href = "/test/2025-12-01-DPHE/";
+            },},{id: "test-verifiable-computation-for-ckks",
+          title: 'Verifiable Computation for CKKS',
+          description: "Homomorphic Encryption (HE) enables computation over encrypted data but, by itself, provides no guarantees that the computation was honestly executed. One can build &quot;Verifiable HE&quot; (vHE) using SNARKs, but efficiently combining HE and SNARKs in practice is a major challenge. This work introduces a blueprint for building verifiable HE schemes and its efficient instantiation for CKKS. Our first step is to introduce a &quot;proof-friendly&quot; version of CKKS, which is more amenable to proof systems, while being only slightly slower than typical RNS CKKS implementations. We then show how the problem of proving proof-friendly HE schemes can be reduced to just two sets of arithmetic relations (containing equalities and inequalities), which, if satisfied, imply the correct execution of the HE evaluation. We design Polynomial Interactive Oracle Proofs (PIOPs) for efficiently proving these relations, and we show how they can be instantiated using standard proof components. Our final construction demonstrates the feasibility of building SNARKs for proving computation of full-fledged HE schemes, opening the path for building practical verifiable HE schemes.",
+          section: "Test",handler: () => {
+              window.location.href = "/test/2026-02-01-verifiable-ckks/";
             },},{
         id: 'social-email',
         title: 'email',
