@@ -142,13 +142,13 @@ newsletter:
 
 collections:
   books:
-    output: true
+    output: false
   news:
     defaults:
       layout: post
     output: true
   projects:
-    output: true
+    output: false
   test:
     defaults:
       layout: post
@@ -195,6 +195,7 @@ exclude:
   - vendor
   - _projects/?_project.md
   - assets/jupyter/blog.ipynb
+  - _test_posted
 keep_files:
   - CNAME
   - .nojekyll
