@@ -112,9 +112,9 @@ $$CRT^{-1}_{\omega_{j}}(a) := \left( \left[ a\right]_{p_0}, \left[ a \right]_{p_
 Note that, in general, the inverse CRT for $\omega_j$ would be defined as a map $R_{q} \rightarrow R_{p_0} \times \ldots \times R_{p_l}$. We slightly modify this, by adding an embedding from $R_{p_0} \times \ldots \times R_{p_{j}}$ to $R_{q}^{j+1}$.
 More precisely, our mapping looks like:
 
-$$R_{q_0} \longrightarrow R_{p_0} \times \ldots \times R_{p_j}  \longrightarrow  R_{q}^{j+1}\\
-	a  \mapsto \mathbf{a} := \left( \left[ a\right]_{p_0}, \left[ a\right]_{p_1}, \dots,\left[ 
-	a\right]_{p_{j}}\right)   \rightarrow \left(\mathbf{a}'_0, \ldots, \mathbf{a}'_j \right),$$
+$$\begin{aligned}R_{q_0} ~~ &\longrightarrow \qquad  R_{p_0} \times \ldots \times R_{p_j} \qquad \longrightarrow \quad  R_{q}^{j+1} \\
+a ~~~ &\mapsto ~ \mathbf{a} := \left( \left[ a\right]_{p_0}, \left[ a\right]_{p_1}, \dots,\left[
+a\right]_{p_{j}}\right) \rightarrow \left(\mathbf{a}'_0, \ldots, \mathbf{a}'_j \right),\end{aligned}$$
 
 where, using RNS representation,
 
@@ -144,16 +144,16 @@ We are ready to describe the algorithms defining our proof-friendly version of C
 
 - $\mathsf{EvalKeyGen}:$ Let the secret key be $s$, and assume we are perfoming a key switching from $s^2$ to $s$. Sample $a_i \leftarrow R_{q}$, sample $e_i \leftarrow \chi_\text{err}$ for $i= 0, \dots, L$. 
 Compute $b_i = - a_i \cdot s + e_i + PW_{\omega_{L}}(s^2)[i]\pmod{q}$. For each level $l \in \{ 0, \dots, D - 1\}$, compute
-$$
-\mathfrak{evk} := (\mathfrak{evk}_{j,0}, \mathfrak{evk}_{j,1}) \leftarrow \left( (z_l b_i)_{i=0, \dots,
-l}, (z_l a_i)_{i=0, \dots, l} \right) \in \left( R_{q}^2 \right)^{l+1}.
-$$
+
+$$\mathfrak{evk} := (\mathfrak{evk}_{j,0}, \mathfrak{evk}_{j,1}) \leftarrow \left( (z_l b_i)_{i=0, \dots,
+l}, (z_l a_i)_{i=0, \dots, l} \right) \in \left( R_{q}^2 \right)^{l+1}.$$
+
 Notice that all key switching keys are generated in $R_{q}$ for all levels, but we *manually* change levels by moving them to the ideals defined by $z_l$. In practice, zeroed RNS components do not need to be processed, yielding similar performance as typical RNS implementations.
 
 - $\mathsf{Mult}(ct_0, ct_1, l):$ Multiplication of two ciphertexts $ct_0 := (ct_0[0], ct_0[1])$, $ct_1 := (ct_1[0], ct_1[1])$ at the same multiplicative level $l$ goes as follows. First a *pre-multiplication* performs a polynomial multiplication
 
 	$$
-		(d_0, d_1, d_2) := (ct_0[0] \cdot ct_1[0], ct_0[0] \cdot ct_1[1] + ct_1[0] \cdot ct_0[1], ct_0[1] \cdot ct_1[1]) \in R_q^3
+		(d_0, d_1, d_2) := (ct_0[0] \cdot ct_1[0], ct_0[0] \cdot ct_1[1] + ct_1[0] \cdot ct_0[1], ct_0[1] \cdot ct_1[1]) \in R_q^3.
 	$$ 
 
 	Then, we perform the *key switching* as follows.
