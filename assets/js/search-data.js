@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/software/";
           },
-        },{id: "post-dphe-protecting-server-privacy-in-ckks-based-protocols",
+        },{id: "post-orion-a-fully-homomorphic-encryption-framework-for-deep-learning",
+        
+          title: "Orion: A Fully Homomorphic Encryption Framework for Deep Learning",
+        
+        description: "TL;DR: Orion is a framework that compiles PyTorch neural network models into efficient CKKS FHE programs for encrypted inference. Orion automatically handles low-level FHE details such as data packing, bootstrap placement, and precision management. Orion is open-sourced at: https://github.com/baahl-nyu/orion.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/orion/";
+          
+        },
+      },{id: "post-dphe-protecting-server-privacy-in-ckks-based-protocols",
         
           title: "DPHE: Protecting Server Privacy in CKKS-based Protocols",
         
@@ -147,11 +158,6 @@ ninja.data = [{
           description: "TL;DR: Homomorphic Encryption (HE) enables computation over encrypted data but, by itself, provides no guarantees that the computation was honestly executed. One can build &quot;Verifiable HE&quot; (vHE) using SNARKs, but efficiently combining HE and SNARKs in practice is a major challenge. This work introduces a blueprint for building verifiable HE schemes and its efficient instantiation for CKKS. Our first step is to introduce a &quot;proof-friendly&quot; version of CKKS, which is more amenable to proof systems, while being only slightly slower than typical RNS CKKS implementations. We then show how the problem of proving proof-friendly HE schemes can be reduced to just two sets of arithmetic relations (containing equalities and inequalities), which, if satisfied, imply the correct execution of the HE evaluation. We design Polynomial Interactive Oracle Proofs (PIOPs) for efficiently proving these relations, and we show how they can be instantiated using standard proof components. Our final construction demonstrates the feasibility of building SNARKs for proving computation of full-fledged HE schemes, opening the path for building practical verifiable HE schemes.",
           section: "Test",handler: () => {
               window.location.href = "/test/2026-02-01-verifiable-ckks/";
-            },},{id: "test-orion-a-fully-homomorphic-encryption-framework-for-deep-learning",
-          title: 'Orion: A Fully Homomorphic Encryption Framework for Deep Learning',
-          description: "TL;DR: Orion is a framework that compiles PyTorch neural network models into efficient CKKS FHE programs for encrypted inference. Orion automatically handles low-level FHE details such as data packing, bootstrap placement, and precision management. Orion is open-sourced at: https://github.com/baahl-nyu/orion.",
-          section: "Test",handler: () => {
-              window.location.href = "/test/2026-02-01-orion/";
             },},{
         id: 'social-email',
         title: 'email',
