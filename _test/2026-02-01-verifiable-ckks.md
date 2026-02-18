@@ -4,8 +4,8 @@ title: >
   Verifiable Computation for CKKS
 date: 2026-01-01 11:12:00+0200
 description: >
-  TL;DR: Homomorphic Encryption (HE) enables computation over encrypted data but, by itself, provides no guarantees that the computation was honestly executed. One can build "Verifiable HE" (vHE) using SNARKs, but efficiently combining HE and SNARKs in practice is a major challenge. This work introduces a blueprint for building verifiable HE schemes and its efficient instantiation for CKKS. Our first step is to introduce a "proof-friendly" version of CKKS, which is more amenable to proof systems, while being only slightly slower than typical RNS CKKS implementations. We then show how the problem of proving proof-friendly HE schemes can be reduced to just two sets of arithmetic relations (containing equalities and inequalities), which, if satisfied, imply the correct execution of the HE evaluation. We design Polynomial Interactive Oracle Proofs (PIOPs) for efficiently proving these relations, and we show how they can be instantiated using standard proof components. Our final construction demonstrates the feasibility of building SNARKs for proving computation of full-fledged HE schemes, opening the path for building practical verifiable HE schemes. 
-author: Daniele Cozzo
+  TL;DR: Homomorphic Encryption (HE) enables computing over encrypted data but, by itself, provides no guarantees that the computation was honestly executed. One can build "Verifiable HE" (vHE) using SNARKs, but efficiently combining HE and SNARKs in practice is a major challenge. This work introduces a blueprint for building verifiable HE schemes and its efficient instantiation for CKKS. Our first step is to introduce a "proof-friendly" version of CKKS, which is more amenable to proof systems, while being only slightly slower than typical RNS CKKS implementations. We then show how the problem of proving correctness of computations for such proof-friendly HE schemes can be reduced to just two sets of arithmetic relations (containing equalities and inequalities). We show that if these are satisfied, it implies the correct execution of the HE evaluation. We design Polynomial Interactive Oracle Proofs (PIOPs) for efficiently proving these relations, and we show how they can be instantiated using standard proof components. Our final construction demonstrates the feasibility of building SNARKs for proving computation of full-fledged HE schemes, opening the path for building practical verifiable HE schemes.
+author: Ignacio Cascudo, Anamaria Costache, Daniele Cozzo, Dario Fiore, Antonio Guimarães, Eduardo Soria-Vazquez
 tags: 
 categories: 
 related_posts: false
@@ -15,25 +15,25 @@ toc:
   sidebar: right
 ---
 
-- Written by [Daniele Cozzo]() (IMDEA Software Institute) <!-- Feel free to add others, and your websites, if any. -->
+- Written by [Ignacio Cascudo]() (IMDEA Software Institute), [Anamaria Costache]() (École Polytechnique), [Daniele Cozzo]() (IMDEA Software Institute), [Dario Fiore]() (IMDEA Software Institute), [Antonio Guimarães]() (IMDEA Software Institute), [Eduardo Soria-Vazquez]() (Technology Innovation Institute)
 - Based on [https://ia.cr/2025/286](https://ia.cr/2025/286) (Crypto 2025)
 
-*TL;DR: Homomorphic Encryption (HE) enables computation over encrypted data but, by itself, provides no guarantees that the computation was honestly executed. One can build "Verifiable HE" (vHE) using SNARKs, but efficiently combining HE and SNARKs in practice is a major challenge. This work introduces a blueprint for building verifiable HE schemes and its efficient instantiation for CKKS. Our first step is to introduce a "proof-friendly" version of CKKS, which is more amenable to proof systems, while being only slightly slower than typical RNS CKKS implementations. We then show how the problem of proving proof-friendly HE schemes can be reduced to just two sets of arithmetic relations (containing equalities and inequalities), which, if satisfied, imply the correct execution of the HE evaluation. We design Polynomial Interactive Oracle Proofs (PIOPs) for efficiently proving these relations, and we show how they can be instantiated using standard proof components. Our final construction demonstrates the feasibility of building SNARKs for proving computation of full-fledged HE schemes, opening the path for building practical verifiable HE schemes.*
+*TL;DR: Homomorphic Encryption (HE) enables computing over encrypted data but, by itself, provides no guarantees that the computation was honestly executed. One can build "Verifiable HE" (vHE) using SNARKs, but efficiently combining HE and SNARKs in practice is a major challenge. This work introduces a blueprint for building verifiable HE schemes and its efficient instantiation for CKKS. Our first step is to introduce a "proof-friendly" version of CKKS, which is more amenable to proof systems, while being only slightly slower than typical RNS CKKS implementations. We then show how the problem of proving correctness of computations for such proof-friendly HE schemes can be reduced to just two sets of arithmetic relations (containing equalities and inequalities). We show that if these are satisfied, it implies the correct execution of the HE evaluation. We design Polynomial Interactive Oracle Proofs (PIOPs) for efficiently proving these relations, and we show how they can be instantiated using standard proof components. Our final construction demonstrates the feasibility of building SNARKs for proving computation of full-fledged HE schemes, opening the path for building practical verifiable HE schemes.*
 
 ---
 <br />
 ## Context
 <div style="margin-top: 1.5em;"></div>
 
-**Homomorphic Encryption.** Homomorphic Encryption (HE) is a type of encryption that allows computing on encrypted data. This allows, amongst others, outsourcing computations without compromising on privacy. 
+**Homomorphic Encryption.** Homomorphic Encryption (HE) is a type of encryption that allows to compute on encrypted data. This allows, amongst others, to outsource computations without compromising on privacy. 
 It is a very powerful primitive, which enables many applications such as secure outsourced medical analysis, private set intersection, and so on. 
 In recent years, Machine Learning (ML) applications have become ubiquitous. While this has opened up the door to many novel and powerful applications, this has also introduced privacy concerns. Indeed, ML applications inherently and very heavily rely on data - but this data can turn out to be sensitive, and users may rightly be weary of sharing their private data with companies. To the rescue comes HE, in the form of Privacy-Preserving Machine Learning (PPML)! With HE, we can now encrypt the data, and evaluate an ML model directly on encrypted data. The result can now be recovered in plaintext, but only by whoever holds the secret key. 
 
-**Verifiable Homomorphic Encryption.** A significant limitation of homomorphic encryption (HE) is that it works in the trusted model, where the entity that computes over the ciphertexts is assumed to behave honestly. In particular, we must assume that the computing party (from here on, we refer to this party as the *server*) performs exactly the operation it says it does, which in practice is a rather strong assumption. In reality, without an integrity mechanism on top of the computation, the server could follow any malicious strategy: it could for example bias the result, or even perform a different computation entirely. Even more concerning, without integrity mechanisms in place, the server could even take advantage of the malleability of HE ciphertexts and mount a key recovery attack. Therefore, a lack of integrity can potentially lead to privacy leaks!
+**Verifiable Homomorphic Encryption.** A significant limitation of homomorphic encryption (HE) is that it works in the trusted model, where the entity that computes over the ciphertexts is assumed to behave honestly. In particular, we must assume that the computing party (from here on, we refer to this party as the *server*) performs exactly the operation it says it does, which in practice is a rather strong assumption. In reality, without an integrity mechanism on top of the computation, the server could follow any malicious strategy: it could for example bias the result, or perform a different computation entirely. Even more concerning, without integrity mechanisms in place, the server could take advantage of the malleability of HE ciphertexts and mount a key recovery attack. Therefore, a lack of integrity can potentially lead to serious privacy leaks!
 
 ### SNARKs
 
-*Succinct proof systems* (commonly referred to as SNARKs) are an important cryptographic primitive that allows to add integrity to computations. Informally, these are cryptographic proofs that allow a prover to convince a verifier that a statement is true. This is a very rich research field in and of itself, so for now, we can think of SNARKs as tools that allow us to prove a statement of the following kind: "Given a public circuit $C$ and an output $y$, I know an input $x$ such that $y=C(x)$." 
+*Succinct proof systems* (commonly referred to as SNARKs) are an important cryptographic primitive that allow to add integrity to computations. Informally, these are cryptographic proofs that allow a prover to convince a verifier that a statement is true. This is a very rich research field in and of itself, so for now, we can think of SNARKs as tools that allow us to prove a statement of the following kind: "Given a public circuit $C$ and an output $y$, I know an input $x$ such that $y=C(x)$." 
 
 What makes SNARKs useful in practice are the following properties: 
 - **Correctness**: if the statement is true, then the verifier will accept the proof; 
@@ -42,13 +42,13 @@ What makes SNARKs useful in practice are the following properties:
 
 ### Verifiable HE
 
-It is natural then to combine SNARKs and HE to achieve both privacy and integrity in outsourcing computations. This approach, also known as *Verifiable Fully-Homomorphic Encryption (vFHE)* does work in theory, because SNARKs can prove NP statements. Unfortunately, in practice this approach has several limitations for the prover efficiency.
+It is natural then to combine SNARKs and HE to achieve both privacy and integrity in outsourcing computations. This approach, also known as *Verifiable Homomorphic Encryption (vHE)* does work in theory, because SNARKs can prove NP statements. Unfortunately, in practice this approach has several limitations for the prover efficiency.
 
  1) HE ciphertexts are typically pairs of elements of the polynomial ring $R_q = \mathbb{Z}_q[X]/{(X^{N}+1)}$, whereas SNARKs typically work best on computations over large finite fields; 
 
  2) Virtually all HE schemes require so-called *ciphertexts maintenance* operations (such as rescaling). These operations entail non-algebraic operations, for instance real division and rounding. In contrast, SNARKs shine at proving algebraic statements. Even worse, operations like rescaling cause the underlying algebraic structure to change during the computation, something that cannot be easily processed by traditional SNARKs.
 
-Naively, general-purpose SNARKs can prove ciphertext arithmetic and maintenance operations by emulating them. This is unfortunately unreasonably costly for the prover, as shown by a recent survey by Knabenhans, Viand, and Hithnawi [4].
+Naively, general-purpose SNARKs can prove ciphertext arithmetic and maintenance operations by emulating them. This is prohibitively expensive for the prover, as shown by a recent survey by Knabenhans, Viand, and Hithnawi [4].
 
 This motivates the research line of designing SNARKs *specifically tailored to HE operations*.
 
@@ -83,15 +83,14 @@ A popular and practical way of realizing SNARKs, which we follow, consists in fi
 ## Proof-friendly CKKS
 <div style="margin-top: 1.5em;"></div>
 
-<!-- In this blog post, we mainly focus on the first component, namely the proof-friendly CKKS scheme, and only sketch the other building blocks. The reason for this is that our framework is very modular, and the remaining components can be instantiated with different schemes as appropriate. -->
 We start by showing how we can build a proof-friendly version of CKKS which presents the characteristics described above while maintaining near state-of-the-art performance levels. 
 
 ### Setting up the ring
 CKKS works over polynomial rings of the form $R_q := \mathbb{Z}_q[X]/(X^N+1)$. The first step is to set up the ring $R_q$ such that it will be easier to construct a SNARK over it. Remember, one of the properties a SNARK must satisfy is soundness: this says that if the statement is false, then the prover is only able to convince the verifier with negligible probability. 
 
-Naively, a way to achieve this is to just repeat the proof system as many times as needed, to amplify soundness error. However, this makes the proof much larger, and one might need many repetitions to achieve negligible soundness error. The alternative is to choose the ring $R_q$ in an appropriate way, so that no repetitions are needed. We omit the discussion of *exceptional sets* for brevity, but one can find the full details in the full version of our paper. 
+Naively, a way to achieve this is to just repeat the proof system as many times as needed, to amplify soundness error. However, this makes the proof much larger, and one might need many repetitions to achieve negligible soundness error. The alternative is to choose the ring $R_q$ in an appropriate way, so that no repetitions are needed. 
 
-The second requirement is, of course, efficiency. We want the prover to be fast while performing the CKKS operations. For that reason, as is typical in HE, we invoke the Chinese Reminder Theorem (CRT). Let $N$ be a power of two and $q:= \prod_{i=0}^L p_i$ for some integer $L$, such that each $p_i$ is a prime of the form $2aN/d + 1$ for some odd integer $a$ and suitable power-of-two value $d$. 
+The second requirement is, of course, efficiency. We want the prover to be fast while performing the CKKS operations. For that reason, as is typical in HE, we invoke the Chinese Remainder Theorem (CRT). Let $N$ be a power of two and $q:= \prod_{i=0}^L p_i$ for some integer $L$, such that each $p_i$ is a prime of the form $2aN/d + 1$ for some odd integer $a$ and suitable power-of-two value $d$. 
 Then, for each $p_i$, the cyclotomic polynomial $X^N+1$ splits in $$\mathbb{Z}_{p_i}[X]$$ into $k = N/d$ irreducible factors
 $$X^N + 1 = \prod_{j=0}^{k-1}(X^d - \zeta^{(2j+1)}),$$
 where $$\zeta\in\mathbb{Z}_{p_i}$$ is a $$2N/d$$-th primitive root of unity. By the CRT, the ring $$R_{q}$$ splits as
@@ -109,7 +108,7 @@ For all $0 \leq j \leq L$ define $q_j = \prod_{i=0}^{j} p_{i}$, and in particula
 
 $$CRT^{-1}_{\omega_{j}}(a) := \left( \left[ a\right]_{p_0}, \left[ a \right]_{p_1}, \dots, \left[ a \right]_{p_{j}} \right) \in R_{q}^{j+1}.$$
 
-Note that, in general, the inverse CRT for $\omega_j$ would be defined as a map $R_{q} \rightarrow R_{p_0} \times \ldots \times R_{p_l}$. We slightly modify this, by adding an embedding from $R_{p_0} \times \ldots \times R_{p_{j}}$ to $R_{q}^{j+1}$.
+Note that, in general, the inverse CRT for $\omega_j$ would be defined as a map $R_{q} \rightarrow R_{p_0} \times \ldots \times R_{p_j}$. We slightly modify this, by adding an embedding from $R_{p_0} \times \ldots \times R_{p_{j}}$ to $R_{q}^{j+1}$.
 More precisely, our mapping looks like:
 
 $$\begin{aligned}R_{q_0} ~~ &\longrightarrow \qquad  R_{p_0} \times \ldots \times R_{p_j} \qquad \longrightarrow \quad  R_{q}^{j+1} \\
@@ -123,29 +122,29 @@ $$\mathbf{a'}_i = \left( \left[ \left[ a\right]_{p_i} \right]_{p_0}, \left[ \lef
 
 Letting $Q_{i} = q_L/p_i$ and $$\hat{Q}_{i} = \left[(q_L/p_i)^{-1}\right]_{p_i}$$ be the usual constants for CRT recomposition, we define 
 
-$$z_l := \sum_{i=0}^{l} Q_i\hat{Q}_i = CRT(\underbrace{1, \dots, 1}_{l+1~\text{times}}, 0, \dots, 0) \in R_{q}.$$
+$$z_j := \sum_{i=0}^{j} Q_i\hat{Q}_i = CRT(\underbrace{1, \dots, j}_{j+1~\text{times}}, 0, \dots, 0) \in R_{q}.$$
 
 For each $0 \leq j \leq L$, the CRT recomposition vector for a given $a \in R_{q}$ is:
 
-$$PW_{\omega_{l}}(a) := \left(\left[ aQ_{0}\hat{Q}_{0} \right]_{q}, \left[ 
+$$PW_{\omega_{j}}(a) := \left(\left[ aQ_{0}\hat{Q}_{0} \right]_{q}, \left[ 
 	aQ_{1}\hat{Q}_{1} 
-	\right]_{q}, \dots, \left[ aQ_{l}\hat{Q}_{l} \right]_{q} \right) \in R_q^{l+1} .$$
+	\right]_{q}, \dots, \left[ aQ_{j}\hat{Q}_{j} \right]_{q} \right) \in R_q^{j+1} .$$
 
-For any $a, b \in R_{q}$, for any level $l$, the following holds
+For any $a, b \in R_{q}$, for any $j$, the following holds
 
 $$
-a \cdot b \cdot z_l \equiv \langle PW_{\omega_{l}}(a), CRT^{-1}_{\omega_{l}}(b) \rangle \cdot z_l 
+a \cdot b \cdot z_j \equiv \langle PW_{\omega_{j}}(a), CRT^{-1}_{\omega_{j}}(b) \rangle \cdot z_j 
 \pmod{q_0}. 
 $$
 
-This follows from a direct application of the CRT in the ideal defined by $z_l$.
+This follows from a direct application of the CRT in the ideal defined by $z_j$.
 
 We are ready to describe the algorithms defining our proof-friendly version of CKKS. Let $q_{0} < q_{1} < \dots < q_{D-1}$ be a chain of moduli for a circuit of depth $D$ and $(\omega_{0}, \omega_{1}, \dots, \omega_{D-1})$ their respective CRT bases, $\chi_\text{key}$ be the secret key distribution over $R$, and $\chi_\text{err}, \chi_\text{enc}$ be discrete Gaussian distributions over $R_{q}$. Below we present our version of the CKKS scheme. For brevity, we only present the algorithms which are different from "regular CKKS". 
 
-- $\mathsf{EvalKeyGen}:$ Let the secret key be $s$, and assume we are perfoming a key switching from $s^2$ to $s$. Sample $a_i \leftarrow R_{q}$, sample $e_i \leftarrow \chi_\text{err}$ for $i= 0, \dots, L$. 
+- $\mathsf{EvalKeyGen}:$ Let the secret key be $s$, and assume we are performing a key switching from $s^2$ to $s$. Sample $a_i \leftarrow R_{q}$, sample $e_i \leftarrow \chi_\text{err}$ for $i= 0, \dots, L$. 
 Compute $b_i = - a_i \cdot s + e_i + PW_{\omega_{L}}(s^2)[i]\pmod{q}$. For each level $l \in \{ 0, \dots, D - 1\}$, compute
 
-$$\mathfrak{evk} := (\mathfrak{evk}_{j,0}, \mathfrak{evk}_{j,1}) \leftarrow \left( (z_l b_i)_{i=0, \dots,
+$$\mathfrak{evk}_l := (\mathfrak{evk}_{l,0}, \mathfrak{evk}_{l,1}) \leftarrow \left( (z_l b_i)_{i=0, \dots,
 l}, (z_l a_i)_{i=0, \dots, l} \right) \in \left( R_{q}^2 \right)^{l+1}.$$
 
 Notice that all key switching keys are generated in $R_{q}$ for all levels, but we *manually* change levels by moving them to the ideals defined by $z_l$. In practice, zeroed RNS components do not need to be processed, yielding similar performance as typical RNS implementations.
@@ -201,7 +200,7 @@ $$
 D_0 = d_0 + \langle \mathfrak{evk}_0, CRT^{-1}_{\omega_l}(d_2) \rangle, \quad D_1 = d_1 + \langle \mathfrak{evk}_1, CRT^{-1}_{\omega_l}(d_2) \rangle, \tag{3}
 $$
 
-we come across the first obstacle. The term $$\mathfrak{evk}_0$$, $$CRT^{-1}_{\omega_l}(d_2)$$ involves expressing $d_2$ with respect to the RNS basis $$\omega_l$$, which is not an arithmetic operation. Instead of proving the decomposition, we let the prover give the verifier the outcome of the decomposition. In other words, the prover sends inputs $$w_{ks, 0}, \dots, w_{ks, l} \in R_q$$ satisfying
+we come across the first obstacle. The term $$\langle \mathfrak{evk}_0$$, $$CRT^{-1}_{\omega_l}(d_2) \rangle$$ involves expressing $d_2$ with respect to the RNS basis $$\omega_l$$, which is not an arithmetic operation. Instead of proving the decomposition, we let the prover give the verifier the outcome of the decomposition. In other words, the prover sends inputs $$w_{ks, 0}, \dots, w_{ks, l} \in R_q$$ satisfying
 
 $$
 d_2 = \sum_{i=0}^l PW_{\omega_l}(1)[i] \cdot w_{ks, i} \tag{4}
@@ -220,7 +219,7 @@ $$
 c_0 = (D_0 + [D_0]_{p_l})\cdot p_l^{-1}, \quad c_1 = (D_1 + [D_1]_{p_l})\cdot p_l^{-1}.
 $$
 
-Note that this is just a component-wise Euclidean division of $D_i$ by $p_l$. Using the same strategy as above, we let the prover introduce values $w_{quo, 0}, w_{quo, 1}$ and $w_{rmd, 0}, w_{rmd, 1}$ and prove that these are the quotients and reminders for the above equations. Specifically, the prover shows that
+Note that this is just a component-wise Euclidean division of $D_i$ by $p_l$. Using the same strategy as above, we let the prover introduce values $w_{quo, 0}, w_{quo, 1}$ and $w_{rmd, 0}, w_{rmd, 1}$ and prove that these are the quotients and remainders for the above equations. Specifically, the prover shows that
 
 $$
 D_i = p_l \cdot w_{quo, i} + w_{rmd, i}, \quad i = 0,1, \tag{6}
@@ -248,7 +247,7 @@ d_2 - \sum_{i=0}^l PW_{\omega_l}(1)[i] \cdot w_{ks, i} = 0
 \end{cases}
 $$
 
-and $l+4$ range check relations over $R_q$:
+and $l+5$ range check relations over $R_q$:
 
 $$
 \Vert w_{ks, 0} \Vert < p_0, \dots, \Vert w_{ks, l} \Vert < p_l
@@ -263,14 +262,14 @@ $$
 $$
 
 We have shown how to arithmetize a single addition and multiplication. A similar but much more involved argument can be done for a general circuit made of CKKS additions and multiplications.
-The strategy is to organize the CKKS circuit into mutiplicative layers, where consecutive additions are grouped together and are followed by the multiplication gate. Now instead of single $R_q$ values one has to reason with $R_q$ vectors. For the details, we refer to Sec. 4 of our paper. 
+The strategy is to organize the CKKS circuit into mutiplicative layers, where consecutive additions are grouped together and are followed by the multiplication gate. Now instead of single $R_q$ values, one has to reason with $R_q$ vectors. For the details, we refer to Sec. 4 of our paper. 
 
 ### To summarize
 To recap, our proof-friendly CKKS has the following properties that make it particularly suitable for proof systems:
 
 1) A carefully designed underlying ring which gives large enough exceptional sets while keeping arithmetic fast;
 
-2) This ring does not change during the computation, thanks our re-design of the rescaling algorithm;
+2) This ring does not change during the computation, thanks to our re-design of the rescaling algorithm;
 
 3) A scheme design for which a noise analysis proves it allows looser bounds, which in turn enables batching of range proofs.
 
@@ -282,12 +281,12 @@ We implemented and benchmarked our proof-friendly version of CKKS. We show that 
 ## A first instantiation 
 <div style="margin-top: 1.5em;"></div>
 
-The framework we propose reduces the problem of proving CKKS operations to the problem of designing PIOPs for two specific relations: arithmetic circuit satisfiability over $R_q$ and range checks for $R_q$ vectors. This problem can now be solved with the use of black-box components, making our solution highly modular. In CCC<sup>+</sup>25, we make some specific choices for providing a first instantiation that could concretely demonstrate practical feasibility. By themselves, some of these components are also independent contributions, as we designed them to exploit the particular characteristics of our arithmetic structures. Ultimately, however, one could pick and choose different instantiations, and in doing so, optimise for different efficiency metrics.
+The framework we propose reduces the problem of proving CKKS operations to the problem of designing PIOPs for two specific relations: arithmetic circuit satisfiability over $R_q$ and range checks for $R_q$ vectors. This problem can now be solved with the use of black-box components, making our solution highly modular. In the paper, we make some specific choices for providing a first instantiation that could concretely demonstrate practical feasibility. By themselves, some of these components are also independent contributions, as we designed them to exploit the particular characteristics of our arithmetic structures. Ultimately, however, one could pick and choose different instantiations, and in doing so, optimise for different efficiency metrics.
 
-Our CCC<sup>+</sup>25, instantiation of the framework consists of the following components:
+Our instantiation of the framework consists of the following components:
 
 - Arithmetic circuit relations are proven with a "custom" version of the GKR protocol [2] over rings. This variant crucially takes advantage of the particular structure of the circuit induced by our previous arithmetization, which results in a GKR circuit of constant depth (consisting of only $4$ layers), independent of the size or depth of the HE circuit.
-- Range checks are proven using lookup arguments, i.e., a proof that convinces the verifier that a value belongs to a table of values $T_B$. For example, this table may include values within a certain range $B$. However, since CKKS requires to check large bounds (e.g., $B$ can have between $50$ and $300$ bits, depending on the level), and the ring dimension is concretely large (typically $N \in \{2^{13}, 2^{17}\}$) the public table $T_B$ would be too large to even represent. To overcome this issue, we rely on the recent decomposition technique of Lasso [5], that consists in splitting a large table into smaller ones, so that one can efficiently perform look-ups into them.
+- Range checks are proven using lookup arguments, i.e., a proof that convinces the verifier that a value belongs to a table of values $T_B$. For example, this table may include values within a certain range $B$. However, since CKKS requires to check large bounds (e.g., $B$ can have between $50$ and $300$ bits, depending on the level), and the ring dimension is concretely large (typically $$N \in \{2^{13}, 2^{17}\}$$) the public table $T_B$ would be too large to even represent. To overcome this issue, we rely on the recent decomposition technique of Lasso [5], that consists in splitting a large table into smaller ones, so that one can efficiently perform look-ups into them.
 - The last component for building a succinct argument is a polynomial commitment for *multilinear* polynomials over $R_q$, since those are used to encode the messages sent by the prover in our PIOPs. First, we use the splitting (1) of $R_q$ into the product of finite fields to reduce the problem of designing a PC for multilinear polynomials over $R_q$ into that of designing PCs for multilinear polynomials over finite fields. The second contribution here is to use a field-agnostic PC, Brakedown [3], and modify it in such a way that we can use the limited algebraic structure of our fields to gain in efficiency.
 
 <br />
@@ -317,9 +316,3 @@ The next challenge is of course practical: to show that our framework is really 
 [4] C. Knabenhans, A. Viand, and A. Hithnawi. "Towards Robust FHE for the Real World." Real World Crypto 2024.
 
 [5] S. T. V. Setty, J. Thaler, and R. S. Wahby. "Unlocking the Lookup Singularity with Lasso." EUROCRYPT 2024.
-
-<!-- For direct linking, you can also use "[^1]" in the main body and "[^1]:” in the references:
-In this blogpost, we introduce our recent result [^1] ... 
-
-[^1]: I. Cascudo, A. Costache, D. Cozzo, D. Fiore, A. Guimaraes and E. Soria-Vazquez. "Verifiable Computation for Approximate Homomorphic Encryption Schemes." CRYPTO 2025.
- -->
