@@ -14,6 +14,17 @@ giscus_comments: true
 toc:
   sidebar: right
 ---
+<style>
+  .math-wide, .math-narrow { display: none; }
+
+  @media (min-width: 661px) {
+    .math-wide { display: block; }
+  }
+
+  @media (max-width: 660px) {
+    .math-narrow { display: block; }
+  }
+</style>
 
 - Written by Ignacio Cascudo (IMDEA Software Institute), Anamaria Costache (École Polytechnique), Daniele Cozzo (IMDEA Software Institute), Dario Fiore (IMDEA Software Institute), Antonio Guimarães (IMDEA Software Institute), Eduardo Soria-Vazquez (Technology Innovation Institute)
 - Based on [https://ia.cr/2025/286](https://ia.cr/2025/286) (Crypto 2025)
@@ -104,68 +115,142 @@ The value $d$ will be chosen appropriately so as to guarantee soundness security
 ### Algorithms
 Now that we have set up the underlying ring $R_q$, we are ready to describe the main algorithms for our proof-friendly CKKS. In more detail, we present a modified version of the CKKS scheme. At a high level, these modifications aim to get around of the hurdles which makes CKKS incompatible with SNARKs, namely the fact that the ring changes during the computation. In our version of CKKS, the algorithms will always work on the same underlying ring $R_q$. The trick that makes this possible is a modification of the CRT map underlying the RNS version of CKKS, which we show now.
 
-For all $0 \leq j \leq L$ define $q_j = \prod_{i=0}^{j} p_{i}$, and in particular $q_L = q$. Then we define $$R := \mathbb{Z}[X]/(X^N+1)$$ and $$R_{q_j} := \mathbb{Z}_{q_j}[X]/(X^N+1)$$ for all $0 \leq j \leq L$. Let $\omega_{j} = (p_0, p_1, \dots, p_{j})$ be a CRT base for $q_j$ and given $a \in R_{q}$, we define the inverse CRT map as follows:
+For all $0 \leq j \leq L$ define $q_j = \prod_{i=0}^{j} p_{i}$, and in particular $q_L = q$. Then we define $$R := \mathbb{Z}[X]/(X^N+1)$$ and $$R_{q_j} := \mathbb{Z}_{q_j}[X]/(X^N+1)$$ for all $0 \leq j \leq L.$ Let $\omega_{j} = (p_0, p_1, \dots, p_{j})$ be a CRT base for $q_j$ and given $a \in R_{q}$, we define the inverse CRT map as follows:
 
-$$CRT^{-1}_{\omega_{j}}(a) := \left( \left[ a\right]_{p_0}, \left[ a \right]_{p_1}, \dots, \left[ a \right]_{p_{j}} \right) \in R_{q}^{j+1}.$$
+<div class="math-wide">
+	$$CRT^{-1}_{\omega_{j}}(a) := \left( \left[ a\right]_{p_0}, \left[ a \right]_{p_1}, \dots, \left[ a \right]_{p_{j}} \right) \in R_{q}^{j+1}.$$
+</div><div class="math-narrow">
+	$$\begin{aligned}
+	&CRT^{-1}_{\omega_{j}}(a) := \\
+	&~~ \left( \left[ a\right]_{p_0}, \left[ a \right]_{p_1}, \dots, \left[ a \right]_{p_{j}} \right) \in R_{q}^{j+1}.
+	\end{aligned}$$
+</div>
 
 Note that, in general, the inverse CRT for $\omega_j$ would be defined as a map $R_{q} \rightarrow R_{p_0} \times \ldots \times R_{p_j}$. We slightly modify this, by adding an embedding from $R_{p_0} \times \ldots \times R_{p_{j}}$ to $R_{q}^{j+1}$.
 More precisely, our mapping looks like:
 
-$$\begin{aligned}R_{q_0} ~~ &\longrightarrow \qquad  R_{p_0} \times \ldots \times R_{p_j} \qquad \longrightarrow \quad  R_{q}^{j+1} \\
-a ~~~ &\mapsto ~ \mathbf{a} := \left( \left[ a\right]_{p_0}, \left[ a\right]_{p_1}, \dots,\left[
-a\right]_{p_{j}}\right) \rightarrow \left(\mathbf{a}'_0, \ldots, \mathbf{a}'_j \right),\end{aligned}$$
+<div class="math-wide">
+	$$\begin{aligned}
+	R_{q_0} ~~ &\longrightarrow \qquad  R_{p_0} \times \ldots \times R_{p_j} \qquad \longrightarrow \quad  R_{q}^{j+1} \\
+	a ~~~ &\mapsto ~ \mathbf{a} := \left( \left[ a\right]_{p_0}, \left[ a\right]_{p_1}, \dots,\left[ a\right]_{p_{j}}\right) \rightarrow \left(\mathbf{a}'_0, \ldots, \mathbf{a}'_j \right)\end{aligned}$$
+</div><div class="math-narrow">
+	$$\begin{aligned}
+	R_{q_0} &\longrightarrow \prod_{i=0}^{j} R_{p_i} \longrightarrow R_{q}^{j+1} \\
+	a &\mapsto \mathbf{a} := ([a]_{p_i})_{i \in [0,j]} \\
+	&~~~~~~~~~~~\rightarrow (\mathbf{a}'_0, \ldots, \mathbf{a}'_j)
+	\end{aligned}$$
+</div>
+
 
 where, using RNS representation,
 
-$$\mathbf{a'}_i = \left( \left[ \left[ a\right]_{p_i} \right]_{p_0}, \left[ \left[ a\right]_{p_i}\right]_{p_1}, \dots,\left[ \left[ a\right]_{p_i}
-\right]_{p_{j}}, \underbrace{0 \ldots, 0}_{L-j ~\text{times}}\right) \in R_q.$$
+
+<div class="math-wide">
+	$$\mathbf{a}'_i = \left( \left[ \left[ a\right]_{p_i} \right]_{p_0}, \left[ \left[ a\right]_{p_i}\right]_{p_1}, \dots,\left[ \left[ a\right]_{p_i}
+	\right]_{p_{j}}, \underbrace{0 \ldots, 0}_{L-j ~\text{times}}\right) \in R_q.$$
+</div><div class="math-narrow">
+	$$\begin{aligned}
+	\mathbf{a}'_i = \bigg( &\left[ \left[ a\right]_{p_i} \right]_{p_0}, \left[ \left[ a\right]_{p_i}\right]_{p_1}, \dots,\\
+	& ~~~~~ \left[ \left[ a\right]_{p_i} \right]_{p_{j}}, \underbrace{0 \ldots, 0}_{L-j ~\text{times}} \bigg) \in R_q.
+	\end{aligned}$$
+</div>
 
 Letting $Q_{i} = q_L/p_i$ and $$\hat{Q}_{i} = \left[(q_L/p_i)^{-1}\right]_{p_i}$$ be the usual constants for CRT recomposition, we define 
 
-$$z_j := \sum_{i=0}^{j} Q_i\hat{Q}_i = CRT(\underbrace{1, \dots, j}_{j+1~\text{times}}, 0, \dots, 0) \in R_{q}.$$
+<div class="math-wide">
+	$$z_j := \sum_{i=0}^{j} Q_i\hat{Q}_i = CRT(\underbrace{1, \dots, j}_{j+1~\text{times}}, 0, \dots, 0) \in R_{q}.$$
+</div><div class="math-narrow">
+	$$\begin{aligned}
+	z_j :=& \sum_{i=0}^{j} Q_i\hat{Q}_i \\
+	=& ~CRT(\underbrace{1, \dots, j}_{j+1~\text{times}}, 0, \dots, 0) \in R_{q}.
+	\end{aligned}$$
+</div>
 
 For each $0 \leq j \leq L$, the CRT recomposition vector for a given $a \in R_{q}$ is:
 
-$$PW_{\omega_{j}}(a) := \left(\left[ aQ_{0}\hat{Q}_{0} \right]_{q}, \left[ 
-	aQ_{1}\hat{Q}_{1} 
-	\right]_{q}, \dots, \left[ aQ_{j}\hat{Q}_{j} \right]_{q} \right) \in R_q^{j+1} .$$
+<div class="math-wide">
+	$$ PW_{\omega_{j}}(a) := \left(\left[ aQ_{0}\hat{Q}_{0} \right]_{q}, \left[ aQ_{1}\hat{Q}_{1} \right]_{q}, \dots, \left[ aQ_{j}\hat{Q}_{j} \right]_{q} \right) \in R_q^{j+1} $$
+</div><div class="math-narrow">
+	$$\begin{aligned} 
+	PW_{\omega_{j}}(a) := \bigg( &\left[ aQ_{0}\hat{Q}_{0} \right]_{q}, \left[ aQ_{1}\hat{Q}_{1} \right]_{q},\\ &\dots, \left[ aQ_{j}\hat{Q}_{j} \right]_{q} \bigg) \in R_q^{j+1}
+	\end{aligned}$$
+</div>
 
 For any $a, b \in R_{q}$, for any $j$, the following holds
 
-$$
-a \cdot b \cdot z_j \equiv \langle PW_{\omega_{j}}(a), CRT^{-1}_{\omega_{j}}(b) \rangle \cdot z_j 
-\pmod{q_0}. 
-$$
+<div class="math-wide">
+	$$
+	a \cdot b \cdot z_j \equiv \langle PW_{\omega_{j}}(a), CRT^{-1}_{\omega_{j}}(b) \rangle \cdot z_j 
+	\pmod{q_0}. 
+	$$
+</div><div class="math-narrow">
+	$$\begin{aligned} 
+	a \cdot b \cdot z_j \equiv \langle PW_{\omega_{j}}(a),~& CRT^{-1}_{\omega_{j}}(b) \rangle \cdot z_j \\
+	&~~~\pmod{q_0}. 
+	\end{aligned}$$
+</div>
 
 This follows from a direct application of the CRT in the ideal defined by $z_j$.
 
 We are ready to describe the algorithms defining our proof-friendly version of CKKS. Let $q_{0} < q_{1} < \dots < q_{D-1}$ be a chain of moduli for a circuit of depth $D$ and $(\omega_{0}, \omega_{1}, \dots, \omega_{D-1})$ their respective CRT bases, $\chi_\text{key}$ be the secret key distribution over $R$, and $\chi_\text{err}, \chi_\text{enc}$ be discrete Gaussian distributions over $R_{q}$. Below we present our version of the CKKS scheme. For brevity, we only present the algorithms which are different from "regular CKKS". 
 
 - $\mathsf{EvalKeyGen}:$ Let the secret key be $s$, and assume we are performing a key switching from $s^2$ to $s$. Sample $a_i \leftarrow R_{q}$, sample $e_i \leftarrow \chi_\text{err}$ for $i= 0, \dots, L$. 
-Compute $b_i = - a_i \cdot s + e_i + PW_{\omega_{L}}(s^2)[i]\pmod{q}$. For each level $l \in \{ 0, \dots, D - 1\}$, compute
+Compute $b_i = - a_i \cdot s + e_i + PW_{\omega_{L}}(s^2)[i]$ $\bmod q$. For each level $l \in \{ 0, \dots, D - 1\}$, compute
 
-$$\mathfrak{evk}_l := (\mathfrak{evk}_{l,0}, \mathfrak{evk}_{l,1}) \leftarrow \left( (z_l b_i)_{i=0, \dots,
-l}, (z_l a_i)_{i=0, \dots, l} \right) \in \left( R_{q}^2 \right)^{l+1}.$$
+<div class="math-wide">
+	$$\mathfrak{evk}_l := (\mathfrak{evk}_{l,0}, \mathfrak{evk}_{l,1}) \leftarrow \left( (z_l b_i)_{i=0, \dots, l}, (z_l a_i)_{i=0, \dots, l} \right) \in \left( R_{q}^2 \right)^{l+1}$$
+</div><div class="math-narrow">
+	$$\begin{aligned}
+	\mathfrak{evk}_l &:= (\mathfrak{evk}_{l,0}, \mathfrak{evk}_{l,1}) \\
+	\leftarrow& \left( (z_l b_i)_{i=0, \dots, l}, (z_l a_i)_{i=0, \dots, l} \right) \in \left( R_{q}^2 \right)^{l+1}
+	\end{aligned}$$
+</div>
 
 Notice that all key switching keys are generated in $R_{q}$ for all levels, but we *manually* change levels by moving them to the ideals defined by $z_l$. In practice, zeroed RNS components do not need to be processed, yielding similar performance as typical RNS implementations.
 
 - $\mathsf{Mult}(ct_0, ct_1, l):$ Multiplication of two ciphertexts $ct_0 := (ct_0[0], ct_0[1])$, $ct_1 := (ct_1[0], ct_1[1])$ at the same multiplicative level $l$ goes as follows. First a *pre-multiplication* performs a polynomial multiplication
 
-	$$
-		(d_0, d_1, d_2) := (ct_0[0] \cdot ct_1[0], ct_0[0] \cdot ct_1[1] + ct_1[0] \cdot ct_0[1], ct_0[1] \cdot ct_1[1]) \in R_q^3.
-	$$ 
+	<div class="math-wide">
+	$$ (d_0, d_1, d_2) := (ct_0[0] \cdot ct_1[0], ct_0[0] \cdot ct_1[1] + ct_1[0] \cdot ct_0[1], ct_0[1] \cdot ct_1[1]) \in R_q^3. $$
+	</div>
+
+	<div class="math-narrow">
+	$$\begin{aligned}
+	(d_0, d_1, d_2) := \big(ct_0[0] \cdot ct_1[0], ~~~~~~~~~~~&\\
+	ct_0[0] \cdot ct_1[1] + ct_1[0] \cdot ct_0[1], &\\
+	ct_0[1] \cdot ct_1[1] \big) \in R_q^3. &
+	\end{aligned}$$
+	</div>
 
 	Then, we perform the *key switching* as follows.
 
+	<div class="math-wide">
 	$$
 		D_i := d_i + \langle CRT_{\omega_l}^{-1}(d_2), \mathfrak{evk}_{l,i} \rangle \in R_{q}, \quad i=0,1. 
 	$$
+	</div>
+
+	<div class="math-narrow">
+	$$\begin{aligned}
+	D_i := d_i + \langle CRT_{\omega_l}^{-1}(d_2), &\mathfrak{evk}_{l,i} \rangle \in R_{q},\\ 
+	\text{ for } i=0,1.~&
+	\end{aligned}$$
+	</div>
 
 	Then we *re-scale* $D_0, D_1$ as follows. Let $$p_l^{-1} = \left[q_{l+1}/q_{l}\right]_{q_{j+1} } \cdot z_l \in R_{q}$$. Then compute and output the final ciphertext
 
+	<div class="math-wide">
 	$$
 	c_i := \left( D_i - \left[D_i\right]_{p_l}\right) p^{-1}_l \in R_{q},\quad i=0,1.
 	$$
+	</div>
+
+	<div class="math-narrow">
+	$$\begin{aligned}
+	c_i := \left( D_i - \left[D_i\right]_{p_l}\right) p^{-1}_l \in R_{q},&\\ 
+	\text{ for } i=0,1.~~~~~~~~~~~~~~~&
+	\end{aligned}$$
+	</div>
 
 A detailed noise analysis can be found in the full version of our paper. We omit it here for brevity, but we show that our CKKS incurs *at most* one additional bit of noise. 
 
@@ -190,15 +275,27 @@ Suppose that now we want to multiply the ciphertexts $a$ and $b$. That means tha
 
 Pre-multiplication can be easily expressed as a sequence of arithmetic operations over $R_q$:
 
+<div class="math-wide">
 $$
-(d_0, d_1, d_2):= (a_0 b_0, a_0b_1 + a_1b_0, a_1b_1). \tag{2}
+	(d_0, d_1, d_2):= (a_0 b_0, a_0b_1 + a_1b_0, a_1b_1). \tag{2}
 $$
+</div><div class="math-narrow">
+  $$\begin{aligned}
+  (d_0, d_1, d_2&):= \\
+  (a_0 b_0, &a_0b_1 + a_1b_0, a_1b_1).
+  \end{aligned}\tag{2}$$
+</div>
 
 For the key switching
 
-$$
-D_0 = d_0 + \langle \mathfrak{evk}_0, CRT^{-1}_{\omega_l}(d_2) \rangle, \quad D_1 = d_1 + \langle \mathfrak{evk}_1, CRT^{-1}_{\omega_l}(d_2) \rangle, \tag{3}
-$$
+<div class="math-wide">
+  $$ D_0 = d_0 + \langle \mathfrak{evk}_0, CRT^{-1}_{\omega_l}(d_2) \rangle, \quad D_1 = d_1 + \langle \mathfrak{evk}_1, CRT^{-1}_{\omega_l}(d_2) \rangle, \tag{3} $$
+</div><div class="math-narrow">
+  $$\begin{aligned}
+  D_0 &= d_0 + \langle \mathfrak{evk}_0, CRT^{-1}_{\omega_l}(d_2) \rangle, \\
+  D_1 &= d_1 + \langle \mathfrak{evk}_1, CRT^{-1}_{\omega_l}(d_2) \rangle, 
+  \end{aligned}\tag{3}$$
+</div>
 
 we come across the first obstacle. The term $$\langle \mathfrak{evk}_0$$, $$CRT^{-1}_{\omega_l}(d_2) \rangle$$ involves expressing $d_2$ with respect to the RNS basis $$\omega_l$$, which is not an arithmetic operation. Instead of proving the decomposition, we let the prover give the verifier the outcome of the decomposition. In other words, the prover sends inputs $$w_{ks, 0}, \dots, w_{ks, l} \in R_q$$ satisfying
 
@@ -215,15 +312,31 @@ $$
 which means that they are bounded by the RNS primes of the basis $\omega_l$ (remember we are at level $l$). In other words, (4) and (5) prove that the new inputs are indeed the CRT decomposition of $d_2$, and thus they can be used in (2) to compute the values $D_i$'s and continue the computation.
 Next is modulus switching
 
-$$
-c_0 = (D_0 + [D_0]_{p_l})\cdot p_l^{-1}, \quad c_1 = (D_1 + [D_1]_{p_l})\cdot p_l^{-1}.
-$$
+
+<div class="math-wide">
+	$$
+	c_0 = (D_0 + [D_0]_{p_l})\cdot p_l^{-1}, \quad c_1 = (D_1 + [D_1]_{p_l})\cdot p_l^{-1}.
+	$$
+</div><div class="math-narrow">
+	$$\begin{aligned}
+	c_0 &= (D_0 + [D_0]_{p_l})\cdot p_l^{-1},\\
+	c_1 &= (D_1 + [D_1]_{p_l})\cdot p_l^{-1}.
+	\end{aligned}$$
+</div>
+
 
 Note that this is just a component-wise Euclidean division of $D_i$ by $p_l$. Using the same strategy as above, we let the prover introduce values $w_{quo, 0}, w_{quo, 1}$ and $w_{rmd, 0}, w_{rmd, 1}$ and prove that these are the quotients and remainders for the above equations. Specifically, the prover shows that
 
-$$
-D_i = p_l \cdot w_{quo, i} + w_{rmd, i}, \quad i = 0,1, \tag{6}
-$$
+<div class="math-wide">
+	$$
+	D_i = p_l \cdot w_{quo, i} + w_{rmd, i}, \quad i = 0,1, \tag{6}
+	$$
+</div><div class="math-narrow">
+	$$\begin{aligned}
+	D_i = p_l \cdot w_{quo, i} + w_{rmd, i},&\\ 
+	\text{ for } i=0,1.~~~~~~~~~&
+	\end{aligned}\tag{6}$$
+</div>
 
 and
 
@@ -239,6 +352,7 @@ $$
 
 Putting (2), (3), (4) and (6) together, these are equivalent to the following arithmetic circuit satisfiability relation over $R_q$:
 
+<div class="math-wide">
 $$
 \begin{cases}
 p_l \cdot w_{quo, 0} + w_{rmd, 0} - a_0b_0 - \sum_{i=0}^l \mathfrak{evk}_0[i]\cdot w_{ks, i}\\
@@ -246,6 +360,21 @@ p_l \cdot w_{quo, 1} + w_{rmd, 1} - a_0b_1 - a_1b_0 - \sum_{i=0}^l \mathfrak{evk
 d_2 - \sum_{i=0}^l PW_{\omega_l}(1)[i] \cdot w_{ks, i} = 0
 \end{cases}
 $$
+</div><div class="math-narrow">
+$$
+\begin{cases}
+\begin{aligned}
+p_l \cdot w_{quo, 0} &+ w_{rmd, 0} - a_0b_0 \\
+&~~~~~ - \sum_{i=0}^l \mathfrak{evk}_0[i]\cdot w_{ks, i}
+\end{aligned}\\
+\begin{aligned}
+p_l \cdot w_{quo, 1} &+ w_{rmd, 1} - a_0b_1 - a_1b_0 \\
+&~~~~~ -\sum_{i=0}^l \mathfrak{evk}_1[i]\cdot w_{ks, i}
+\end{aligned}\\
+d_2 - \sum_{i=0}^l PW_{\omega_l}(1)[i] \cdot w_{ks, i} = 0
+\end{cases}
+$$
+</div>
 
 and $l+5$ range check relations over $R_q$:
 
