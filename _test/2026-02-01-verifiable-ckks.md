@@ -169,10 +169,10 @@ Letting $Q_{i} = q_L/p_i$ and $$\hat{Q}_{i} = \left[(q_L/p_i)^{-1}\right]_{p_i}$
 For each $0 \leq j \leq L$, the CRT recomposition vector for a given $a \in R_{q}$ is:
 
 <div class="math-wide">
-	$$ PW_{\omega_{j}}(a) := \left(\left[ aQ_{0}\hat{Q}_{0} \right]_{q}, \left[ aQ_{1}\hat{Q}_{1} \right]_{q}, \dots, \left[ aQ_{j}\hat{Q}_{j} \right]_{q} \right) \in R_q^{j+1} $$
+	$$ PW_{\omega_{j}}(a) := \left(\left[ aQ_{0}\hat{Q}_{0} \right]_{q}, \left[ aQ_{1}\hat{Q}_{1} \right]_{q}, \dots, \left[ aQ_{j}\hat{Q}_{j} \right]_{q} \right) \in R_q^{j+1}.$$
 </div><div class="math-narrow">
 	$$\begin{aligned} 
-	PW_{\omega_{j}}(a) := \bigg( &\left[ aQ_{0}\hat{Q}_{0} \right]_{q}, \left[ aQ_{1}\hat{Q}_{1} \right]_{q},\\ &\dots, \left[ aQ_{j}\hat{Q}_{j} \right]_{q} \bigg) \in R_q^{j+1}
+	PW_{\omega_{j}}(a) := \bigg( &\left[ aQ_{0}\hat{Q}_{0} \right]_{q}, \left[ aQ_{1}\hat{Q}_{1} \right]_{q},\\ &\dots, \left[ aQ_{j}\hat{Q}_{j} \right]_{q} \bigg) \in R_q^{j+1}.
 	\end{aligned}$$
 </div>
 
@@ -198,11 +198,11 @@ We are ready to describe the algorithms defining our proof-friendly version of C
 Compute $b_i = - a_i \cdot s + e_i + PW_{\omega_{L}}(s^2)[i]$ $\bmod q$. For each level $l \in \{ 0, \dots, D - 1\}$, compute
 
 <div class="math-wide">
-	$$\mathfrak{evk}_l := (\mathfrak{evk}_{l,0}, \mathfrak{evk}_{l,1}) \leftarrow \left( (z_l b_i)_{i=0, \dots, l}, (z_l a_i)_{i=0, \dots, l} \right) \in \left( R_{q}^2 \right)^{l+1}$$
+	$$\mathfrak{evk}_l := (\mathfrak{evk}_{l,0}, \mathfrak{evk}_{l,1}) \leftarrow \left( (z_l b_i)_{i=0, \dots, l}, (z_l a_i)_{i=0, \dots, l} \right) \in \left( R_{q}^2 \right)^{l+1}.$$
 </div><div class="math-narrow">
 	$$\begin{aligned}
 	\mathfrak{evk}_l &:= (\mathfrak{evk}_{l,0}, \mathfrak{evk}_{l,1}) \\
-	\leftarrow& \left( (z_l b_i)_{i=0, \dots, l}, (z_l a_i)_{i=0, \dots, l} \right) \in \left( R_{q}^2 \right)^{l+1}
+	\leftarrow& \left( (z_l b_i)_{i=0, \dots, l}, (z_l a_i)_{i=0, \dots, l} \right) \in \left( R_{q}^2 \right)^{l+1}.
 	\end{aligned}$$
 </div>
 
@@ -333,8 +333,8 @@ Note that this is just a component-wise Euclidean division of $D_i$ by $p_l$. Us
 	$$
 </div><div class="math-narrow">
 	$$\begin{aligned}
-	D_i = p_l \cdot w_{quo, i} + w_{rmd, i},&\\ 
-	\text{ for } i=0,1.~~~~~~~~~&
+	D_i = p_l \cdot w_{quo, i} &+ w_{rmd, i}, \\
+	i = 0,& 1, 
 	\end{aligned}\tag{6}$$
 </div>
 
@@ -355,9 +355,9 @@ Putting (2), (3), (4) and (6) together, these are equivalent to the following ar
 <div class="math-wide">
 $$
 \begin{cases}
-p_l \cdot w_{quo, 0} + w_{rmd, 0} - a_0b_0 - \sum_{i=0}^l \mathfrak{evk}_0[i]\cdot w_{ks, i}\\
-p_l \cdot w_{quo, 1} + w_{rmd, 1} - a_0b_1 - a_1b_0 - \sum_{i=0}^l \mathfrak{evk}_1[i]\cdot w_{ks, i}\\
-d_2 - \sum_{i=0}^l PW_{\omega_l}(1)[i] \cdot w_{ks, i} = 0
+p_l \cdot w_{quo, 0} + w_{rmd, 0} - a_0b_0 - \sum_{i=0}^l \mathfrak{evk}_0[i]\cdot w_{ks, i} = 0,\\
+p_l \cdot w_{quo, 1} + w_{rmd, 1} - a_0b_1 - a_1b_0 - \sum_{i=0}^l \mathfrak{evk}_1[i]\cdot w_{ks, i} = 0,\\
+d_2 - \sum_{i=0}^l PW_{\omega_l}(1)[i] \cdot w_{ks, i} = 0,
 \end{cases}
 $$
 </div><div class="math-narrow">
@@ -365,13 +365,13 @@ $$
 \begin{cases}
 \begin{aligned}
 p_l \cdot w_{quo, 0} &+ w_{rmd, 0} - a_0b_0 \\
-&~~~~~ - \sum_{i=0}^l \mathfrak{evk}_0[i]\cdot w_{ks, i}
+&~~ - \sum_{i=0}^l \mathfrak{evk}_0[i]\cdot w_{ks, i} = 0,
 \end{aligned}\\
 \begin{aligned}
 p_l \cdot w_{quo, 1} &+ w_{rmd, 1} - a_0b_1 - a_1b_0 \\
-&~~~~~ -\sum_{i=0}^l \mathfrak{evk}_1[i]\cdot w_{ks, i}
+&~~ -\sum_{i=0}^l \mathfrak{evk}_1[i]\cdot w_{ks, i} = 0,
 \end{aligned}\\
-d_2 - \sum_{i=0}^l PW_{\omega_l}(1)[i] \cdot w_{ks, i} = 0
+d_2 - \sum_{i=0}^l PW_{\omega_l}(1)[i] \cdot w_{ks, i} = 0,
 \end{cases}
 $$
 </div>
@@ -379,11 +379,11 @@ $$
 and $l+5$ range check relations over $R_q$:
 
 $$
-\Vert w_{ks, 0} \Vert < p_0, \dots, \Vert w_{ks, l} \Vert < p_l
+\Vert w_{ks, 0} \Vert < p_0, \dots, \Vert w_{ks, l} \Vert < p_l,
 $$
 
 $$
-\Vert w_{rmd,0} \Vert, \Vert w_{rmd,1} \Vert  < p_l
+\Vert w_{rmd,0} \Vert, \Vert w_{rmd,1} \Vert  < p_l,
 $$
 
 $$

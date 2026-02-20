@@ -260,4 +260,9 @@ Run Docker application. Then in the terminal, try
 docker compose pull
 docker compose up
 ```
+
+Check http://localhost:8080.
+Also try `toggle device toolbar` in Chrome, for mobile visibility check. 
+Long equations shall be avoided, but you can manually make them look okay.
+See `2026-02-01-verifiable-ckks` for a reference.
 -->
