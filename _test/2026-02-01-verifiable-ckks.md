@@ -300,7 +300,7 @@ For the key switching
 we come across the first obstacle. The term $$\langle \mathfrak{evk}_0$$, $$CRT^{-1}_{\omega_l}(d_2) \rangle$$ involves expressing $d_2$ with respect to the RNS basis $$\omega_l$$, which is not an arithmetic operation. Instead of proving the decomposition, we let the prover give the verifier the outcome of the decomposition. In other words, the prover sends inputs $$w_{ks, 0}, \dots, w_{ks, l} \in R_q$$ satisfying
 
 $$
-d_2 = \sum_{i=0}^l PW_{\omega_l}(1)[i] \cdot w_{ks, i} \tag{4}
+d_2 = \sum_{i=0}^l PW_{\omega_l}(1)[i] \cdot w_{ks, i}, \tag{4}
 $$
 
 that is to say, they recompose to $d_2$ under the CRT map, and 
