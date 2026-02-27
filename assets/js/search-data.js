@@ -49,7 +49,7 @@ ninja.data = [{
         
           title: "Homomorphic Encryption for Data Science",
         
-        description: "TL;DR: We introduce a new high-precision CKKS bootstrapping method. It leverages a novel Integer Cleaning strategy inspired by the Discrete CKKS technique and is implemented using the Grafting technique. We highlight its main building blocks and discuss its efficiency.",
+        description: "TL;DR: FHE has advanced significantly since its introduction fifteen years ago, yet it remains challenging to use efficiently. We examine methods addressing three of the major challenges faced by cryptographers and data scientists face when using FHE: data packing; polynomial approximations and data traversal.",
         section: "Posts",
         handler: () => {
           
