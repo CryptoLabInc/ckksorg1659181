@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/software/";
           },
-        },{id: "post-orion-a-fully-homomorphic-encryption-framework-for-deep-learning",
+        },{id: "post-verifiable-computation-for-ckks",
+        
+          title: "Verifiable Computation for CKKS",
+        
+        description: "TL;DR: Homomorphic Encryption (HE) enables computing over encrypted data but, by itself, provides no guarantees that the computation was honestly executed. One can build &quot;Verifiable HE&quot; (vHE) using SNARKs, but efficiently combining HE and SNARKs in practice is a major challenge. This work introduces a blueprint for building verifiable HE schemes and its efficient instantiation for CKKS. Our first step is to introduce a &quot;proof-friendly&quot; version of CKKS, which is more amenable to proof systems, while being only slightly slower than typical RNS CKKS implementations. We then show how the problem of proving correctness of computations for such proof-friendly HE schemes can be reduced to just two sets of arithmetic relations (containing equalities and inequalities). We show that if these are satisfied, it implies the correct execution of the HE evaluation. We design Polynomial Interactive Oracle Proofs (PIOPs) for efficiently proving these relations, and we show how they can be instantiated using standard proof components. Our final construction demonstrates the feasibility of building SNARKs for proving computation of full-fledged HE schemes, opening the path for building practical verifiable HE schemes.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/verifiable-ckks/";
+          
+        },
+      },{id: "post-orion-a-fully-homomorphic-encryption-framework-for-deep-learning",
         
           title: "Orion: A Fully Homomorphic Encryption Framework for Deep Learning",
         
@@ -156,12 +167,7 @@ ninja.data = [{
           section: "News",},{id: "news-keewoo-lee-is-phasing-out-his-role-as-a-co-editor-may-2025-jan-2026-we-are-deeply-grateful-for-his-dedication-from-the-very-beginning",
           title: 'Keewoo Lee is phasing out his role as a co-editor (May 2025 –...',
           description: "",
-          section: "News",},{id: "test-verifiable-computation-for-ckks",
-          title: 'Verifiable Computation for CKKS',
-          description: "TL;DR: Homomorphic Encryption (HE) enables computing over encrypted data but, by itself, provides no guarantees that the computation was honestly executed. One can build &quot;Verifiable HE&quot; (vHE) using SNARKs, but efficiently combining HE and SNARKs in practice is a major challenge. This work introduces a blueprint for building verifiable HE schemes and its efficient instantiation for CKKS. Our first step is to introduce a &quot;proof-friendly&quot; version of CKKS, which is more amenable to proof systems, while being only slightly slower than typical RNS CKKS implementations. We then show how the problem of proving correctness of computations for such proof-friendly HE schemes can be reduced to just two sets of arithmetic relations (containing equalities and inequalities). We show that if these are satisfied, it implies the correct execution of the HE evaluation. We design Polynomial Interactive Oracle Proofs (PIOPs) for efficiently proving these relations, and we show how they can be instantiated using standard proof components. Our final construction demonstrates the feasibility of building SNARKs for proving computation of full-fledged HE schemes, opening the path for building practical verifiable HE schemes.",
-          section: "Test",handler: () => {
-              window.location.href = "/test/2026-02-01-verifiable-ckks/";
-            },},{
+          section: "News",},{
         id: 'social-email',
         title: 'email',
         section: 'Socials',
