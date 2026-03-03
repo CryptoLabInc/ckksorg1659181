@@ -2,7 +2,7 @@
 layout: post
 title: >
   Verifiable Computation for CKKS
-date: 2026-01-01 11:12:00+0200
+date: 2026-03-03 6:01:00+0200
 description: >
   TL;DR: Homomorphic Encryption (HE) enables computing over encrypted data but, by itself, provides no guarantees that the computation was honestly executed. One can build "Verifiable HE" (vHE) using SNARKs, but efficiently combining HE and SNARKs in practice is a major challenge. This work introduces a blueprint for building verifiable HE schemes and its efficient instantiation for CKKS. Our first step is to introduce a "proof-friendly" version of CKKS, which is more amenable to proof systems, while being only slightly slower than typical RNS CKKS implementations. We then show how the problem of proving correctness of computations for such proof-friendly HE schemes can be reduced to just two sets of arithmetic relations (containing equalities and inequalities). We show that if these are satisfied, it implies the correct execution of the HE evaluation. We design Polynomial Interactive Oracle Proofs (PIOPs) for efficiently proving these relations, and we show how they can be instantiated using standard proof components. Our final construction demonstrates the feasibility of building SNARKs for proving computation of full-fledged HE schemes, opening the path for building practical verifiable HE schemes.
 author: Ignacio Cascudo, Anamaria Costache, Daniele Cozzo, Dario Fiore, Antonio Guimarães, Eduardo Soria-Vazquez
@@ -74,7 +74,7 @@ The core contributions of our work are a blueprint for constructing practical vH
 <figure class="figure-class">
     <div class="row mt-3">
         <div class="col-sm-12 mt-3 mt-md-0 mx-auto d-block">
-            {% include figure.liquid loading="eager" path="assets/img/blog/2602_DanieleCozzo/image.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+            {% include figure.liquid loading="eager" path="assets/img/blog/2603_DanieleCozzo/image.png" class="img-fluid rounded z-depth-1" zoomable=true %}
         </div>
     </div>
     <figcaption class="figure-caption" style="text-align: center;">
