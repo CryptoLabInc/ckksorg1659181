@@ -255,12 +255,12 @@ Finally, we conclude by introducing a paper for readers interested in related wo
 [2] Kim, J. "Faster homomorphic integer computer". Cryptology ePrint Archive, Paper
 2025/1440 (2025).
 
-[3] Alexandru, A., Kim, A., Polyakov, Y. "General functional bootstrapping using
+[3] Alexandru, A., Kim, A., and Polyakov, Y. "General functional bootstrapping using
 CKKS." CRYPTO 2025.
 
-[4] Kim, J., Noh, T. "Modular reduction in ckks." CIC 2025.
+[4] Kim, J. and Noh, T. "Modular reduction in ckks." CIC 2025.
 
-[5] Bae, Y., Kim, J., Stehlé, D., Suvanto, E. "Bootstrapping small integers with ckks". ASIACRYPT 2024.
+[5] Bae, Y., Kim, J., Stehlé, D., and Suvanto, E. "Bootstrapping small integers with ckks". ASIACRYPT 2024.
 
-[6] Brakerski, Z., Friedman, O., Golan, D., Gurny, A., Mutzari, D., Sheinfeld, O. "REFHE: Fully Homomorphic ALU." EUROCRYPT 2026
+[6] Brakerski, Z., Friedman, O., Golan, D., Gurny, A., Mutzari, D., and Sheinfeld, O. "REFHE: Fully Homomorphic ALU." EUROCRYPT 2026
 
