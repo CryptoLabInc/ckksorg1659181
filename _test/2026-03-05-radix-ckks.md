@@ -112,7 +112,7 @@ For the unique digit representations of two integers, no digit reduction is need
 
 In practice, for $$B=16$$, multiplying two integers in unique digit representation requires only about 2 to 4 bootstrappings to reduce all digit values below $$2B-1$$, for bit-lengths ranging from 16 bits to 2048 bits. If a larger base $$B$$ is chosen, this number can be reduced even further.
 
-Repeated iteration of LazyCarry reduce the digit size rapidly, making it possible to continue arithmetic operations once the digits become sufficiently small. This is in the same spirit as [2].
+Repeated iterations of LazyCarry reduce the digit size rapidly, making it possible to continue arithmetic operations once the digits become sufficiently small. This is in the same spirit as [2].
 
 <br />
 ### Homomorphic Digit carry
@@ -192,7 +192,7 @@ since zeros do not affect the carry behavior at all.
 After evaluating $$f_k$$, the positions that propagate a carry contain the value $$2$$, while the remaining positions contain $$0$$ or $$1$$. We then evaluate a mapping function $$\tau$$ that converts these values into $$1$$ and $$0$$, respectively. Finally, by applying $$\tau$$ and computing Equation~(1), the carry procedure is completed. We call this overall procedure **LazyCarry-to-Carry**.
 
 <br />
-### Whole Algorith Description
+### Whole Algorithm Description
 <div style="margin-top: 1.5em;"></div>
 
 1. Evaluate Look-up Table $\phi$ :  $$\mathsf{ct}_{\mathsf{bin}} \gets \mathsf{CKKS.FBT}(\mathsf{ct}_{\mathsf{lazycarry}}, \mathsf{LUT}=\phi)$$
@@ -250,17 +250,15 @@ Finally, we conclude by introducing a paper for readers interested in related wo
 ## References
 <div style="margin-top: 1.5em;"></div>
 
-[1] Kim, J. "Efficient homomorphic integer computer from ckks". TCHES 2025.
+[1] Kim, J. "Efficient Homomorphic Integer Computer from CKKS". TCHES 2025.
 
-[2] Kim, J. "Faster homomorphic integer computer". Cryptology ePrint Archive, Paper
-2025/1440 (2025).
+[2] Kim, J. "Faster Homomorphic Integer Computer". Cryptology ePrint Archive, Paper 2025/1440, 2025.
 
-[3] Alexandru, A., Kim, A., and Polyakov, Y. "General functional bootstrapping using
-CKKS." CRYPTO 2025.
+[3] Alexandru, A., Kim, A., and Polyakov, Y. "General Functional Bootstrapping using CKKS." CRYPTO 2025.
 
-[4] Kim, J. and Noh, T. "Modular reduction in ckks." CIC 2025.
+[4] Kim, J. and Noh, T. "Modular Reduction in CKKS." CIC 2025.
 
-[5] Bae, Y., Kim, J., Stehlé, D., and Suvanto, E. "Bootstrapping small integers with ckks". ASIACRYPT 2024.
+[5] Bae, Y., Kim, J., Stehlé, D., and Suvanto, E. "Bootstrapping Small Integers with CKKS". ASIACRYPT 2024.
 
-[6] Brakerski, Z., Friedman, O., Golan, D., Gurny, A., Mutzari, D., and Sheinfeld, O. "REFHE: Fully Homomorphic ALU." EUROCRYPT 2026
+[6] Brakerski, Z., Friedman, O., Golan, D., Gurny, A., Mutzari, D., and Sheinfeld, O. "REFHE: Fully Homomorphic ALU." EUROCRYPT 2026.
 
