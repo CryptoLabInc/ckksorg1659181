@@ -4,7 +4,7 @@ title: >
   RadixCKKS: A General Framework for Integer Computation over CKKS
 date: 2026-03-05 11:12:00-0400
 description: >
-  TL;DR: Radix-based approaches for handling large integers in FHE decompose an integer into small chunks, namely digits. These digits are then encoded as the coefficients of a polynomial, allowing integer arithmetic to be performed via polynomial arithmetic. However, after arithmetic operations, the resulting representation no longer remains unique, which makes it difficult to directly perform non-arithmetic operations such as comparison or bitwise operations. The process of restoring this disturbed digit representation back to a unique form is commonly referred to as digit carry, and this step inherently requires non-arithmetic processing. In this post, we introduce a two-step homomorphic digit carry algorithm that operates over CKKS. This algorithm restores the digit representation to its unique form using $O(\log k)$ bootstrappings.
+  TL;DR: To handle large integers in FHE, a common approach is to decompose an integer into several small pieces, called digits, and perform computations based on them. One such approach is the radix-based approach, which decomposes a large integer into digits in base $B$ and carries out arithmetic on those digits via polynomial operations. However, after arithmetic operations, the resulting representation is no longer unique, which makes it difficult to directly perform non-arithmetic operations such as comparison or bitwise operations. The process of restoring such a disturbed digit representation back to its unique form is commonly called digit carry, and this step inherently requires non-arithmetic processing. In this post, we introduce a two-step homomorphic digit carry algorithm over CKKS. Our algorithm restores the digit representation to its unique form using $O(\log k)$ bootstrappings.
 author: Gyeongwon Cha
 tags: 
 categories: 
@@ -17,7 +17,7 @@ giscus_comments: true
 - Written by [Gyeongwon Cha](https://sites.google.com/view/cau-paiclab/home) (Chung-ang university)
 - Based on [https://ia.cr/2025/1740](https://eprint.iacr.org/2025/1740) (Eurocrypt 2026)
 
-_TL;DR: Radix-based approaches for handling large integers in FHE decompose an integer into small chunks, namely digits. These digits are then encoded as the coefficients of a polynomial, allowing integer arithmetic to be performed via polynomial arithmetic. However, after arithmetic operations, the resulting representation no longer remains unique, which makes it difficult to directly perform non-arithmetic operations such as comparison or bitwise operations. The process of restoring this disturbed digit representation back to a unique form is commonly referred to as digit carry, and this step inherently requires non-arithmetic processing. In this post, we introduce a two-step homomorphic digit carry algorithm that operates over CKKS. This algorithm restores the digit representation to its unique form using $O(\log k)$ bootstrappings._
+_TL;DR: To handle large integers in FHE, a common approach is to decompose an integer into several small pieces, called digits, and perform computations based on them. One such approach is the radix-based approach, which decomposes a large integer into digits in base $B$ and carries out arithmetic on those digits via polynomial operations. However, after arithmetic operations, the resulting representation is no longer unique, which makes it difficult to directly perform non-arithmetic operations such as comparison or bitwise operations. The process of restoring such a disturbed digit representation back to its unique form is commonly called digit carry, and this step inherently requires non-arithmetic processing. In this post, we introduce a two-step homomorphic digit carry algorithm over CKKS. Our algorithm restores the digit representation to its unique form using $O(\log k)$ bootstrappings._
 
 ---
 
@@ -31,7 +31,8 @@ The radix-based approach represents a plaintext integer in base $B$. Once decomp
 
 The main challenge is that while polynomial arithmetic preserves the value of the represented integer, it does not preserve the uniqueness of its digit representation. After arithmetic operations, digit values may exceed their normal range, which in turn causes additional noise growth. More importantly, once the digit representation is no longer unique, non-arithmetic operations such as comparison can no longer be performed directly. Therefore, radix-based approaches must restore the non-unique digit representation to its unique form through digit carry.
 
-This carry procedure, however, has remained a major bottleneck, since it inherently requires remainder computation and must process the digits sequentially. Although [1, 2] achieved homomorphic digit carry using discrete CKKS, the number of required bootstrappings remained linear in the plaintext bit-length $k$, that is, $O(k)$. This naturally leads to the following question: can this linear cost be reduced further?
+This carry procedure, however, has remained a major bottleneck, since it inherently requires remainder computation and must process the digits sequentially. Although [1, 2] achieved homomorphic digit carry using discrete CKKS, the number of required bootstrappings remained linear in the plaintext bit-length $k$. This naturally leads to the following question: can this linear cost be reduced further?
+
 
 <br />
 ## Key idea: reducing carry in base $B$ to carry in base $2$.
@@ -51,7 +52,7 @@ Q_B(z_{i+1} + y_i),
 $
 so the carry process becomes inherently sequential.
 
-However, if every digit is bounded by $2B-1$, then a much simpler structure emerges. In this case, $Q_B(z_i)$ can be at most $1$. Consequently, $z_{i+1}+y_i$ is also at most $2B-1$, and therefore the carry propagated to the next digit is again at most $1$. Intuitively, this makes radix-$B$ carry behave like binary carry, where each position propagates only a single carry bit.
+However, if every digit is smaller than $2B-1$, then a much simpler structure emerges. In this case, $Q_B(z_i)$ can be at most $1$. Consequently, $z_{i+1}+y_i$ is also at most $2B-1$, and therefore the carry propagated to the next digit is again at most $1$. Intuitively, this makes radix-$B$ carry behave like binary carry, where each position propagates only a single carry bit.
 
 At this point, our problem boils down to the following two tasks:
 
@@ -62,16 +63,23 @@ At this point, our problem boils down to the following two tasks:
 ## 2-step carry algorithm
 <div style="margin-top: 1.5em;"></div>
 
+**Notation.**
+We denote homomorphic arithmetic operations between ciphertexts simply as $+,-,\times$.  In addition, we denote the rotation operation by $\rho_r$, which rotates a ciphertext to the left by $r$ positions.  If $r$ is negative, this corresponds to a right rotation.
+
 **Polynomial arithmetic.** Since CKKS supports SIMD-style parallel operations across slots, a different method is needed to realize polynomial arithmetic. We simply use the DFT to evaluate polynomials in Fourier form, and then apply the iDFT to recover the result in coefficient form.
 
 When the plaintext modulus is $$\mathbb{Z}_{B^k}$$, a single integer is packed into $$2k$$ slots: the first $$k$$ slots contain its radix-$$B$$ digits, while the remaining $$k$$ slots are padded with zeros. This zero-padding is introduced to avoid cyclic shifts. Accordingly, after the iDFT step, the lower $$k$$ slots are masked out and reset to zero.
 
-Let the number of CKKS slots be $$N/2$$, and assume that $$2k \mid N/2$$. Then a single ciphertext can store a total of $$N/4k$$ integers, where the packing is obtained by simply concatenating digit vectors of length $$2k$$.
+Let the number of CKKS slots be $$N/2$$, and assume that $$2k \mid (N/2)$$. Then a single ciphertext can store a total of $$N/4k$$ integers, where the packing is obtained by simply concatenating digit vectors of length $$2k$$.
 
-
-**Modular reduction in CKKS.** Modular reduction, as discussed in [3,4], is a key operation in our construction. At a high level, this algorithm first transforms a slot-encoded CKKS ciphertext into coefficient encoding, reduces it modulo the base modulus $$q_0$$, and then applies bootstrapping to recover a slot-encoded CKKS ciphertext.
+**Modular reduction in CKKS.** Modular reduction, as discussed in [3, 4], is a key operation in our construction. At a high level, this algorithm first transforms a slot-encoded CKKS ciphertext into coefficient encoding, reduces it modulo the base modulus $$q_0$$, and then applies bootstrapping to recover a slot-encoded CKKS ciphertext.
 
 The interesting point is that if the ciphertext scaling at level $$q_0$$ is adjusted to $$q_0/B$$, then the resulting ciphertext has exactly the same form as a coefficient-encoded BFV ciphertext with plaintext modulus $$B$$. Consequently, the message naturally undergoes the operation $$[\cdot]_B$$, while requiring only a single bootstrapping. For convenience, we denote the modular reduction algorithm with respect to $$B$$ by $$\mathsf{Mod}_B$$.
+
+**Functional Bootstrapping in CKKS.** Functional bootstrapping [3, 5] in discrete CKKS enables the evaluation of a look-up table (LUT) function, denoted as $\mathsf{LUT}$, simultaneously with the bootstrapping of a ciphertext.  
+
+We denote the functional bootstrapping operation in CKKS by $\mathsf{CKKS.FBT}(\cdot,~\mathsf{LUT} = \cdot)$, where the first argument is the ciphertext to be bootstrapped and the second argument specifies the LUT function.
+
 
 <br />
 ### Homomorphic Digit Reduction
@@ -110,7 +118,7 @@ We call this entire procedure **LazyCarry**.
 
 For the unique digit representations of two integers, no digit reduction is needed after addition. In contrast, after multiplication, invoking LazyCarry $$O(\log k)$$ times suffices to reduce all digit values below $$2B-1$$.
 
-In practice, for $$B=16$$, multiplying two integers in unique digit representation requires only about 2 to 4 bootstrappings to reduce all digit values below $$2B-1$$, for bit-lengths ranging from 16 bits to 2048 bits. If a larger base $$B$$ is chosen, this number can be reduced even further.
+In practice, for $$B=16$$, multiplying two integers in unique digit representation requires only 2 to 4 bootstrappings to reduce all digit values below $$2B-1$$, for bit-lengths ranging from 16 bits to 2048 bits. If a larger base $$B$$ is chosen, this number can be reduced even further.
 
 Repeated iterations of LazyCarry reduce the digit size rapidly, making it possible to continue arithmetic operations once the digits become sufficiently small. This is in the same spirit as [2].
 
@@ -118,11 +126,11 @@ Repeated iterations of LazyCarry reduce the digit size rapidly, making it possib
 ### Homomorphic Digit carry
 <div style="margin-top: 1.5em;"></div>
 
-We now take a closer look at the carry behavior of digit vectors whose entries are all bounded by $$2B-1$$. The figure  illustrates the case $$B=16$$ and $$k=4$$: the top shows carry propagation in base $$B$$, while the bottom shows the corresponding carry behavior after reduction to binary.
+We now take a closer look at the carry behavior of digit vectors whose entries are all smaller than $$2B-1$$. The figure  illustrates the case $$B=16$$ and $$k=4$$: the top shows carry propagation in base $$B$$, while the bottom shows the corresponding carry behavior after reduction to binary.
 
 <div class="row mt-3">
     <div class="col-sm-12 mt-3 mt-md-0 mx-auto d-block">
-        {% include figure.liquid loading="eager" path="assets/img/blog/2026_Gyeongwon/c.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.liquid loading="eager" path="assets/img/blog/2604_Gyeongwon/c.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
 
@@ -131,7 +139,7 @@ Under this constraint, whenever the $$i$$-th digit propagates a value to the nex
 Therefore, if we can obtain a ciphertext encrypting a vector $\vec c$ whose entries indicate whether each digit propagates a carry to the next position—encoded as $1$ for true and $0$ for false—then the unique carried representation of the original digit vector $\vec z$ can be computed as follows : 
 
 $$
-z_{\mathsf{carried}} = \vec z - B\cdot\vec c + \rho_{-1}(\vec c)
+z_{\mathsf{carried}} = \vec z - B\cdot\vec c + \rho_{-1}(\vec c) \tag{1}
 $$
 
 For example, in the figure, $\vec c = (1,1,1,0)$.
@@ -167,9 +175,11 @@ $$
 
 We then extend this to a $$k$$-digit vector $$(z_1,\dots,z_k)$$. The question of whether $$z_k$$ propagates a carry to the next position (the case $$i<k$$ will be discussed shortly) can be expressed recursively using rotations via the function $$f_k$$:
 
-$$
-f_k(z_1,\dots,z_k) = f\bigl(z_1,\, f_{k-1}(z_2,\dots,z_k)\bigr).
-$$
+$$ 
+f_2 = f, \quad
+f_k(z_1,\dots,z_k) = f\bigl(z_1, f_{k-1}(z_2,\dots,z_k)\bigr).
+$$ 
+
 
 At first glance, evaluating $$f_k$$ appears to require $$k$$ sequential calls to $$f$$. However, observing that the structure of $$f$$ is determined by its second argument, one can show that
 
@@ -187,78 +197,94 @@ $$
 f_k(0,\dots,0,m_1,\dots,m_i),
 $$
 
-since zeros do not affect the carry behavior at all.
+since zeros do not affect the carry behavior at all. The figure below illustrates the evaluation of $f_k$ for $k = 4$.
+<div class="row mt-3">
+    <div class="col-sm-12 mt-3 mt-md-0 mx-auto d-block">
+        {% include figure.liquid loading="eager" path="assets/img/blog/2604_Gyeongwon/lc2c.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
 
-After evaluating $$f_k$$, the positions that propagate a carry contain the value $$2$$, while the remaining positions contain $$0$$ or $$1$$. We then evaluate a mapping function $$\tau$$ that converts these values into $$1$$ and $$0$$, respectively. Finally, by applying $$\tau$$ and computing Equation~(1), the carry procedure is completed. We call this overall procedure **LazyCarry-to-Carry**.
+After evaluating $$f_k$$, the positions that propagate a carry contain the value $$2$$, while the remaining positions contain $$0$$ or $$1$$. We then evaluate a mapping function $$\tau$$ that converts these values into $$1$$ and $$0$$, respectively. Finally, by applying $$\tau$$ and evaluating Equation (1), the carry procedure is completed. We call this overall procedure **LazyCarry-to-Carry**.
 
 <br />
 ### Whole Algorithm Description
 <div style="margin-top: 1.5em;"></div>
+The overall procedure of our two-step homomorphic carry algorithm is as follows.  
+Let $\mathsf{ct}$ be a ciphertext that requires digit carry propagation.  
+We assume that an upper bound on the corresponding digit vector of $\mathsf{ct}$ can be estimated.  
+Given this bound, let $t$ denote the number of times the **LazyCarry** algorithm is applied to ensure that each digit becomes smaller than $2B - 1$.
 
-1. Evaluate Look-up Table $\phi$ :  $$\mathsf{ct}_{\mathsf{bin}} \gets \mathsf{CKKS.FBT}(\mathsf{ct}_{\mathsf{lazycarry}}, \mathsf{LUT}=\phi)$$
-2. Evaluate $f_k$ : For $i=0$ to $\log (k)$ do \{ $$\mathsf{ct_{sym}}\gets$$ Evaluate $f(\mathsf{ct_{sym}}, \rho_{2^{-i}}(\mathsf{ct_{sym}}))$\}
-3. Evaluate $\tau$ : $$ \mathsf{ct}_c \gets  \tau(\mathsf{ct_{sym}})$$
-4. Return $$\mathsf{ct_{out}}\gets \mathsf{ct_{lazycarry}} - B\cdot \mathsf{ct}_c + \rho_{-1}(\mathsf{ct}_c)$$
+For example, consider a 64-bit multiplication with parameters $(B,k) = (2^4, 16)$.  
+When multiplying two unique digit representations, the resulting upper bound is given by
+$$
+k(B-1)^2 = 3600.
+$$
+In this case, two iterations of **LazyCarry** are sufficient.
 
-Our algorithm performs one bootstrapping in Step 1 and invokes additional bootstrappings in Step 2. The extra bootstrappings in Step 2 arise in two cases: (1) when the remaining multiplicative depth is insufficient to evaluate the function $$f_k$$, or (2) when bootstrapping is needed for noise management. Despite these additional calls, their number remains modest in practice. The actual number of bootstrapping calls is reported in the Conclusion section.
+1. Repeat **LazyCarry** $t$ times : $$\mathsf{ct}_{\mathsf{lazycarry}} \gets \mathsf{LazyCarry}^{(t)}(\mathsf{ct})$$
+
+2. Evaluate the look-up table $\phi$ via functional bootstrapping :  $$\mathsf{ct}_{\mathsf{bin}} \gets \mathsf{CKKS.FBT}(\mathsf{ct}_{\mathsf{lazycarry}}, \mathsf{LUT}=\phi)$$
+
+3. Evaluate $f_k$ : For $i=0$ to $\log(k)$ do \{$$\mathsf{ct}_{\mathsf{bin}} \gets \text{evaluate } f(\rho_{-2^i}(\mathsf{ct}_{\mathsf{bin}}), \mathsf{ct}_{\mathsf{bin}})$$\}
+
+4. Evaluate $\tau$ : $$\mathsf{ct}' \gets \tau(\mathsf{ct}_{\mathsf{bin}})$$
+
+5. Return $$\mathsf{ct}_{\mathsf{out}} \gets \mathsf{ct}_{\mathsf{lazycarry}} - B\cdot \mathsf{ct}' + \rho_{-1}(\mathsf{ct}')$$
+
+Our algorithm performs \(t\) bootstrappings in Step 1, one bootstrapping in Step 2, and additional bootstrappings in Step 3. The extra bootstrappings in Step 3 arise in two cases: (1) when the remaining multiplicative depth is insufficient to evaluate the function \(f_k\), or (2) when bootstrapping is required for noise management. Despite these additional calls, the total number of bootstrappings remains modest in practice. The exact number of bootstrapping calls is reported in the Conclusion section.
 
 
 <br />
-## Another Operation
+## Other integer operations
 <div style="margin-top: 1.5em;"></div>
-
-Because the digit vector can be restored to its unique representation, one can further design non-arithmetic operations such as comparison, subtraction, and conditional subtraction. Moreover, by using the bit-extraction technique of [5], each digit can be decomposed into bits, thereby enabling bitwise operations as well. These non-arithmetic operations can in turn be used to homomorphically implement reduction techniques such as folding and Montgomery reduction, thereby supporting computation not only over prime-power moduli but also over more general moduli. Although we would have liked to discuss these non-arithmetic operations in this post as well, we refer the interested reader to the paper for further details.
+Because the digit vector can be restored to its unique representation, one can further design non-arithmetic operations such as comparison and conditional subtraction. Moreover, by using the bit-extraction technique of [5], each digit can be decomposed into bits, thereby enabling bitwise operations as well. These non-arithmetic operations can in turn be used to homomorphically implement reduction techniques such as folding and Montgomery reduction, thereby supporting computation not only over prime-power moduli but also over more general moduli. Although we would have liked to discuss these non-arithmetic operations in this post as well, we refer the interested reader to the paper for further details.
 
 
 <br />
 ## Conclusion
 <div style="margin-top: 1.5em;"></div>
+All experiments were conducted on an AMD Ryzen 9 7900X 12-Core Processor with 125 GB RAM, running Ubuntu 20.04, using a single thread. We used the Lattigo library, a representative RNS-CKKS library, for our implementation.
 
-We evaluated multiplication operations for bit-lengths ranging from 16 bits to 2048 bits. In the third column, $$a+b$$ means that $$a$$ bootstrappings were used in LazyCarry and $$b$$ bootstrappings were used in LazyCarry-to-Carry.
+We evaluated multiplication operations for bit-lengths ranging from 16 bits to 2048 bits. In the third column, \(a+b\) indicates that \(a\) bootstrappings were used in LazyCarry and \(b\) bootstrappings were used in LazyCarry-to-Carry.
 
 <div class="row mt-3">
     <div class="col-sm-12 mt-3 mt-md-0 mx-auto d-block">
-        {% include figure.liquid loading="eager" path="assets/img/blog/2026_Gyeongwon/2.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.liquid loading="eager" path="assets/img/blog/2604_Gyeongwon/2.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
 
 To be completely honest, a single multiplication still took a considerable amount of time. Even though our method processes many integers at once, the total runtime is by no means small.
 
-At first glance, BFV may appear more attractive, since homomorphic multiplication can be carried out simply by invoking the scheme’s native multiplication primitive. However, the main bottleneck in BFV lies in bootstrapping, whose runtime can in some cases exceed that of our entire multiplication procedure. In other words, the relevant comparison is not just raw multiplication speed, but rather
+At first glance, BFV may appear more attractive, as homomorphic multiplication can be performed simply by invoking the scheme’s native multiplication primitive. However, the main bottleneck of BFV lies in bootstrapping, whose runtime may exceed that of our entire multiplication procedure depending on the plaintext modulus. 
+Therefore, a fair comparison should not be based solely on raw multiplication speed, but rather should account for the cost of BFV bootstrapping.
 
-$$
-\text{(BFV mult depth)} \times (\text{BFV mult time}) + (\text{BFV bootstrapping time})
-$$ 
-
-$$
-\quad\text{vs.}\quad
-$$ 
-
-$$
-\text{(BFV mult depth)} \times (\text{our multiplication time}).
-$$
+For instance, according to Table 4 in [6], BFV bootstrapping with a plaintext modulus of approximately 234 bits at $N = 2^{17}$ takes about 392 seconds. In contrast, our proposed framework enables subsequent computations after a single additional CKKS bootstrapping (approximately 12 seconds).
 
 From an amortized perspective, a more careful comparison is also needed, since the number of available BFV slots depends on the plaintext modulus.
 
 For DM/CGGI, by contrast, our method consistently shows better amortized performance. Interestingly, at the time of writing, our single-thread benchmark on the same machine showed that TFHE-rs required 77.5 seconds for 128-bit multiplication, whereas our method took 57.4 seconds. This indicates that from 128 bits onward, our method outperforms TFHE-rs not only in amortized throughput but also in latency.
 
 Finally, we conclude by introducing a paper for readers interested in related work. While our work focuses on algorithms for performing carry homomorphically, the work introduced below is particularly impressive in that it avoids performing carry altogether.
-- [6] : **REFHE: Fully Homomorphic ALU**
+- [7] : **REFHE: Fully Homomorphic ALU**
 
 
 <br />
 ## References
 <div style="margin-top: 1.5em;"></div>
 
-[1] Kim, J. "Efficient Homomorphic Integer Computer from CKKS". TCHES 2025.
+[1] Kim, J. "Efficient Homomorphic Integer Computer from CKKS." TCHES 2025.
 
-[2] Kim, J. "Faster Homomorphic Integer Computer". Cryptology ePrint Archive, Paper 2025/1440, 2025.
+[2] Kim, J. "Faster Homomorphic Integer Computer." Cryptology ePrint Archive, Paper 2025/1440, 2025.
 
 [3] Alexandru, A., Kim, A., and Polyakov, Y. "General Functional Bootstrapping using CKKS." CRYPTO 2025.
 
 [4] Kim, J. and Noh, T. "Modular Reduction in CKKS." CIC 2025.
 
-[5] Bae, Y., Kim, J., Stehlé, D., and Suvanto, E. "Bootstrapping Small Integers with CKKS". ASIACRYPT 2024.
+[5] Bae, Y., Kim, J., Stehlé, D., and Suvanto, E. "Bootstrapping Small Integers with CKKS." ASIACRYPT 2024.
 
-[6] Brakerski, Z., Friedman, O., Golan, D., Gurny, A., Mutzari, D., and Sheinfeld, O. "REFHE: Fully Homomorphic ALU." EUROCRYPT 2026.
+[6] Kim, J., Seo, J., and Song, Y. "Simpler and Faster BFV Bootstrapping for Arbitrary Plaintext Modulus from CKKS." CCS 2024.
+
+[7] Brakerski, Z., Friedman, O., Golan, D., Gurny, A., Mutzari, D., and Sheinfeld, O. "REFHE: Fully Homomorphic ALU." EUROCRYPT 2026.
+
+
 
