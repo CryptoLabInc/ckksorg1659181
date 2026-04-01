@@ -264,9 +264,7 @@ From an amortized perspective, a more careful comparison is also needed, since t
 
 For DM/CGGI, by contrast, our method consistently shows better amortized performance. Interestingly, at the time of writing, our single-thread benchmark on the same machine showed that TFHE-rs required 77.5 seconds for 128-bit multiplication, whereas our method took 57.4 seconds. This indicates that from 128 bits onward, our method outperforms TFHE-rs not only in amortized throughput but also in latency.
 
-Finally, we conclude by introducing a paper for readers interested in related work. While our work focuses on algorithms for performing carry homomorphically, the work introduced below is particularly impressive in that it avoids performing carry altogether.
-- [7] : **REFHE: Fully Homomorphic ALU**
-
+Finally, we conclude by introducing a paper for readers interested in related work [7]. While our work focuses on algorithms for performing carry homomorphically, the work introduced below is particularly impressive in that it avoids performing carry altogether.
 
 <br />
 ## References
