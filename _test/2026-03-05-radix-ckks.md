@@ -76,13 +76,13 @@ Let the number of CKKS slots be $$N/2$$, and assume that $$2k \mid (N/2)$$. Then
 
 The interesting point is that if the ciphertext scaling at level $$q_0$$ is adjusted to $$q_0/B$$, then the resulting ciphertext has exactly the same form as a coefficient-encoded BFV ciphertext with plaintext modulus $$B$$. Consequently, the message naturally undergoes the operation $$[\cdot]_B$$, while requiring only a single bootstrapping. For convenience, we denote the modular reduction algorithm with respect to $$B$$ by $$\mathsf{Mod}_B$$.
 
-**Functional Bootstrapping in CKKS.** Functional bootstrapping [3, 5] in discrete CKKS enables the evaluation of a look-up table (LUT) function, denoted as $\mathsf{LUT}$, simultaneously with the bootstrapping of a ciphertext.  
+**Functional bootstrapping in CKKS.** Functional bootstrapping [3, 5] in discrete CKKS enables the evaluation of a look-up table (LUT) function, denoted as $\mathsf{LUT}$, simultaneously with the bootstrapping of a ciphertext.  
 
 We denote the functional bootstrapping operation in CKKS by $\mathsf{CKKS.FBT}(\cdot,~\mathsf{LUT} = \cdot)$, where the first argument is the ciphertext to be bootstrapped and the second argument specifies the LUT function.
 
 
 <br />
-### Homomorphic Digit Reduction
+### Homomorphic digit reduction
 <div style="margin-top: 1.5em;"></div>
 
 After arithmetic operations, we repeatedly invoke $$\mathsf{Mod}_B$$ to reduce the digit size. Let the input digit vector be
@@ -123,7 +123,7 @@ In practice, for $$B=16$$, multiplying two integers in unique digit representati
 Repeated iterations of LazyCarry reduce the digit size rapidly, making it possible to continue arithmetic operations once the digits become sufficiently small. This is in the same spirit as [2].
 
 <br />
-### Homomorphic Digit carry
+### Homomorphic digit carry
 <div style="margin-top: 1.5em;"></div>
 
 We now take a closer look at the carry behavior of digit vectors whose entries are all smaller than $$2B-1$$. The figure  illustrates the case $$B=16$$ and $$k=4$$: the top shows carry propagation in base $$B$$, while the bottom shows the corresponding carry behavior after reduction to binary.
@@ -207,7 +207,7 @@ since zeros do not affect the carry behavior at all. The figure below illustrate
 After evaluating $$f_k$$, the positions that propagate a carry contain the value $$2$$, while the remaining positions contain $$0$$ or $$1$$. We then evaluate a mapping function $$\tau$$ that converts these values into $$1$$ and $$0$$, respectively. Finally, by applying $$\tau$$ and evaluating Equation (1), the carry procedure is completed. We call this overall procedure **LazyCarry-to-Carry**.
 
 <br />
-### Whole Algorithm Description
+### Whole algorithm description
 <div style="margin-top: 1.5em;"></div>
 The overall procedure of our two-step homomorphic carry algorithm is as follows.  
 Let $\mathsf{ct}$ be a ciphertext that requires digit carry propagation.  
