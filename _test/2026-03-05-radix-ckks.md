@@ -33,6 +33,8 @@ The main challenge is that while polynomial arithmetic preserves the value of th
 
 This carry procedure, however, has remained a major bottleneck, since it inherently requires remainder computation and must process the digits sequentially. Although [1, 2] achieved homomorphic digit carry using discrete CKKS, the number of required bootstrappings remained linear in the plaintext bit-length $k$. This naturally leads to the following question: can this linear cost be reduced further?
 
+**Notation.**
+Throughout this post, we adopt the following notation for clarity. We denote homomorphic arithmetic operations between ciphertexts simply as $+,-,\times$.  In addition, we denote the rotation operation by $\rho_r$, which rotates a ciphertext to the left by $r$ positions.  If $r$ is negative, this corresponds to a right rotation.
 
 <br />
 ## Key idea: reducing carry in base $B$ to carry in base $2$.
@@ -62,10 +64,6 @@ At this point, our problem boils down to the following two tasks:
 <br />
 ## 2-step carry algorithm
 <div style="margin-top: 1.5em;"></div>
-
-**Notation.**
-We denote homomorphic arithmetic operations between ciphertexts simply as $+,-,\times$.  In addition, we denote the rotation operation by $\rho_r$, which rotates a ciphertext to the left by $r$ positions.  If $r$ is negative, this corresponds to a right rotation.
-
 **Polynomial arithmetic.** Since CKKS supports SIMD-style parallel operations across slots, a different method is needed to realize polynomial arithmetic. We simply use the DFT to evaluate polynomials in Fourier form, and then apply the iDFT to recover the result in coefficient form.
 
 When the plaintext modulus is $$\mathbb{Z}_{B^k}$$, a single integer is packed into $$2k$$ slots: the first $$k$$ slots contain its radix-$$B$$ digits, while the remaining $$k$$ slots are padded with zeros. This zero-padding is introduced to avoid cyclic shifts. Accordingly, after the iDFT step, the lower $$k$$ slots are masked out and reset to zero.
