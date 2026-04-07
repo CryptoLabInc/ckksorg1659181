@@ -2,7 +2,7 @@
 layout: post
 title: >
   RadixCKKS: A General Framework for Integer Computation over CKKS
-date: 2026-04-07 09:00:00+0200
+date: 2026-04-07 6:01:00+0200
 description: >
   TL;DR: To handle large integers in FHE, a common approach is to decompose an integer into several small pieces, called digits, and perform computations based on them. One such approach is the radix-based approach, which decomposes a large integer into digits in base $B$ and carries out arithmetic on those digits via polynomial operations. However, after arithmetic operations, the resulting representation is no longer unique, which makes it difficult to directly perform non-arithmetic operations such as comparison or bitwise operations. The process of restoring such a disturbed digit representation back to its unique form is commonly called digit carry, and this step inherently requires non-arithmetic processing. In this post, we introduce a two-step homomorphic digit carry algorithm over CKKS. Our algorithm restores the digit representation to its unique form using $O(\log k)$ bootstrappings.
 author: Gyeongwon Cha
