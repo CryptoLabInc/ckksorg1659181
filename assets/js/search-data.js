@@ -167,12 +167,7 @@ ninja.data = [{
           section: "News",},{id: "news-keewoo-lee-is-phasing-out-his-role-as-a-co-editor-may-2025-jan-2026-we-are-deeply-grateful-for-his-dedication-from-the-very-beginning",
           title: 'Keewoo Lee is phasing out his role as a co-editor (May 2025 –...',
           description: "",
-          section: "News",},{id: "test-radixckks-a-general-framework-for-integer-computation-over-ckks",
-          title: 'RadixCKKS: A General Framework for Integer Computation over CKKS',
-          description: "TL;DR: To handle large integers in FHE, a common approach is to decompose an integer into several small pieces, called digits, and perform computations based on them. One such approach is the radix-based approach, which decomposes a large integer into digits in base $B$ and carries out arithmetic on those digits via polynomial operations. However, after arithmetic operations, the resulting representation is no longer unique, which makes it difficult to directly perform non-arithmetic operations such as comparison or bitwise operations. The process of restoring such a disturbed digit representation back to its unique form is commonly called digit carry, and this step inherently requires non-arithmetic processing. In this post, we introduce a two-step homomorphic digit carry algorithm over CKKS. Our algorithm restores the digit representation to its unique form using $O(\log k)$ bootstrappings.",
-          section: "Test",handler: () => {
-              window.location.href = "/test/2026-03-05-radix-ckks/";
-            },},{
+          section: "News",},{
         id: 'social-email',
         title: 'email',
         section: 'Socials',
