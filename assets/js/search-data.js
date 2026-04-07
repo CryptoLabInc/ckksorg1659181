@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/software/";
           },
-        },{id: "post-verifiable-computation-for-ckks",
+        },{id: "post-radixckks-a-general-framework-for-integer-computation-over-ckks",
+        
+          title: "RadixCKKS: A General Framework for Integer Computation over CKKS",
+        
+        description: "TL;DR: To handle large integers in FHE, a common approach is to decompose an integer into several small pieces, called digits, and perform computations based on them. One such approach is the radix-based approach, which decomposes a large integer into digits in base $B$ and carries out arithmetic on those digits via polynomial operations. However, after arithmetic operations, the resulting representation is no longer unique, which makes it difficult to directly perform non-arithmetic operations such as comparison or bitwise operations. The process of restoring such a disturbed digit representation back to its unique form is commonly called digit carry, and this step inherently requires non-arithmetic processing. In this post, we introduce a two-step homomorphic digit carry algorithm over CKKS. Our algorithm restores the digit representation to its unique form using $O(\log k)$ bootstrappings.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/radix-ckks/";
+          
+        },
+      },{id: "post-verifiable-computation-for-ckks",
         
           title: "Verifiable Computation for CKKS",
         
