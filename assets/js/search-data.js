@@ -178,6 +178,9 @@ ninja.data = [{
           section: "News",},{id: "news-keewoo-lee-is-phasing-out-his-role-as-a-co-editor-may-2025-jan-2026-we-are-deeply-grateful-for-his-dedication-from-the-very-beginning",
           title: 'Keewoo Lee is phasing out his role as a co-editor (May 2025 –...',
           description: "",
+          section: "News",},{id: "news-guillaume-hanrot-joins-as-new-co-editor",
+          title: 'Guillaume Hanrot joins as new co-editor!',
+          description: "",
           section: "News",},{
         id: 'social-email',
         title: 'email',
