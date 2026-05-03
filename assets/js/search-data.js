@@ -181,7 +181,12 @@ ninja.data = [{
           section: "News",},{id: "news-guillaume-hanrot-joins-as-new-co-editor",
           title: 'Guillaume Hanrot joins as new co-editor!',
           description: "",
-          section: "News",},{
+          section: "News",},{id: "test-modern-construction-of-moduli-chain-in-heaan2",
+          title: 'Modern Construction of Moduli Chain in HEaaN2',
+          description: "TL;DR: Every CKKS computation is built upon a sequence of moduli that predetermines the rescaling amount after each multiplication. A new CKKS library, HEaaN2, generalizes the construction of this parameter with a carefully designed scheme and API set. In this article, we break down the traditional construction of the moduli chain to derive the new one.",
+          section: "Test",handler: () => {
+              window.location.href = "/test/2026-04-25-heaan2-moduli-chain/";
+            },},{
         id: 'social-email',
         title: 'email',
         section: 'Socials',
