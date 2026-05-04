@@ -141,3 +141,45 @@ performs the key switch, then switches the modulus back down to the ciphertext's
 <!-- TODO : Add a link to documentation params construction on HEaaN2 -->
 
 ## Moduli Chain De-Construction
+By far generalizing the idea of the moduli chain, it is natural to question as below.
+
+> Can we construct a CKKS system even without defining a moduli chain?
+
+Recall that the moduli chain was derived from an alternating sequence of multiplication and rescaling.
+To support exotic operation sequences—such as cubic multiplication—a more general system for managing modulus and scale is needed.
+In this section, we specify such a system. Note that this is not a new idea; CKKS has never restricted its operation sequence,
+and what follows is one point in its vast design space.
+
+We begin by letting the domain be all ciphertexts and plaintexts encoded under an arbitrary modulus and scale.
+Write $\mathrm{Enc}_s(m, Q, \Delta)$ for the set of ciphertexts encrypting message $m$ under secret $s$ with modulus $Q$ and scale $\Delta$.
+The elementary CKKS operations are then defined as follows.
+
+- **Addition.** For $ct_1 \in \mathrm{Enc}_s(m_1, Q, \Delta)$ and $ct_2 \in \mathrm{Enc}_s(m_2, Q, \Delta)$,
+  $$\mathrm{Add}(ct_1, ct_2) \in \mathrm{Enc}_s(m_1 + m_2,\; Q,\; \Delta).$$
+- **Multiplication.** For $ct_1 \in \mathrm{Enc}_s(m_1, Q, \Delta_1)$ and $ct_2 \in \mathrm{Enc}_s(m_2, Q, \Delta_2)$,
+  $$\mathrm{Mul}(ct_1, ct_2) \in \mathrm{Enc}_s(m_1 \cdot m_2,\; Q,\; \Delta_1 \cdot \Delta_2).$$
+- **Scalar-Multiplication.** For $ct_1 \in \mathrm{Enc}_s(m_1, Q, \Delta_1)$, $c_2 \in \mathbb{C}$ and $\Delta_2$,
+  $$\mathrm{SMul}(ct_1, c_2, \Delta_2) \in \mathrm{Enc}_s(m_1 \cdot c_2,\; Q,\; \Delta_1 \cdot \Delta_2).$$
+- **Rescaling.** For $ct \in \mathrm{Enc}_s(m, Q, \Delta)$ and a modulus $Q_{to}$,
+  $$\mathrm{Rescale}(ct, Q_{to}) \in \mathrm{Enc}_s(m, Q_{to}, \frac{\Delta}{\frac{Q / Q_{to}}}).$$
+
+Note that multiplication can be decomposed into tensor product and relinearization, but we omit the details here.
+Likewise, scalar-multiplication is a concatenation of encoding $c_2$ at scale $\Delta_2$ and multiplying.
+
+The operations above correspond one-to-one with ordinary leveled-CKKS operations
+and suffice to reproduce every leveled-CKKS usage on their own.
+However, additional primitives exist that enable CKKS circuits beyond what a fixed chain can express.
+- **Setting Scale.** For $ct \in \mathrm{Enc}_s(m, Q, \Delta)$ and a new scale $\Delta_{to}$,
+  $$\mathrm{SetScale}(ct, \Delta_{to}) \in \mathrm{Enc}_s(m \cdot \Delta / \Delta_{to},\; Q,\; \Delta_{to}).$$
+  This reinterprets the scale without modifying the underlying polynomial.
+- **Adjusting.** For $ct \in \mathrm{Enc}_s(m, Q, \Delta)$, a target modulus $Q_{to}$ and target scale $\Delta_{to}$,
+  $$\mathrm{Adjust}(ct, Q_{to}, \Delta_{to}) \in \mathrm{Enc}_s(m,\; Q_{to},\; \Delta_{to}).$$
+  This switches the modulus and scale while preserving the message.
+
+Adjust may seem unfamiliar, but it is essentially a scalar-multiplication that compensates the modulus ratio, followed by a rescaling.
+Although the operation offers considerable flexibility, it remains precise only when $Q_{to}$ is sufficiently smaller than $Q$.
+
+The deconstructed system is flexible, but flexibility alone does not imply user-convenience;
+the absence of a moduli chain forces the user to manage modulus and scale manually.
+In practice, the chain-free primitives are most useful alongside the ordinary ones:
+run standard leveled operations within a chain, and invoke non-leveled operations only to transfer between chains or to execute a specially optimized sub-circuit.
