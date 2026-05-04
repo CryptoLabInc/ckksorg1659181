@@ -34,7 +34,7 @@ then present a modern construction as implemented in HEaaN2.
 Finally, we deconstruct the idea to suggest an extended, chain-free CKKS API set.
 
 ## Traditional Construction of Moduli Chain and Its Limits
-An early-stage model of the moduli chain is presented in the original RNS-CKKS paper.
+An early-stage model of the moduli chain is presented in the original RNS-CKKS paper[^1].
 Throughout this article, let _level_ denote multiplicative depth.
 - Gather $q_i$ to be similar to each other.
 - Let the initial modulus $Q = \prod_{i = 1}^\ell q_i$.
@@ -47,10 +47,10 @@ A more precise variant can be obtained by modifying the scale management as foll
 - Let the scale differ for each level, following the recurrence $\frac{\Delta_i^2}{q_i} = \Delta_{i-1}$.
 - Choose $q_i$ appropriately to make $\Delta_{i-1}$ close to the desired value.
 
-This simple, user-familiar model was adopted in the initial designs of many CKKS libraries, including Lattigo, OpenFHE, and HEaaN.
+This simple, user-familiar model was adopted in the initial designs of many CKKS libraries, including Lattigo[^2], OpenFHE[^3], and HEaaN[^4].
 Over time, each implementation improved the model independently to overcome its natural limitations.
 
-As recognized in prior works (BitPacker, Grafting),
+As recognized in prior works (BitPacker[^5], Grafting[^6]),
 the core limitation is the coupling between the RNS system and the rescaling amount (roughly, the scaling factor).
 The rescaling amount, set to be close to $q_i$ or $\Delta_i$,
 cannot be freely chosen because $q_i$ is a single prime and primes are not conveniently distributed.
@@ -74,19 +74,19 @@ A short formalization of the model is as follows.
 Since $Q_i / Q_{i-1}$ is no longer restricted to a single NTT-friendly prime, the rescaling amount can be chosen much more freely.
 The model is suggested and instantiated in distinct forms by different implementations.
 
-HElib was the first to propose a generalized construction, doing so from the very beginning of its design.
+HElib[^7] was the first to propose a generalized construction, doing so from the very beginning of its design.
 It manages _small primes_ alongside the normal primes,
 which are primes dedicated to handle fine-grained adjustement of modulus.
 These _small primes_ are precomputed for a target bit resolution,
 enabling construction of $Q_i$ at an arbitrary multiple of that resolution.
 
-BitPacker conceptualizes the CKKS adjusting and rescaling operations
+BitPacker[^5] conceptualizes the CKKS adjusting and rescaling operations
 and proposes a greedy algorithm to construct a modulus of arbitrary desired bit size.
 Like HElib, BitPacker separates _terminal residues_ from non-terminal residues,
 but allows variable-length _terminal residues_,
 whereas HElib's _small primes_ always occupy up to two machine words.
 
-Grafting formalizes the correctness of CKKS adjusting and rescaling,
+Grafting[^6] formalizes the correctness of CKKS adjusting and rescaling,
 and identifies a key-switching problem in generalized moduli chains:
 a switching key must be constructed over the LCM of all chain entries,
 unless multiple switching keys are instantiated at additional memory cost.
@@ -94,7 +94,7 @@ To address this, Grafting introduces the _sprout_, whose divisor can have an arb
 thereby limiting the LCM of the moduli and reducing key size.
 See the [article on Grafting](https://ckks.org/blog/2025/grafting/) for more details.
 
-Cheddar utilizes a middle ground between HElib and BitPacker to maximize performance.
+Cheddar[^8] utilizes a middle ground between HElib and BitPacker to maximize performance.
 In its _25-30 prime system_, the RNS system consists of many 30-bit primes and a few 25-bit primes.
 The 25-bit primes are precomputed to provide a predefined resolution as in HElib,
 while occupying a variable number of words as in BitPacker.
@@ -183,3 +183,15 @@ The deconstructed system is flexible, but flexibility alone does not imply user-
 the absence of a moduli chain forces the user to manage modulus and scale manually.
 In practice, the chain-free primitives are most useful alongside the ordinary ones:
 run standard leveled operations within a chain, and invoke non-leveled operations only to transfer between chains or to execute a specially optimized sub-circuit.
+
+<br />
+## References
+
+[^1]: J. H. Cheon, K. Han, A. Kim, M. Kim, and Y. Song. ["A Full RNS Variant of Approximate Homomorphic Encryption."](https://ia.cr/2018/931) SAC 2018. 
+[^2]: Jean-Philippe Bossuat et al. ["A library for lattice-based homomorphic encryption in Go."](https://github.com/tuneinsight/lattigo) 
+[^3]: A. Al Badawi, J. Bates, F. Bergamaschi, et al. ["OpenFHE: Open-Source Fully Homomorphic Encryption Library."](https://ia.cr/2022/915) WAHC 2022. 
+[^4]: CryptoLab Inc. ["HEaaN Library."](https://heaan.it/) 
+[^5]: N. Samardzic and D, Sanchez. ["Bitpacker: Enabling high arithmetic efficiency in fully homomorphic encryption accelerators."](https://dl.acm.org/doi/10.1145/3620665.3640397) ASPLOS 2024. 
+[^6]: J. H. Cheon, H. Choe, M. Kang, J. Kim, S. Kim, J. Mono, and T. Noh. ["Grafting: Decoupled Scale Factors and Modulus in RNS-CKKS."](https://ia.cr/2024/1014) ACM CCS 2025. 
+[^7]: S. Halevi and V. Shoup. ["Design and implementation of {HElib}: a homomorphic encryption library."](https://ia.cr/2020/1481) 
+[^8]: W. Choi, J. Kim and J. Ahn ["Cheddar: A Swift Fully Homomorphic Encryption Library Designed for GPU Architectures"](https://dl.acm.org/doi/abs/10.1145/3760250.3762223) ASPLOS 2026.
