@@ -2,7 +2,7 @@
 layout: post
 title: >
   Modern Construction of Moduli Chain in HEaaN2
-date: 2026-04-24 00:00:00-0400
+date: 2026-05-04 00:00:00-0400
 description: >
   TL;DR: Every CKKS computation is built upon a sequence of moduli that predetermines the rescaling amount after each multiplication. A new CKKS library, HEaaN2, generalizes the construction of this parameter with a carefully designed scheme and API set. In this article, we break down the traditional construction of the moduli chain to derive the new one.
 author: Seonghak Kim
@@ -15,7 +15,7 @@ giscus_comments: true
 ---
 
 - Written by Seonghak Kim (CryptoLab Inc.)
-- About HEaaN2(Available at https://heaan.io/)
+- About HEaaN2(Available at [CODE.HEAAN](https://heaan.io/))
 
 _TL;DR: Every CKKS computation is built upon a sequence of moduli that predetermines the rescaling amount after each multiplication. A new CKKS library, HEaaN2, generalizes the construction of this parameter with a carefully designed scheme and API set. In this article, we break down the traditional construction of the moduli chain to derive the new one._
 
@@ -138,7 +138,25 @@ it first switches the ciphertext modulus up to the key's modulus,
 performs the key switch, then switches the modulus back down to the ciphertext's original modulus.
 <!-- but if so, how can we claim the advantage over BitPacker? -->
 
-<!-- TODO : Add a link to documentation params construction on HEaaN2 -->
+HEaaN2 offers straightforward APIs which reveal the theoretical definition.
+In HEaaN2, the concept of moduli chain is represented by the class `Levels`.
+`Levels` is defined as below, with a sequence of moduli and another sequence of scales.
+The class can be handed to computing modules (e.g. `HomEval`) to inform which moduli chain to execute computation on.
+Notably, the API is minimal so that instantiating a moduli chain requires
+neither a full CKKS parameter set nor an explicit precomputation (which is commonly called a "context").
+Find more details at [the HEaaN2 documentation](https://cryptolab.gitbook.io/heaan2/api-reference/metadata/levels).
+
+```cpp
+struct HEAAN2_API Levels {
+    std::vector<PolyMod> mods;
+    std::vector<Real128> scales;
+};
+```
+
+HEaaN2 also offers an utility to automatically construct a moduli chain, named as `LevelsBuilder`.
+A notable point on the utility is that it accepts bit-size of a modulus as argument,
+thanks to the _sprout_'s capability to express any bits.
+You can find more details and an example usage at [the corresponding documentation](https://cryptolab.gitbook.io/heaan2/basics/custom-parameters#levelsbuilder).
 
 ## Moduli Chain De-Construction
 By far generalizing the idea of the moduli chain, it is natural to question as below.
@@ -160,8 +178,8 @@ The elementary CKKS operations are then defined as follows.
   $$\mathrm{Mul}(ct_1, ct_2) \in \mathrm{Enc}_s(m_1 \cdot m_2,\; Q,\; \Delta_1 \cdot \Delta_2).$$
 - **Scalar-Multiplication.** For $ct_1 \in \mathrm{Enc}_s(m_1, Q, \Delta_1)$, $c_2 \in \mathbb{C}$ and $\Delta_2$,
   $$\mathrm{SMul}(ct_1, c_2, \Delta_2) \in \mathrm{Enc}_s(m_1 \cdot c_2,\; Q,\; \Delta_1 \cdot \Delta_2).$$
-- **Rescaling.** For $ct \in \mathrm{Enc}_s(m, Q, \Delta)$ and a modulus $Q_{to}$,
-  $$\mathrm{Rescale}(ct, Q_{to}) \in \mathrm{Enc}_s(m, Q_{to}, \frac{\Delta}{\frac{Q / Q_{to}}}).$$
+- **Rescaling.** For $$ct \in \mathrm{Enc}_s(m, Q, \Delta)$$ and a modulus $$Q_{to}$$,
+  $$\mathrm{Rescale}(ct, Q_{to}) \in \mathrm{Enc}_s(m, Q_{to}, \frac{\Delta}{Q / Q_{to}}).$$
 
 Note that multiplication can be decomposed into tensor product and relinearization, but we omit the details here.
 Likewise, scalar-multiplication is a concatenation of encoding $c_2$ at scale $\Delta_2$ and multiplying.
@@ -169,10 +187,10 @@ Likewise, scalar-multiplication is a concatenation of encoding $c_2$ at scale $\
 The operations above correspond one-to-one with ordinary leveled-CKKS operations
 and suffice to reproduce every leveled-CKKS usage on their own.
 However, additional primitives exist that enable CKKS circuits beyond what a fixed chain can express.
-- **Setting Scale.** For $ct \in \mathrm{Enc}_s(m, Q, \Delta)$ and a new scale $\Delta_{to}$,
+- **Setting Scale.** For $$ct \in \mathrm{Enc}_s(m, Q, \Delta)$$ and a new scale $$\Delta_{to}$$,
   $$\mathrm{SetScale}(ct, \Delta_{to}) \in \mathrm{Enc}_s(m \cdot \Delta / \Delta_{to},\; Q,\; \Delta_{to}).$$
   This reinterprets the scale without modifying the underlying polynomial.
-- **Adjusting.** For $ct \in \mathrm{Enc}_s(m, Q, \Delta)$, a target modulus $Q_{to}$ and target scale $\Delta_{to}$,
+- **Adjusting.** For $$ct \in \mathrm{Enc}_s(m, Q, \Delta)$$, a target modulus $$Q_{to}$$ and target scale $$\Delta_{to}$$,
   $$\mathrm{Adjust}(ct, Q_{to}, \Delta_{to}) \in \mathrm{Enc}_s(m,\; Q_{to},\; \Delta_{to}).$$
   This switches the modulus and scale while preserving the message.
 
@@ -183,6 +201,28 @@ The deconstructed system is flexible, but flexibility alone does not imply user-
 the absence of a moduli chain forces the user to manage modulus and scale manually.
 In practice, the chain-free primitives are most useful alongside the ordinary ones:
 run standard leveled operations within a chain, and invoke non-leveled operations only to transfer between chains or to execute a specially optimized sub-circuit.
+
+<div class="row mt-3">
+    <div class="col-sm-7 mt-3 mt-md-0 mx-auto d-block">
+        {% include figure.liquid loading="eager" path="assets/img/blog/2605_Seonghak/HPBootCircuit.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+<div class="caption">
+    The computation circuit of high-precision Bootstrapping
+</div>
+
+An eager usage of chain-free operations can be found in the high-precision bootstrapping circuit from HJD+25[^9].
+The circuit uses the standard moduli chain piecewise, inside each module (e.g. SlotToCoeff, CoeffToSlot),
+and the chains are diverged, concatenated, and converged with various chain-free operations.
+
+HEaaN2 provides a subset of these chain-free primitives and illustrates them through [a `Cleaning` example](https://cryptolab.gitbook.io/heaan2/advanced/cleaning): iterative cubic multiplication whose rescaling amount differs at every iteration.
+The example compares the execution with the naive chain-full variant, to emphasize the practical gain of managing modulus and scale outside a fixed chain.
+
+## Conclusion
+
+The moduli chain is a fundamental parameter of CKKS, but its traditional construction—a single fixed sequence baked into the program—is unnecessarily rigid.
+Improvements by HElib, BitPacker, and Grafting have refined the chain construction, but they still operate within the framework of a predetermined sequence.
+HEaaN2 deconstructs the chain into independent modulus and scale management, so that flexible circuits (diverging chains, variable rescaling, cross-chain transfers) become straightforward to express.
 
 <br />
 ## References
@@ -195,3 +235,4 @@ run standard leveled operations within a chain, and invoke non-leveled operation
 [^6]: J. H. Cheon, H. Choe, M. Kang, J. Kim, S. Kim, J. Mono, and T. Noh. ["Grafting: Decoupled Scale Factors and Modulus in RNS-CKKS."](https://ia.cr/2024/1014) ACM CCS 2025. 
 [^7]: S. Halevi and V. Shoup. ["Design and implementation of {HElib}: a homomorphic encryption library."](https://ia.cr/2020/1481) 
 [^8]: W. Choi, J. Kim and J. Ahn ["Cheddar: A Swift Fully Homomorphic Encryption Library Designed for GPU Architectures"](https://dl.acm.org/doi/abs/10.1145/3760250.3762223) ASPLOS 2026.
+[^9]: H. Choe, J. Kim, D. Stehlé, E. Suvanto ["Leveraging Discrete CKKS to Bootstrap in High Precision"](https://ia.cr/2025/1786) ACM CCS 2025.
