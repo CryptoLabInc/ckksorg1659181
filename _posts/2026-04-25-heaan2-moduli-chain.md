@@ -14,15 +14,15 @@ toc:
 giscus_comments: true
 ---
 
-- Written by Seonghak Kim (CryptoLab)
-- About HEaaN2(https://heaan.io/)
+- Written by Seonghak Kim (CryptoLab Inc.)
+- About HEaaN2(Available at https://heaan.io/)
 
 _TL;DR: Every CKKS computation is built upon a sequence of moduli that predetermines the rescaling amount after each multiplication. A new CKKS library, HEaaN2, generalizes the construction of this parameter with a carefully designed scheme and API set. In this article, we break down the traditional construction of the moduli chain to derive the new one._
 
 ---
 
-A CKKS circuit essentially requires a sequence of modulus. A CKKS multiplication is may accompanied with a rescaling, and a rescaling reduces a ciphertext to another modulus.
-Continued multiplication and rescaling done a ciphertext transfers the modulus of the ciphertext till the modulus is depleted, and a bootstrap restores the modulus back.
+A CKKS circuit essentially requires a sequence of modulus. A CKKS multiplication may be accompanied by a rescaling, which reduces the ciphertext modulus.
+Continued multiplication and rescaling done on a ciphertext consumes the modulus of until the available modulus is depleted, and a bootstrap restores the modulus back.
 
 A _moduli chain_ is this sequence of moduli, governing the entire lifecycle of a ciphertext.
 Notably in many CKKS implementations the moduli chain is baked into a "CKKS Parameter",
@@ -38,8 +38,8 @@ An early-stage model of the moduli chain is presented in the original RNS-CKKS p
 Throughout this article, let _level_ denote multiplicative depth.
 - Gather $q_i$ to be similar to each other.
 - Let the initial modulus $Q = \prod_{i = 1}^\ell q_i$.
-- Rescale by $q_i$ at each level.
-- Keep the scale roughly stable by setting $\Delta \simeq q_i$ so that $\frac{\Delta^2}{q_i} \approx \Delta$.
+- Let the modulus for level $l$ to be $Q_l = \prod_{i = 1}^l q_i$. In other words, rescaling scales down the modulus by $q_i$ at each level.
+- During the pocedures, the scale is kept roughly stable by setting $\Delta \simeq q_i$ so that $\frac{\Delta^2}{q_i} \approx \Delta$.
 
 Note that this model explicitly chooses an approximate management of scale, trading precision for ease of use.
 A more precise variant can be obtained by modifying the scale management as follows.
@@ -58,8 +58,9 @@ cannot be freely chosen because $q_i$ is a single prime and primes are not conve
 This coarse choice leads to the following restrictions.
 Note that below we assume RNS-CKKS, which uses the NTT for polynomial multiplication.
 - The rescaling amount is tied to $q_i$, and thus cannot exceed a machine word.
+<!-- Composite rescaling is not defined for the traditional model -->
 - Since $q_i$ must be NTT-friendly, the value also cannot fall below the smallest NTT-friendly prime.
-- A 32-bit RNS system suffers from a scarcity of suitable primes.
+- The suitable primes which fits 32-bit machine-word is scarse, so it is hard to construct a stable implementation based on a 32-bit architecture.
 - If the chain grows long enough, the scale factor can diverge.
 
 ## Attempts for Generalized Constructions
@@ -108,16 +109,16 @@ Following Grafting, these designated words are called the _sprout_.
 We formalize how HEaaN2 uses _sprout_ as below.
 
 > **Definition (Sprout).**
-> The _sprout_ of $Q_i$, $S_i$ is a designated pair of words $(q_30, q_X)$ such that
-> - $q_30$ is either absent or a 30-bit NTT-friendly prime, and
-> - $q_X$ is a prime with $30 \le \lceil\log_2 q_X\rceil \le 59$.
+> The _sprout_ associated with $i$-th modulus (i.e. $Q_i$), $S_i$ is a designated pair of words $(q_{30}, q_X)$ such that
+> - $q_{30}$ is a 30-bit NTT-friendly prime which may absent
+> - $q_X$ is a flexible-bit prime with $30 \le \lceil\log_2 q_X\rceil \le 59$.
 
 Note that $q_{30}$ contributes 0 or 30 bits and $q_X$ contributes 30–59 bits,
 so a sprout can express every bit size from 0 to 59 modulo 60.
 By varying the sprout and filling the remaining words with 60-bit primes,
 a modulus of arbitrary bit size can be constructed.
 
-Now that a single modulus $Q_i$ of can be constructed as desired,
+Now that a single modulus $Q_i$ can be constructed as desired,
 building the whole moduli chain from a sequence of desired scale factors is straightforward.
 - Start from $Q_0$, sized to meet the base-level bits.
 - Repeatedly build $Q_{i+1}$ on top of $Q_i$ by updating the sprout and, if needed, appending a full-sized word.
@@ -125,7 +126,7 @@ building the whole moduli chain from a sequence of desired scale factors is stra
   The value of $q_X$ is allowed to differ across $S_i$'s even for the same target bit size.
 
 The resulting construction offers several advantages over its predecessors.
-Its overall structure resembles HElib, successfully providing 1-bit resolution as HElib does.
+Its overall structure resembles HElib, successfully providing a 1-bit resolution as HElib does.
 Unlike HElib, however, it chooses $q_X$ dynamically at construction time, making scale divergence far less likely.
 Compared to BitPacker, the scheme keeps the number of _terminal values_ small,
 so the modulus-switching overhead between adjacent moduli stays low.
@@ -135,6 +136,8 @@ A remaining issue is the switching-key problem raised by Grafting.
 HEaaN2 sidesteps this problem at the cost of a small performance overhead on key switching:
 it first switches the ciphertext modulus up to the key's modulus,
 performs the key switch, then switches the modulus back down to the ciphertext's original modulus.
+<!-- but if so, how can we claim the advantage over BitPacker? -->
+
+<!-- TODO : Add a link to documentation params construction on HEaaN2 -->
 
 ## Moduli Chain De-Construction
-<!-- TODO -->
