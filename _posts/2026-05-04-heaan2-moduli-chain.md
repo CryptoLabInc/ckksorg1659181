@@ -132,11 +132,11 @@ Compared to BitPacker, the scheme keeps the number of _terminal values_ small,
 so the modulus-switching overhead between adjacent moduli stays low.
 A drawback is that the construction requires a 64-bit RNS system and cannot be applied to 32-bit systems, where NTT-friendly primes in the required range are too scarce.
 
-A remaining issue is the switching-key problem raised by Grafting.
-HEaaN2 sidesteps this problem at the cost of a small performance overhead on key switching:
+A remaining issue is the switching-key problem raised by Grafting[^6].
+HEaaN2 adopts an alternative option of Grafting suggested by the same paper,
+which sidesteps this problem at the cost of a small performance overhead on key switching:
 it first switches the ciphertext modulus up to the key's modulus,
 performs the key switch, then switches the modulus back down to the ciphertext's original modulus.
-<!-- but if so, how can we claim the advantage over BitPacker? -->
 
 HEaaN2 offers straightforward APIs which reveal the theoretical definition.
 In HEaaN2, the concept of moduli chain is represented by the class `Levels`.
