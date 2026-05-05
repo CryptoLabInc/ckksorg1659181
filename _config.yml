@@ -8,8 +8,7 @@ middle_name:
 last_name: 
 contact_note: > 
   Editors: <a href="https://hmchoe0528.github.io/">Hyeongmin Choe</a> (hyeongmin.choe@uni.lu), 
-  <a href="https://perso.ens-lyon.fr/guillaume.hanrot/">Guillaume Hanrot</a> (guillaume.hanrot@cryptolab.co.kr), 
-  <a href="https://perso.ens-lyon.fr/damien.stehle/">Damien Stehlé</a> (damien.stehle@cryptolab.co.kr)
+  <a href="https://perso.ens-lyon.fr/guillaume.hanrot/">Guillaume Hanrot</a> (guillaume.hanrot@cryptolab.co.kr)
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
 footer_text: >
 keywords: # add your own keywords or leave empty
