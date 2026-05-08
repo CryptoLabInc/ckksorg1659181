@@ -61,7 +61,7 @@ This coarse choice leads to the following restrictions.
 - The rescaling amount is tied to $q_i$, and thus cannot exceed a machine word.
 - As NTT is required for efficient polynomial arithmetic,
 the primes $q_i$ must be NTT-friendy, hence $\equiv 1 \pmod{2N}$,
-requiring $q_i$ to be at least 2N+1 (and often significantly more).
+requiring $q_i$ to be at least $2N+1$ (and often significantly more).
 - The suitable primes which fits 32-bit machine-word is scarse, so it is hard to construct a stable implementation based on a 32-bit architecture.
 - If the chain grows long enough, the scale factor can diverge.
 
@@ -113,10 +113,10 @@ We formalize how HEaaN2 uses _sprout_ as below.
 > **Definition (Sprout).**
 > The _sprout_ associated with $i$-th modulus (i.e. $Q_i$), $S_i$ is a designated pair of words $(q_{30}, q_X)$ such that
 > - $q_{30}$ is either 1 or a 30-bit NTT-friendly prime.
-> - $q_X$ is a flexible-bit prime with $30 \le \lceil\log_2 q_X\rceil \le 59$.
+> - $q_X$ is a flexible-bit prime with $30 \le \lfloor\log_2 q_X\rceil \le 59$.
 
 Note that we can find a sprout for any bit size in $\left[30, 89\right]$. By adding as many
-60-bit primes as needed, we can thus obtain moduli with any bit-size $\le 30$ bits.
+60-bit primes as needed, we can thus obtain moduli with any bit-size $\ge 30$ bits.
 
 Now that a single modulus $Q_i$ can be constructed as desired,
 building the whole moduli chain from a sequence of desired scale factors is straightforward.
@@ -213,7 +213,9 @@ run standard leveled operations within a chain, and invoke non-leveled operation
     </div>
 </div>
 <div class="caption">
-    The computation circuit of high-precision Bootstrapping.
+    The computation circuit of high-precision Bootstrapping. <br>
+    $Q_{stc}$, $Q_0$, $Q_{lpcts}$, $Q_{em}$, $Q_{hpcts}$, $Q_{bts}$ stands for the modulus of the ciphertext on respective steps. <br>
+    $\Delta_{stc}$, $\Delta_0$, $\Delta_{lpcts}$, $\Delta_{em}$, $\Delta_{hpcts}$, $\Delta_{bts}$ are corresponding scale factors.
 </div>
 
 An eager usage of chain-free operations can be found in the high-precision bootstrapping circuit from CKSS25[^9].
