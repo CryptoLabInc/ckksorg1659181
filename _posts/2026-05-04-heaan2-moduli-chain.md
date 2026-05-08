@@ -101,6 +101,10 @@ In its _25-30 prime system_, the RNS system consists of many 30-bit primes and a
 The 25-bit primes are precomputed to provide a predefined resolution as in HElib,
 while occupying a variable number of words as in BitPacker.
 
+We note that the security of the corresponding CKKS scheme relies on the same
+RLWE problem over a ring modulo a huge modulus, regardless of the underlying
+arithmetic description of how moduli change during homomorphic operations.
+
 ## The Construction in HEaaN2
 The moduli chain construction in HEaaN2 tries to combine the best features of these various implementations,
 though the library internally adopts the terminology of Grafting.
