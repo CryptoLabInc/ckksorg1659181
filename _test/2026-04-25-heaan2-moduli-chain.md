@@ -21,30 +21,36 @@ _TL;DR: Every CKKS computation is built upon a sequence of moduli that predeterm
 
 ---
 
-A CKKS circuit essentially requires a sequence of modulus. A CKKS multiplication may be accompanied by a rescaling, which reduces the ciphertext modulus.
-Continued multiplication and rescaling done on a ciphertext consumes the modulus of until the available modulus is depleted, and a bootstrap restores the modulus back.
+A CKKS circuit essentially requires a sequence of modulus.
+Every CKKS entity is scaled up with its own scaling factor,
+and a multiplication between them yield a result with the multiplied scaling factor.
+A rescaling operation is required to revert this scaling factor back, and this operation reduces the ciphertext modulus.
+Continued multiplication and rescaling done on a ciphertext consumes the modulus of until the available modulus is exhausted, and a bootstrapping operation restores the modulus back.
 
 A _moduli chain_ is this sequence of moduli, governing the entire lifecycle of a ciphertext.
-Notably in many CKKS implementations the moduli chain is baked into a "CKKS Parameter",
+Notably in many CKKS implementations the moduli chain is treated as a global object into a "CKKS Parameter",
 meaning it affects not just one ciphertext but every ciphertext in the program,
 making it critical for overall performance and memory usage.
 
 In this article, we first review existing models of the moduli chain,
 then present a modern construction as implemented in HEaaN2.
-Finally, we deconstruct the idea to suggest an extended, chain-free CKKS API set.
+Finally, we outline an extended, chain-free CKKS API relying on a ciphertext-based modulus management.
 
+<br />
 ## Traditional Construction of Moduli Chain and Its Limits
+<div style="margin-top: 1.5em;"></div>
+
 An early-stage model of the moduli chain is presented in the original RNS-CKKS paper[^1].
 Throughout this article, let _level_ denote multiplicative depth.
-- Gather $q_i$ to be similar to each other.
+- Let $q_i$ be primes which are close to a common value.
 - Let the initial modulus $Q = \prod_{i = 1}^\ell q_i$.
 - Let the modulus for level $l$ to be $Q_l = \prod_{i = 1}^l q_i$. In other words, rescaling scales down the modulus by $q_i$ at each level.
-- During the pocedures, the scale is kept roughly stable by setting $\Delta \simeq q_i$ so that $\frac{\Delta^2}{q_i} \approx \Delta$.
+- During the pocedures, the scale is kept roughly stable by setting $\Delta \simeq q_i$ so that ${\Delta^2}/{q_i} \approx \Delta.$
 
 Note that this model explicitly chooses an approximate management of scale, trading precision for ease of use.
-A more precise variant can be obtained by modifying the scale management as follows.
+A more accurate variant can be obtained by modifying the scale management as follows.
 
-- Let the scale differ for each level, following the recurrence $\frac{\Delta_i^2}{q_i} = \Delta_{i-1}$.
+- Let the scale differ for each level, following the recurrence ${\Delta_i^2}/{q_i} = \Delta_{i-1}$.
 - Choose $q_i$ appropriately to make $\Delta_{i-1}$ close to the desired value.
 
 This simple, user-familiar model was adopted in the initial designs of many CKKS libraries, including Lattigo[^2], OpenFHE[^3], and HEaaN[^4].
@@ -52,29 +58,31 @@ Over time, each implementation improved the model independently to overcome its 
 
 As recognized in prior works (BitPacker[^5], Grafting[^6]),
 the core limitation is the coupling between the RNS system and the rescaling amount (roughly, the scaling factor).
-The rescaling amount, set to be close to $q_i$ or $\Delta_i$,
-cannot be freely chosen because $q_i$ is a single prime and primes are not conveniently distributed.
+The rescaling amount, whose value is $q_i$, cannot be freely chosen because $q_i$ is a single prime and primes are not conveniently distributed.
 
 This coarse choice leads to the following restrictions.
-Note that below we assume RNS-CKKS, which uses the NTT for polynomial multiplication.
 - The rescaling amount is tied to $q_i$, and thus cannot exceed a machine word.
-<!-- Composite rescaling is not defined for the traditional model -->
-- Since $q_i$ must be NTT-friendly, the value also cannot fall below the smallest NTT-friendly prime.
+- As NTT is required for efficient polynomial arithmetic,
+the primes $q_i$ must be NTT-friendy, hence $\equiv 1 \pmod{2N}$,
+requiring $q_i$ to be at least $2N+1$ (and often significantly more).
 - The suitable primes which fits 32-bit machine-word is scarse, so it is hard to construct a stable implementation based on a 32-bit architecture.
 - If the chain grows long enough, the scale factor can diverge.
 
+<br />
 ## Attempts for Generalized Constructions
+<div style="margin-top: 1.5em;"></div>
+
 Several attempts have been made to generalize the system and overcome the problems above.
 They share a common abstraction that redefines the moduli chain in a more general way.
 A short formalization of the model is as follows.
 - Define $Q_0 < Q_1 < \cdots < Q_L$ as the modulus for each level. $Q_{i-1} \mid Q_i$ is not required.
 - Rescaling divides by the ratio $Q_i / Q_{i-1}$.
-- The scale follows the recurrence $$\frac{\Delta_i^2}{Q_i / Q_{i-1}} = \Delta_{i-1} \text{.}$$
+- The scale follows the recurrence $${\Delta_i^2}/{(Q_i / Q_{i-1})} = \Delta_{i-1} \text{.}$$
 
 Since $Q_i / Q_{i-1}$ is no longer restricted to a single NTT-friendly prime, the rescaling amount can be chosen much more freely.
 The model is suggested and instantiated in distinct forms by different implementations.
 
-HElib[^7] was the first to propose a generalized construction, doing so from the very beginning of its design.
+HElib[^7] suggests and utilizes a generalized construction, doing so from the very beginning of its design.
 It manages _small primes_ alongside the normal primes,
 which are primes dedicated to handle fine-grained adjustement of modulus.
 These _small primes_ are precomputed for a target bit resolution,
@@ -99,8 +107,15 @@ In its _25-30 prime system_, the RNS system consists of many 30-bit primes and a
 The 25-bit primes are precomputed to provide a predefined resolution as in HElib,
 while occupying a variable number of words as in BitPacker.
 
+We note that the security of the corresponding CKKS scheme relies on the same
+RLWE problem over a ring modulo a huge modulus, regardless of the underlying
+arithmetic description of how moduli change during homomorphic operations.
+
+<br />
 ## The Construction in HEaaN2
-The moduli chain construction in HEaaN2 is an intermediate instance of the implementations above,
+<div style="margin-top: 1.5em;"></div>
+
+The moduli chain construction in HEaaN2 tries to combine the best features of these various implementations,
 though the library internally adopts the terminology of Grafting.
 
 Like the prior works, HEaaN2 lets a few designated RNS words absorb the fine-grained bit adjustment
@@ -110,13 +125,11 @@ We formalize how HEaaN2 uses _sprout_ as below.
 
 > **Definition (Sprout).**
 > The _sprout_ associated with $i$-th modulus (i.e. $Q_i$), $S_i$ is a designated pair of words $(q_{30}, q_X)$ such that
-> - $q_{30}$ is a 30-bit NTT-friendly prime which may absent
-> - $q_X$ is a flexible-bit prime with $30 \le \lceil\log_2 q_X\rceil \le 59$.
+> - $q_{30}$ is either 1 or a 30-bit NTT-friendly prime.
+> - $q_X$ is a flexible-bit prime with $30 \le \lfloor\log_2 q_X\rceil \le 59$.
 
-Note that $q_{30}$ contributes 0 or 30 bits and $q_X$ contributes 30–59 bits,
-so a sprout can express every bit size from 0 to 59 modulo 60.
-By varying the sprout and filling the remaining words with 60-bit primes,
-a modulus of arbitrary bit size can be constructed.
+Note that we can find a sprout for any bit size in $\left[30, 89\right]$. By adding as many
+60-bit primes as needed, we can thus obtain moduli with any bit-size $\ge 30$ bits.
 
 Now that a single modulus $Q_i$ can be constructed as desired,
 building the whole moduli chain from a sequence of desired scale factors is straightforward.
@@ -133,18 +146,18 @@ so the modulus-switching overhead between adjacent moduli stays low.
 A drawback is that the construction requires a 64-bit RNS system and cannot be applied to 32-bit systems, where NTT-friendly primes in the required range are too scarce.
 
 A remaining issue is the switching-key problem raised by Grafting[^6].
-HEaaN2 adopts an alternative option of Grafting suggested by the same paper,
-which sidesteps this problem at the cost of a small performance overhead on key switching:
+HEaaN2 adopts a pragmatic solution suggested in the same paper :
 it first switches the ciphertext modulus up to the key's modulus,
 performs the key switch, then switches the modulus back down to the ciphertext's original modulus.
+This yields a simple solution, at the expense of a small performance overhead on key-switching.
 
-HEaaN2 offers straightforward APIs which reveal the theoretical definition.
-In HEaaN2, the concept of moduli chain is represented by the class `Levels`.
-`Levels` is defined as below, with a sequence of moduli and another sequence of scales.
-The class can be handed to computing modules (e.g. `HomEval`) to inform which moduli chain to execute computation on.
-Notably, the API is minimal so that instantiating a moduli chain requires
-neither a full CKKS parameter set nor an explicit precomputation (which is commonly called a "context").
-Find more details at [the HEaaN2 documentation](https://cryptolab.gitbook.io/heaan2/api-reference/metadata/levels).
+In HEaaN2, the concept of moduli chain is represented by a class named `Levels`.
+This class contains two fields, one being the sequence of moduli (the moduli chain),
+the other one being the corresponding sequence of scales.
+The class can be handed to computing modules (e.g. `HomEval`) to inform which moduli chain to use during a computation.
+Notably, the API separates a moduli chain from a full CKKS parameter set,
+allowing a CKKS program to have multiple moduli chains.
+More details can be found at [the HEaaN2 documentation](https://cryptolab.gitbook.io/heaan2/api-reference/metadata/levels).
 
 ```cpp
 struct HEAAN2_API Levels {
@@ -156,15 +169,20 @@ struct HEAAN2_API Levels {
 HEaaN2 also offers an utility to automatically construct a moduli chain, named as `LevelsBuilder`.
 A notable point on the utility is that it accepts bit-size of a modulus as argument,
 thanks to the _sprout_'s capability to express any bits.
-You can find more details and an example usage at [the corresponding documentation](https://cryptolab.gitbook.io/heaan2/basics/custom-parameters#levelsbuilder).
+Details of the class and an example usage can be found at [the corresponding documentation](https://cryptolab.gitbook.io/heaan2/basics/custom-parameters#levelsbuilder).
 
-## Moduli Chain De-Construction
-By far generalizing the idea of the moduli chain, it is natural to question as below.
+<br />
+## Towards a Moduli-Chain Free CKKS
+<div style="margin-top: 1.5em;"></div>
 
-> Can we construct a CKKS system even without defining a moduli chain?
+Though the moduli chain is a natural structure for CKKS computations,
+it also creates rigidity in complex circuits.
+As an example, when the required precision per multiplication varies,
+the rescaling amount can be finely adjusted to reduce modulus consumption.
+A natural idea is to try to get rid of the global moduli chain and move to a ciphertext-based modulus management.
 
 Recall that the moduli chain was derived from an alternating sequence of multiplication and rescaling.
-To support exotic operation sequences—such as cubic multiplication—a more general system for managing modulus and scale is needed.
+To support non-standard operation sequences—such as cubic multiplication—a more general system for managing modulus and scale is needed.
 In this section, we specify such a system. Note that this is not a new idea; CKKS has never restricted its operation sequence,
 and what follows is one point in its vast design space.
 
@@ -173,19 +191,25 @@ Write $\mathrm{Enc}_s(m, Q, \Delta)$ for the set of ciphertexts encrypting messa
 The elementary CKKS operations are then defined as follows.
 
 - **Addition.** For $ct_1 \in \mathrm{Enc}_s(m_1, Q, \Delta)$ and $ct_2 \in \mathrm{Enc}_s(m_2, Q, \Delta)$,
+
   $$\mathrm{Add}(ct_1, ct_2) \in \mathrm{Enc}_s(m_1 + m_2,\; Q,\; \Delta).$$
+
 - **Multiplication.** For $ct_1 \in \mathrm{Enc}_s(m_1, Q, \Delta_1)$ and $ct_2 \in \mathrm{Enc}_s(m_2, Q, \Delta_2)$,
+
   $$\mathrm{Mul}(ct_1, ct_2) \in \mathrm{Enc}_s(m_1 \cdot m_2,\; Q,\; \Delta_1 \cdot \Delta_2).$$
+
 - **Scalar-Multiplication.** For $ct_1 \in \mathrm{Enc}_s(m_1, Q, \Delta_1)$, $c_2 \in \mathbb{C}$ and $\Delta_2$,
+
   $$\mathrm{SMul}(ct_1, c_2, \Delta_2) \in \mathrm{Enc}_s(m_1 \cdot c_2,\; Q,\; \Delta_1 \cdot \Delta_2).$$
+
 - **Rescaling.** For $$ct \in \mathrm{Enc}_s(m, Q, \Delta)$$ and a modulus $$Q_{to}$$,
+
   $$\mathrm{Rescale}(ct, Q_{to}) \in \mathrm{Enc}_s(m, Q_{to}, \frac{\Delta}{Q / Q_{to}}).$$
 
 Note that multiplication can be decomposed into tensor product and relinearization, but we omit the details here.
 Likewise, scalar-multiplication is a concatenation of encoding $c_2$ at scale $\Delta_2$ and multiplying.
 
-The operations above correspond one-to-one with ordinary leveled-CKKS operations
-and suffice to reproduce every leveled-CKKS usage on their own.
+The usual, moduli-chain based CKKS behaviour can be emulated using these operations.
 However, additional primitives exist that enable CKKS circuits beyond what a fixed chain can express.
 - **Setting Scale.** For $$ct \in \mathrm{Enc}_s(m, Q, \Delta)$$ and a new scale $$\Delta_{to}$$,
   $$\mathrm{SetScale}(ct, \Delta_{to}) \in \mathrm{Enc}_s(m \cdot \Delta / \Delta_{to},\; Q,\; \Delta_{to}).$$
@@ -194,38 +218,49 @@ However, additional primitives exist that enable CKKS circuits beyond what a fix
   $$\mathrm{Adjust}(ct, Q_{to}, \Delta_{to}) \in \mathrm{Enc}_s(m,\; Q_{to},\; \Delta_{to}).$$
   This switches the modulus and scale while preserving the message.
 
+Notably, these two operations together can align the moduli and scales of multiple ciphertexts,
+so that they become compatible operands for subsequent additions or multiplications.
+
 Adjust may seem unfamiliar, but it is essentially a scalar-multiplication that compensates the modulus ratio, followed by a rescaling.
 Although the operation offers considerable flexibility, it remains precise only when $Q_{to}$ is sufficiently smaller than $Q$.
 
-The deconstructed system is flexible, but flexibility alone does not imply user-convenience;
-the absence of a moduli chain forces the user to manage modulus and scale manually.
+The deconstructed system opens a vast design space for fine-grained optimizations,
+but in return, the user bears the burden of navigating that space—manually
+tracking every modulus and scale that a moduli chain would otherwise manage.
 In practice, the chain-free primitives are most useful alongside the ordinary ones:
 run standard leveled operations within a chain, and invoke non-leveled operations only to transfer between chains or to execute a specially optimized sub-circuit.
 
 <div class="row mt-3">
     <div class="col-sm-10 mt-3 mt-md-0 mx-auto d-block">
-        {% include figure.liquid loading="eager" path="assets/img/blog/2605_Seonghak/HighPrec.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.liquid loading="eager" path="assets/img/blog/2605_Seonghak/HPBootCircuit.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
 <div class="caption">
-    The computation circuit of high-precision Bootstrapping
+    The computation circuit of high-precision Bootstrapping. <br>
+    $Q_{stc}$, $Q_0$, $Q_{lpcts}$, $Q_{em}$, $Q_{hpcts}$, $Q_{bts}$ stands for the modulus of the ciphertext on respective steps. <br>
+    $\Delta_{stc}$, $\Delta_0$, $\Delta_{lpcts}$, $\Delta_{em}$, $\Delta_{hpcts}$, $\Delta_{bts}$ are corresponding scale factors.
 </div>
 
-An eager usage of chain-free operations can be found in the high-precision bootstrapping circuit from HJD+25[^9].
+An eager usage of chain-free operations can be found in the high-precision bootstrapping circuit from CKSS25[^9].
 The circuit uses the standard moduli chain piecewise, inside each module (e.g. SlotToCoeff, CoeffToSlot),
 and the chains are diverged, concatenated, and converged with various chain-free operations.
 
 HEaaN2 provides a subset of these chain-free primitives and illustrates them through [a `Cleaning` example](https://cryptolab.gitbook.io/heaan2/advanced/cleaning): iterative cubic multiplication whose rescaling amount differs at every iteration.
 The example compares the execution with the naive chain-full variant, to emphasize the practical gain of managing modulus and scale outside a fixed chain.
 
+<br />
 ## Conclusion
+<div style="margin-top: 1.5em;"></div>
 
-The moduli chain is a fundamental parameter of CKKS, but its traditional construction—a single fixed sequence baked into the program—is unnecessarily rigid.
+The moduli chain is a fundamental parameter of CKKS, but its traditional construction—a single fixed sequence baked into the program—is unnecessarily rigid for aggressive optimizations.
 Improvements by HElib, BitPacker, and Grafting have refined the chain construction, but they still operate within the framework of a predetermined sequence.
-HEaaN2 deconstructs the chain into independent modulus and scale management, so that flexible circuits (diverging chains, variable rescaling, cross-chain transfers) become straightforward to express.
+HEaaN2 deconstructs the chain into independent modulus and scale management,
+and this approach gives a very flexible way to express complex CKKS circuits (diverging chains, variable rescaling, cross-chain transfers) and allow expert users to perform fine-grained optimization of modulus usage.
 
 <br />
 ## References
+<div style="margin-top: 1.5em;"></div>
+
 
 [^1]: J. H. Cheon, K. Han, A. Kim, M. Kim, and Y. Song. ["A Full RNS Variant of Approximate Homomorphic Encryption."](https://ia.cr/2018/931) SAC 2018. 
 [^2]: Jean-Philippe Bossuat et al. ["A library for lattice-based homomorphic encryption in Go."](https://github.com/tuneinsight/lattigo) 
