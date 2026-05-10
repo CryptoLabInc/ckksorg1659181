@@ -15,7 +15,7 @@ giscus_comments: true
 ---
 
 - Written by Seonghak Kim (CryptoLab Inc.)
-- About HEaaN2(Available at [CODE.HEAAN](https://heaan.io/))
+- About HEaaN2 (Available at [CODE.HEAAN](https://heaan.io/))
 
 _TL;DR: Every CKKS computation is built upon a sequence of moduli that predetermines the rescaling amount after each multiplication. A new CKKS library, HEaaN2, generalizes the construction of this parameter with a carefully designed scheme and API set. In this article, we break down the traditional construction of the moduli chain to derive the new one._
 
@@ -236,8 +236,8 @@ run standard leveled operations within a chain, and invoke non-leveled operation
     </div>
 </div>
 <div class="caption">
-    The computation circuit of high-precision Bootstrapping. <br>
-    $Q_{stc}$, $Q_0$, $Q_{lpcts}$, $Q_{em}$, $Q_{hpcts}$, $Q_{bts}$ stands for the modulus of the ciphertext on respective steps. <br>
+    The Computation Circuit of High-precision Bootstrapping. <br>
+    $Q_{stc}$, $Q_0$, $Q_{lpcts}$, $Q_{em}$, $Q_{hpcts}$, $Q_{bts}$ stand for the moduli of the ciphertexts on respective steps. <br>
     $\Delta_{stc}$, $\Delta_0$, $\Delta_{lpcts}$, $\Delta_{em}$, $\Delta_{hpcts}$, $\Delta_{bts}$ are corresponding scale factors.
 </div>
 
