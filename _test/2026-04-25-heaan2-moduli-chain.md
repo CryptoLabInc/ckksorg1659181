@@ -263,11 +263,11 @@ and this approach gives a very flexible way to express complex CKKS circuits (di
 
 
 [^1]: J. H. Cheon, K. Han, A. Kim, M. Kim, and Y. Song. ["A Full RNS Variant of Approximate Homomorphic Encryption."](https://ia.cr/2018/931) SAC 2018. 
-[^2]: Jean-Philippe Bossuat et al. ["A library for lattice-based homomorphic encryption in Go."](https://github.com/tuneinsight/lattigo) 
+[^2]: EPFL-LDS, Tune Insight SA. ["A Library for Lattice-based Homomorphic Encryption in Go."](https://github.com/tuneinsight/lattigo) 
 [^3]: A. Al Badawi, J. Bates, F. Bergamaschi, et al. ["OpenFHE: Open-Source Fully Homomorphic Encryption Library."](https://ia.cr/2022/915) WAHC 2022. 
 [^4]: CryptoLab Inc. ["HEaaN Library."](https://heaan.it/) 
-[^5]: N. Samardzic and D, Sanchez. ["Bitpacker: Enabling high arithmetic efficiency in fully homomorphic encryption accelerators."](https://dl.acm.org/doi/10.1145/3620665.3640397) ASPLOS 2024. 
+[^5]: N. Samardzic and D, Sanchez. ["Bitpacker: Enabling High Arithmetic Efficiency in Fully Homomorphic Encryption Accelerators."](https://dl.acm.org/doi/10.1145/3620665.3640397) ASPLOS 2024. 
 [^6]: J. H. Cheon, H. Choe, M. Kang, J. Kim, S. Kim, J. Mono, and T. Noh. ["Grafting: Decoupled Scale Factors and Modulus in RNS-CKKS."](https://ia.cr/2024/1014) ACM CCS 2025. 
-[^7]: S. Halevi and V. Shoup. ["Design and implementation of {HElib}: a homomorphic encryption library."](https://ia.cr/2020/1481) 
-[^8]: W. Choi, J. Kim and J. Ahn ["Cheddar: A Swift Fully Homomorphic Encryption Library Designed for GPU Architectures"](https://dl.acm.org/doi/abs/10.1145/3760250.3762223) ASPLOS 2026.
-[^9]: H. Choe, J. Kim, D. Stehlé, E. Suvanto ["Leveraging Discrete CKKS to Bootstrap in High Precision"](https://ia.cr/2025/1786) ACM CCS 2025.
+[^7]: S. Halevi and V. Shoup. ["Design and Implementation of HElib: A Homomorphic Encryption Library."](https://ia.cr/2020/1481) IACR ePrint Archive.
+[^8]: W. Choi, J. Kim and J. Ahn ["Cheddar: A Swift Fully Homomorphic Encryption Library Designed for GPU Architectures."](https://dl.acm.org/doi/abs/10.1145/3760250.3762223) ASPLOS 2026.
+[^9]: H. Choe, J. Kim, D. Stehlé, E. Suvanto ["Leveraging Discrete CKKS to Bootstrap in High Precision."](https://ia.cr/2025/1786) ACM CCS 2025.
