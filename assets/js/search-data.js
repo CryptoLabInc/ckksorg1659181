@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/software/";
           },
-        },{id: "post-radixckks-a-general-framework-for-integer-computation-over-ckks",
+        },{id: "post-modern-construction-of-moduli-chain-in-heaan2",
+        
+          title: "Modern Construction of Moduli Chain in HEaaN2",
+        
+        description: "TL;DR: Every CKKS computation is built upon a sequence of moduli that predetermines the rescaling amount after each multiplication. A new CKKS library, HEaaN2, generalizes the construction of this parameter with a carefully designed scheme and API set. In this article, we break down the traditional construction of the moduli chain to derive the new one.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/heaan2-moduli-chain/";
+          
+        },
+      },{id: "post-radixckks-a-general-framework-for-integer-computation-over-ckks",
         
           title: "RadixCKKS: A General Framework for Integer Computation over CKKS",
         
@@ -184,12 +195,7 @@ ninja.data = [{
           section: "News",},{id: "news-damien-stehlé-is-stepping-down-his-role-as-a-co-editor-may-2025-may-2026-having-led-this-initiative-alongside-keewoo-from-the-very-beginning-we-are-deeply-grateful-for-his-immense-dedication",
           title: 'Damien Stehlé is stepping down his role as a co-editor (May 2025 –...',
           description: "",
-          section: "News",},{id: "test-modern-construction-of-moduli-chain-in-heaan2",
-          title: 'Modern Construction of Moduli Chain in HEaaN2',
-          description: "TL;DR: Every CKKS computation is built upon a sequence of moduli that predetermines the rescaling amount after each multiplication. A new CKKS library, HEaaN2, generalizes the construction of this parameter with a carefully designed scheme and API set. In this article, we break down the traditional construction of the moduli chain to derive the new one.",
-          section: "Test",handler: () => {
-              window.location.href = "/test/2026-04-25-heaan2-moduli-chain/";
-            },},{
+          section: "News",},{
         id: 'social-email',
         title: 'email',
         section: 'Socials',
