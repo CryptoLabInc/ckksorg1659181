@@ -27,7 +27,7 @@ _TL;DR: To improve efficiency and reduce the modulus consumption in standard CKK
 
 The standard CKKS bootstrapping comprises four steps: ModRaise, CtS, EvalMod, and StC. Many works have optimized these subroutines to improve the bootstrapping process. However, bootstrapping is still the performance bottleneck of the whole scheme, manifested mainly in the large computational overhead of CtS/StC and excessive modulus consumption. For example, in a 25-level CKKS scheme, as shown in [1], only 10 levels remain after bootstrapping for subsequent homomorphic computations. Here we focus on optimizing the linear transformations: CtS and StC.
 
-In CKKS bootstrapping, homomorphic linear transformations are essentially homomorphic matrix-vector multiplications, and the state-of-the-art linear transformations were introduced in [1]. They adopted the matrix factorization algorithm [2,3], and introduced the double-hoisting Baby-Step Giant-Step (BSGS) algorithm. The matrix factorization algorithm [2,3] decomposes a DFT/iDFT matrix into several sparse diagonal matrices; thus, a matrix-vector multiplication becomes several sparse diagonal matrix-vector multiplications.  This improves efficiency but consumes more depth. The BSGS method splits  $n$ rotations into two parts:  baby-step rotations and giant-step rotations, resulting in $O(\sqrt{n})$ homomorphic rotations. However, we find that for small $n$ (i.e., sparse diagonal matrices), the performance gain of BSGS is limited. We aim to design a faster matrix-vector multiplication method specifically for sparse diagonal matrices. Our second goal is to reduce modulus consumption in CKKS bootstrapping.
+In CKKS bootstrapping, homomorphic linear transformations are essentially homomorphic matrix-vector multiplications, and the state-of-the-art linear transformations were introduced in [1]. They adopted the matrix factorization algorithm [2,3], and introduced the double-hoisting Baby-Step Giant-Step (BSGS) algorithm. The matrix factorization algorithm [2,3] decomposes a DFT/iDFT matrix into several sparse diagonal matrices; thus, a matrix-vector multiplication becomes several sparse diagonal matrix-vector multiplications.  This improves efficiency but consumes more depth. The BSGS method splits  $n$ rotations into two parts:  baby-step rotations and giant-step rotations, resulting in $O(\sqrt{n})$ homomorphic rotations. However, we find that for small $n$ (_i.e.,_ sparse diagonal matrices), the performance gain of BSGS is limited. We aim to design a faster matrix-vector multiplication method specifically for sparse diagonal matrices. Our second goal is to reduce modulus consumption in CKKS bootstrapping.
 
 
 **Notation.** We first provide some necessary notations. Let $N$ be a power-of-two integer, $q_0,q_1,\cdots, q_L,p_0,p_1,\cdots,p_{k-1}$ be $L+K+1$ distinct primes, and $Q_\ell=\prod_{i=0}^{\ell}q_i$, $P_j=\prod_{i=0}^j p_i$ for $0\le \ell \le L$ and $0\le j<k$. For simplicity, we write $Q = Q_L$ and $P = P_{k−1}$. We define $\mathcal{R}=\mathbb{Z}[X]/(X^N+1,Q)$, the cyclotomic polynomial ring over the integers modulo $Q$.
@@ -46,9 +46,9 @@ Rescaling is a fundamental operation in CKKS. It is usually performed after homo
 
 > **Core idea of LCR**: For ciphertext $$\mathtt{ct}\in\mathcal{R}_{Q_L}^2$$ with secret key $$\mathtt{sk}$$, if the coefficients of $$\mathtt{ct}$$ are small enough, specifically, $$\Vert\langle \mathtt{ct},\mathtt{sk}\rangle\Vert_{\infty}< Q_L /2$$, then the output ciphertext of the rescaling on $$\mathtt{ct}$$ can still be in $$\mathcal{R}_{Q_L}^2$$.
 
-**Why?** Recall the CKKS decryption process, we know $$\langle \mathtt{ct},\mathtt{sk}\rangle = \mathtt{pt} + e + kQ_L$$ where $||\mathtt{pt} + e||_{\infty} < Q_L/2$, $e$ is an error and $k$ is a polynomial with integer coefficients. If $$||\langle \mathtt{ct},\mathtt{sk}\rangle||_{\infty}< Q_L /2,$$ then $k = 0$, i.e.,$\langle \mathtt{ct},\mathtt{sk}\rangle=\mathtt{pt} + e $. After rescaling $\mathtt{ct}'=\lfloor \frac{\mathtt{ct}}{q_L}\rceil$, we have
+**Why?** Recall the CKKS decryption process, we know $$\langle \mathtt{ct},\mathtt{sk}\rangle = \mathtt{pt} + e + kQ_L$$ where $\Vert\mathtt{pt} + e\Vert_{\infty} < Q_L/2$, $e$ is an error and $k$ is a polynomial with integer coefficients. If $$\Vert\langle \mathtt{ct},\mathtt{sk}\rangle\Vert_{\infty}< Q_L /2,$$ then $$k = 0$$, _i.e.,_ $$\langle \mathtt{ct},\mathtt{sk}\rangle=\mathtt{pt} + e $$. After rescaling $\mathtt{ct}'=\lfloor {\mathtt{ct}}/{q_L}\rceil$, we have
 $$
-\langle \mathtt{ct}',\mathtt{sk}\rangle \approx \frac{\mathtt{pt}+e}{q_L},
+\langle \mathtt{ct}',\mathtt{sk}\rangle \approx ({\mathtt{pt}+e})/{q_L},
 $$
 thus 
 $$
@@ -130,7 +130,7 @@ Overall, LCR saves modulus consumption at the cost of higher computational overh
 
 1. **Modulus level is preserved:**  The output of the AKS operation stays in $$\mathcal{R}_{Q_L}^2$$.
 2. **LCRescale:** The regular Rescale is replaced by LCRescale on the $c_0$ branch.
-3. **GHS-type key-switching:** In key-switching, the GHS-type key-switching is used instead of hybrid key-switching, i.e., the rotation key is
+3. **GHS-type key-switching:** In key-switching, the GHS-type key-switching is used instead of hybrid key-switching, _i.e.,_ the rotation key is
 
 $$
 \mathtt{evk} = \Biggl(\Biggl[-a s_2 + \Bigg\lfloor\frac{\bigl[P m s_1 \bigr]_{P Q_L}}{q_L}\Bigg\rceil + e\Biggr]_{P Q_L},\; [a]_{P Q_L}\Biggr).
@@ -180,13 +180,13 @@ The time–memory trade-off strategy can reach up to 40% higher throughput at th
 ## References
 <div style="margin-top: 1.5em;"></div>
 
-[1] Bossuat, J.P., Mouchet, C., Troncoso-Pastoriza, J., and Hubaux, J.P. "Efficient bootstrapping for approximate homomorphic encryption with non-sparse keys." EUROCRYPT 2021.
+[1] Bossuat, J.P., Mouchet, C., Troncoso-Pastoriza, J., and Hubaux, J.P. "Efficient Bootstrapping for Approximate Homomorphic Encryption with Non-sparse Keys." EUROCRYPT 2021.
 
-[2] Chen, H., Chillotti, I., and Song, Y. "Improved bootstrapping for approximate homomorphic encryption." EUROCRYPT 2019
+[2] Chen, H., Chillotti, I., and Song, Y. "Improved Bootstrapping for Approximate Homomorphic Encryption." EUROCRYPT 2019.
 
-[3] Han, K., Hhan, M., and Cheon, J.H. "Improved homomorphic discrete fourier transforms and FHE bootstrapping." IEEE Access 2019.
+[3] Han, K., Hhan, M., and Cheon, J.H. "Improved Homomorphic Discrete Fourier Transforms and FHE Bootstrapping." IEEE Access 2019.
 
-[4] Bossuat, J.P., Troncoso-Pastoriza, J.R., and Hubaux, J.P. "Bootstrapping for approximate homomorphic encryption with negligible failure-probability by using sparse-secret encapsulation." ACNS 2022.
+[4] Bossuat, J.P., Troncoso-Pastoriza, J.R., and Hubaux, J.P. "Bootstrapping for Approximate Homomorphic Encryption with Negligible Failure-probability by using Sparse-secret Encapsulation." ACNS 2022.
 
 
 
