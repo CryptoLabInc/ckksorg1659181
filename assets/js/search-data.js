@@ -195,7 +195,12 @@ ninja.data = [{
           section: "News",},{id: "news-damien-stehlé-is-stepping-down-his-role-as-a-co-editor-may-2025-may-2026-having-led-this-initiative-alongside-keewoo-from-the-very-beginning-we-are-deeply-grateful-for-his-immense-dedication",
           title: 'Damien Stehlé is stepping down his role as a co-editor (May 2025 –...',
           description: "",
-          section: "News",},{
+          section: "News",},{id: "test-faster-bootstrapping-for-ckks-with-less-modulus-consumption",
+          title: 'Faster Bootstrapping for CKKS with Less Modulus Consumption',
+          description: "TL;DR: To improve efficiency and reduce the modulus consumption in standard CKKS bootstrapping, we propose two novel core techniques: level-conserving rescaling (LCR) and aggregated key-switching (AKS), which act on the matrix-vector multiplications in linear transformations and can be further combined into the lossless LCR+AKS. The contributions enable bootstrapping that consumes one fewer modulus level, improves throughput by 20%–35%, and reduces CtS rotation key size by 11.9%–15.2%, while preserving identical precision and failure probability.",
+          section: "Test",handler: () => {
+              window.location.href = "/test/2026-06-01-less-mod-ckks/";
+            },},{
         id: 'social-email',
         title: 'email',
         section: 'Socials',
