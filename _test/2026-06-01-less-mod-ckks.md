@@ -30,7 +30,7 @@ The standard CKKS bootstrapping comprises four steps: ModRaise, CtS, EvalMod, an
 In CKKS bootstrapping, homomorphic linear transformations are essentially homomorphic matrix-vector multiplications, and the state-of-the-art linear transformations were introduced in [1]. They adopted the matrix factorization algorithm [2,3], and introduced the double-hoisting Baby-Step Giant-Step (BSGS) algorithm. The matrix factorization algorithm [2,3] decomposes a DFT/iDFT matrix into several sparse diagonal matrices; thus, a matrix-vector multiplication becomes several sparse diagonal matrix-vector multiplications.  This improves efficiency but consumes more depth. The BSGS method splits  $n$ rotations into two parts:  baby-step rotations and giant-step rotations, resulting in $O(\sqrt{n})$ homomorphic rotations. However, we find that for small $n$ (_i.e.,_ sparse diagonal matrices), the performance gain of BSGS is limited. We aim to design a faster matrix-vector multiplication method specifically for sparse diagonal matrices. Our second goal is to reduce modulus consumption in CKKS bootstrapping.
 
 
-**Notation.** We first provide some necessary notations. Let $N$ be a power-of-two integer, $q_0,q_1,\cdots, q_L,p_0,p_1,\cdots,p_{k-1}$ be $L+K+1$ distinct primes, and $Q_\ell=\prod_{i=0}^{\ell}q_i$, $P_j=\prod_{i=0}^j p_i$ for $0\le \ell \le L$ and $0\le j<k$. For simplicity, we write $Q = Q_L$ and $P = P_{k−1}$. We define $\mathcal{R}=\mathbb{Z}[X]/(X^N+1,Q)$, the cyclotomic polynomial ring over the integers modulo $Q$.
+**Notation.** We first provide some necessary notations. Let $N$ be a power-of-two integer, $q_0,q_1,\cdots, q_L,p_0,p_1,\cdots,p_{k-1}$ be $L+K+1$ distinct primes, and $Q_\ell=\prod_{i=0}^{\ell}q_i$, $P_j=\prod_{i=0}^j p_i$ for $0\le \ell \le L$ and $0\le j<k$. For simplicity, we write $Q = Q_L$ and $P = P_{k-1}$. We define $\mathcal{R}=\mathbb{Z}[X]/(X^N+1,Q)$, the cyclotomic polynomial ring over the integers modulo $Q$.
 
 <br />
 ## Key ideas
@@ -109,15 +109,15 @@ where $$a_j \leftarrow U(\mathcal{R}_{P Q_L})$$ and $e_j$ is sampled from the er
 **AKS operation.** Given $$\mathtt{ct} = (c_0, c_1) \in \mathcal{R}_{Q_L}^2$$ that encrypts $$\mathtt{pt}$$ under $s_1$ at modulus $Q_{L}$, the AKS operation proceeds in three steps: 
 1. **Key-switching:** 
   $$(d_0, d_1) = \left\lfloor \frac{1}{P} \left( \sum_{j=0}^{\beta-1} [c_1]_{D_j} \cdot \text{evk}_j \pmod {P Q_{L-1}} \right) \right\rceil \in \mathcal{R}_{Q_{L-1}}^2.$$
-1. **ScalarMult+Rescale on $c_0$:** $$c_0' = \left\lfloor \frac{m \cdot c_0}{q_L} \right\rceil\in \mathcal{R}_{Q_{L-1}}$$. 
-2. **Addition:** $$\mathtt{ct}' = (d_0 + c_0', d_1)$$. 
+2. **ScalarMult+Rescale on $c_0$:** $$c_0' = \left\lfloor \frac{m \cdot c_0}{q_L} \right\rceil\in \mathcal{R}_{Q_{L-1}}$$. 
+3. **Addition:** $$\mathtt{ct}' = (d_0 + c_0', d_1)$$. 
 
 The output encrypts $$m \cdot \mathtt{pt} / q_L$$ under $s_2$ at modulus $Q_{L-1}$. 
 
 **New matrix-vector multiplication.** Applying the AKS operation, we design a new matrix-vector multiplication algorithm, which adopts the hoisting approach but drops the BSGS method. The improved algorithm is:
 
 1. **Decompose:** Perform the Decompose procedure on $c_1$ (as usual).
-2. **AKS operation:** For each $$i\in\left[0,r\right)$$, perform MultSum using the decomposed $c_1$ and the aggregated rotation keys (KS+Scalar Mult+Rescale on $c_1$), followed by the ScalarMult+Rescale on $c_0$.
+2. **AKS operation:** For each $$i\in\left[0,r\right)$$, perform MultSum using the decomposed $c_1$ and the aggregated rotation keys (KS+ScalarMult+Rescale on $c_1$), followed by the ScalarMult+Rescale on $c_0$.
 3. **Permute+Add:** Rotate all $r$ ciphertexts accordingly and add them together.
 
 Compared with the matrix-vector multiplication based on the BSGS method, the new algorithm requires $r$ rotations, but the process is much simpler: it cuts down scalar multiplication and rescaling operations, and eliminates extra NTT/iNTT computations between baby-step and giant-step loops. Theoretically, the AKS-based algorithm is more efficient when the number of non-zero diagonals is small ($r \le 64$). The space overhead increases due to the larger number of rotation keys.
