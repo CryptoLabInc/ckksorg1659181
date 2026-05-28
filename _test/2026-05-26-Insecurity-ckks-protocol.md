@@ -153,17 +153,17 @@ In the previous (insecure) protocol, knowing one's own noise allowed an adversar
 
 We show that the output of the simulator $\text{Sim}^{P_1}_{\text{secure2PC}}(x, z)$ is computationally indistinguishable with the joint distribution of $P_1$'s view and the real execution output.
 
-$$\begin{aligned}
+$$
+\begin{array}{cl}
 & \{\text{view}^{\Pi_{\text{secure2PC}}}_{P_1}(x,y), \text{Out}^{\Pi_{\text{secure2PC}}}(x,y)\} \\
 \equiv\,\, & \{(..., \text{ct}_{\text{out}}':= \text{ct}_{\text{out}}+\text{ct}_{\text{zero}} + (r_2, 0)), C(x,y) + e_{\text{out}} + r_1 + r_2 \} \\
-%--------------
-\approx_s & \{(..., \text{ct}_{\text{out}}':= \text{ct}_{\text{out}}+\text{ct}_{\text{zero}} + (e -e_{\text{out}} - r_1, 0)), C(x,y)+e_{\text{out}} + e - e_{\text{out}}\} \\
-%--------------
+\approx_s & \{(..., \text{ct}_{\text{out}}':= \text{ct}_{\text{out}}+\text{ct}_{\text{zero}} + (e - e_{\text{out}} - r_1, 0)), C(x,y)+e_{\text{out}} + e - e_{\text{out}}\} \\
 \equiv\,\, & \{(..., \text{ct}_{\text{out}}'= ((a_{\text{out}} + a_{\text{zero}}) s + C(x,y) + e - r_1, a_{\text{out}}+a_{\text{zero}})), C(x,y) + e \} \\
-%--------------
 \approx_c & \{(..., \text{ct}_{\text{out}}'= (as + z - r_1, a)), z \} \\
 \equiv\,\, & \{(\text{Sim}^{P_1}_{\text{secure2PC}}(x, z), z )\}
-\end{aligned}$$
+\end{array}
+$$
+
 
 The statistical indistinguishability follows from the assumption that $e$ is an smudging error, while the computational indistinguishability is derived from the fact that the distribution of $a_\mathsf{zero}$ obtained from $$\mathsf{ct}_\mathsf{zero}=(b_\mathsf{zero}, a_\mathsf{zero}) \leftarrow \mathsf{Enc}_{pk}(0)$$ is indistinguishable from a uniform distribution over $R_q$ under the RLWE assumption.
 
