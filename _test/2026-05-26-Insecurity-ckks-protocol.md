@@ -52,7 +52,7 @@ We first introduce about the atandard simulation-based security notion for the c
 An $n$-party protocol $\Pi$ securely realizes a functionality $f$ if there exists a PPT simulator $\text{Sim}^\Pi$ such that for every corrupted subset of parties $$A \subseteq \{1, \dots, n\}$$ and every input vector $\mathbf{x}$, the following holds:
 
 $$
-\{(\text{Sim}^\Pi(A, (x_i)_{i\in A}, f_A(\mathbf{x})), f(\mathbf{x}))\} \approx_c \{(\mathsf{view}_A^\Pi(\mathbf{x}), \mathsf{output}^\Pi(\mathbf{x}))\}
+\{(\text{Sim}^\Pi(A, (x_i)_{i\in A}, f_A(\mathbf{x})), f(\mathbf{x}))\} \approx_c \{(\mathsf{view}_A^\Pi(\mathbf{x}), \mathsf{output}^\Pi(\mathbf{x}))\}.
 $$
 
 The above privacy requirement asserts that the **joint distribution** of the simulator's output and the outputs of functionality should be indistinguishable from the view of the corrupted party and the outputs of parties.
@@ -98,7 +98,7 @@ We demonstrate that this protocol does not satisfy the simulation-based security
 Assume the client ($P_1$) is corrupted. We claim that there does not exist a PPT algorithm $\text{Sim}^{\Pi}$ that satisfies the standard simulation-based security condition.
 
 $$
-\{(\text{Sim}^\Pi(P_1, x, f(x,y)), f(x,y))\} \approx_c \{(\mathsf{view}_{P_1}^\Pi(x,y), \mathsf{output}^\Pi(x,y))\}
+\{(\text{Sim}^\Pi(P_1, x, f(x,y)), f(x,y))\} \approx_c \{(\mathsf{view}_{P_1}^\Pi(x,y), \mathsf{output}^\Pi(x,y))\}.
 $$
 
 In a real execution of the protocol, the client naturally knows its own input $x$ and its locally sampled smudging noise $e_1$. Since the final protocol output is approximately the sum of all inputs and smudging noises ($z = x + y + e_1 + e_2$), a real-world adversary can easily calculate $z - x - e_1 = y + e_2$.
@@ -160,7 +160,7 @@ $$
 \approx_s & \{(..., \text{ct}_{\text{out}}':= \text{ct}_{\text{out}}+\text{ct}_{\text{zero}} + (e - e_{\text{out}} - r_1, 0)), C(x,y)+e_{\text{out}} + e - e_{\text{out}}\} \\
 \equiv\,\, & \{(..., \text{ct}_{\text{out}}'= ((a_{\text{out}} + a_{\text{zero}}) s + C(x,y) + e - r_1, a_{\text{out}}+a_{\text{zero}})), C(x,y) + e \} \\
 \approx_c & \{(..., \text{ct}_{\text{out}}'= (as + z - r_1, a)), z \} \\
-\equiv\,\, & \{(\text{Sim}^{P_1}_{\text{secure2PC}}(x, z), z )\}
+\equiv\,\, & \{(\text{Sim}^{P_1}_{\text{secure2PC}}(x, z), z )\}.
 \end{array}
 $$
 
