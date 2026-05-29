@@ -45,8 +45,8 @@ Throughout this post, we only discuss 2PC case between a client and a server for
 We first introduce about the atandard simulation-based security notion for the computation protocol.
 * **$n$:** a number of parties.
 * **$$f:(\{0,1\}^*)^n \rightarrow (\{0,1\}^*)^n$$:** a probabilistic polynomial-time (PPT) functionality.
-* **$\mathsf{view}_i^\Pi(\mathbf{x})$:** a view of party $P_i$ consists of its input, random tape, and all messages received during the protocol.
-* **$\mathsf{output}_i^\Pi(\mathbf{x}):$** an output of the protocol.
+* **$$\mathsf{view}_i^\Pi(\mathbf{x})$$:** a view of party $P_i$ consists of its input, random tape, and all messages received during the protocol.
+* **$$\mathsf{output}_i^\Pi(\mathbf{x})$$:** an output of the protocol.
 
 **Definition**
 An $n$-party protocol $\Pi$ securely realizes a functionality $f$ if there exists a PPT simulator $\text{Sim}^\Pi$ such that for every corrupted subset of parties $$A \subseteq \{1, \dots, n\}$$ and every input vector $\mathbf{x}$, the following holds:
@@ -196,7 +196,7 @@ This technique can be extended across polynomials ($R$) by evaluating each coeff
 
 In a two-party environment, the required random bit shares are generated efficiently via a 1-out-of-2 Oblivious Transfer (OT) protocol:
 
-* **The Process:** The sender ($P_1$) samples a random bit $b$ and a local mask $r_1$, preparing masked values ($m_0, m_1$)=($b-r_1$, $1-b-r_1$) for the transfer. The receiver ($P_2$) samples a selection bit $\sigma$ and fetches the corresponding value $m_\sigma$ through the OT mechanism.
+* **The Process:** The sender ($P_1$) samples a random bit $b$ and a local mask $r_1$, preparing masked values $(m_0, m_1)=(b-r_1, 1-b-r_1)$ for the transfer. The receiver ($P_2$) samples a selection bit $\sigma$ and fetches the corresponding value $m_\sigma$ through the OT mechanism.
 * **Optimization:** The protocol instantiates this using a random OT baseline combined with Beaver's OT derandomization technique. This approach turns a random OT into a sender-chosen OT with only one additional round of communication. Because all instances can run in parallel, the round complexity remains constant.
 
 <br />
