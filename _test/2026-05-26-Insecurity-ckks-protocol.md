@@ -50,11 +50,11 @@ Throughout this post, we only discuss 2PC case between a client and a server for
 We first introduce the standard simulation-based security notion for the computation protocol.
 * **$n$:** the number of parties.
 * **$$f:(\{0,1\}^*)^n \rightarrow (\{0,1\}^*)^n$$:** a probabilistic polynomial-time (PPT) functionality.
-* **$$\text{view}_i^\Pi(\mathbf{x})$$:** a view of party $P_i$, consisting of its input, random tape, and all messages received during the protocol.
+* **$$\text{view}_i^\Pi(\mathbf{x})$$:** a view of party $P_i,$ consisting of its input, random tape, and all messages received during the protocol.
 * **$$\text{output}_i^\Pi(\mathbf{x})$$:** an output of the protocol.
 
 **Definition**
-An $n$-party protocol $\Pi$ securely realizes a functionality $f$ if there exists a PPT simulator $\text{Sim}^\Pi$ such that for every corrupted subset of parties $$A \subseteq \{1, \dots, n\}$$ and every input vector $\mathbf{x}$, the following holds:
+An $n$-party protocol $\Pi$ securely realizes a functionality $f$ if there exists a PPT simulator $\text{Sim}^\Pi$ such that for every corrupted subset of parties $$A \subseteq \{1, \dots, n\}$$ and every input vector $\mathbf{x},$ the following holds:
 
 $$
 \{(\text{Sim}^\Pi(A, (x_i)_{i\in A}, f_A(\mathbf{x})), f(\mathbf{x}))\} \approx_c \{(\text{view}_A^\Pi(\mathbf{x}), \text{output}^\Pi(\mathbf{x}))\}
@@ -78,7 +78,7 @@ Asymmetric two-party protocols constitute one of the most common applications of
 
 This baseline solution raises several security concerns. First, the decrypted value of a CKKS ciphertext may leak more information than the client intends.
 On the other hand, the server also needs to ensure its input privacy, which is often referred to as circuit privacy in the HE context. Therefore, the two aforementioned issues must be considered together for constructing a secure CKKS-based 2PC protocol.
-Since a noise smudging technique is widely regarded as a standard countermeasure for achieving $\text{IND-CPA}^\text{D}$ security [2] and circuit privacy [3], existing CKKS-based 2PC protocols typically adopt noise smudging in both sides. In this case, the functionality output is $f(x,y) = C(c,y) + e_1 + e_2$ where $e_1$ and $e_2$ are independently sampled from the client ($P_1$) and the server ($P_2$), respectively.
+Since a noise smudging technique is widely regarded as a standard countermeasure for achieving $\text{IND-CPA}^\text{D}$ security [2] and circuit privacy [3], existing CKKS-based 2PC protocols typically adopt noise smudging in both sides. In this case, the functionality output is $f(x,y) = C(x,y) + e_1 + e_2$ where $e_1$ and $e_2$ are independently sampled from the client ($P_1$) and the server ($P_2$), respectively.
 
 <!-- <div style="text-align: center;">
   <img src="exist2PC.PNG" alt="Existing approximate 2PC protocol" style="display: block; margin: 0 auto; max-width: 65%;">
@@ -108,7 +108,7 @@ $$
 
 In a real execution of the protocol, the client naturally knows its own input $x$ and its locally sampled smudging noise $e_1$. Since the final protocol output is approximately the sum of all inputs and smudging noises ($z = x + y + e_1 + e_2$), a real-world adversary can easily calculate $z - x - e_1 = y + e_2$.
 
-In the ideal world, however, the simulator only receives the client's input $x$ and the aggregated ideal output $z$. To satisfy simulation-based security, the simulator must generate a fake view containing a simulated noise $e'_1$ such that $z - x - e'_1$ is indistinguishable from $y + e_2$. Because the simulator has no knowledge of the server's private input $y$, it faces an impossible task. It cannot correctly decompose the aggregated sum to isolate a convincing $e'_1$ for all possible values of $y$, making the simulated view easily distinguishable from the real execution.
+In the ideal world, however, the simulator only receives the client's input $x$ and the aggregated ideal output $z$. To satisfy simulation-based security, the simulator must generate a fake view containing a simulated noise $e'_1$ such that $z - x - e'_1$ is indistinguishable from $y + e_2$. Because the simulator has no knowledge of the server's private input $y,$ it faces an impossible task. It cannot correctly decompose the aggregated sum to isolate a convincing $e'_1$ for all possible values of $y,$ making the simulated view easily distinguishable from the real execution.
 
 Similarly, it can be readily shown that no simulator exists for a corrupted server. When the server is corrupted, the smudging error $e_2$ becomes part of the adversary’s internal state.
 Ultimately, because a valid simulator cannot be constructed for either party, the baseline protocol fails to satisfy standard simulation-based security requirements.
@@ -128,7 +128,7 @@ As a result, we address this issue from the following key idea:
 
 > If each party is independent of the smudging error, the protocol achieves the simulation-based security.
 
-In order to achieve this property, we propose an alternative error generation procedure, called **collaborative sampling**. The functionality of the collaborative sampling is generating a single smudging error $e$ from a smudging distribution and dividing it into two random additive shares, $r_1$ and $r_2$, such that $r_1 + r_2 = e$. Because each individual share is statistically indistinguishable from a uniformly random element, neither party obtains any partial knowledge about the total smudging error $e$ in isolation.
+In order to achieve this property, we propose an alternative error generation procedure, called **collaborative sampling**. The functionality of the collaborative sampling is generating a single smudging error $e$ from a smudging distribution and dividing it into two random additive shares, $r_1$ and $r_2,$ such that $r_1 + r_2 = e$. Because each individual share is statistically indistinguishable from a uniformly random element, neither party obtains any partial knowledge about the total smudging error $e$ in isolation.
 
 By utilizing the collaborative sampling, we can construct the secure approximate 2PC protocol. During the protocol, the client encrypts its input, and the server homomorphically evaluates the circuit with their private input. To maintain circuit privacy, the server adds its secret noise share $r_2$ directly to the evaluated ciphertext before sending it to the client. The client then decrypts the received ciphertext while simultaneously factoring in its own noise share $r_1$. This reconstructs the final output, which is statistically identical to $z=C(x,y) + e$.
 
@@ -146,7 +146,7 @@ By utilizing the collaborative sampling, we can construct the secure approximate
     Figure 2. Secure approximate 2PC protocol. 
 </div>
 
-In the previous (insecure) protocol, knowing one's own noise allowed an adversary to extract a more precise approximation than the ideal functionality intended to reveal. In this secure protocol, because the individual noise shares are entirely decoupled from the actual total error $e$, neither the client nor the server can derive additional information than the ideal functionality. More precisely, we can construct the simulator against the adversarial client ($P_1$) as below.
+In the previous (insecure) protocol, knowing one's own noise allowed an adversary to extract a more precise approximation than the ideal functionality intended to reveal. In this secure protocol, because the individual noise shares are entirely decoupled from the actual total error $e,$ neither the client nor the server can derive additional information than the ideal functionality. More precisely, we can construct the simulator against the adversarial client ($P_1$) as below.
 
 1) Generate key pair $(sk, pk)$ and encrypt the client's private input $$\text{ct}_\text{in} \leftarrow \text{Enc}_{pk}(x)$$.
    
@@ -201,7 +201,7 @@ This technique can be extended across polynomials ($R$) by evaluating each coeff
 
 In a two-party environment, the required random bit shares are generated efficiently via a 1-out-of-2 Oblivious Transfer (OT) protocol:
 
-* **The Process:** The sender ($P_1$) samples a random bit $b$ and a local mask $r_1$, preparing masked values $(m_0, m_1)=(b-r_1, 1-b-r_1)$ for the transfer. The receiver ($P_2$) samples a selection bit $\sigma$ and fetches the corresponding value $m_\sigma$ through the OT mechanism.
+* **The Process:** The sender ($P_1$) samples a random bit $b$ and a local mask $r_1,$ preparing masked values $(m_0, m_1)=(b-r_1, 1-b-r_1)$ for the transfer. The receiver ($P_2$) samples a selection bit $\sigma$ and fetches the corresponding value $m_\sigma$ through the OT mechanism.
 * **Optimization:** The protocol instantiates this using a random OT baseline combined with Beaver's OT derandomization technique. This approach turns a random OT into a sender-chosen OT with only one additional round of communication. Because all instances can run in parallel, the round complexity remains constant.
 
 <br />
@@ -256,7 +256,7 @@ We implement and benchmark the protocols for collaborative sampling in both two-
 </div>
 
 For the two-party case, we use LibOTe library with the OT extension to generate bit shares for $\log q \approx 128$.
-For the multi-party case, we use Lattigo library to implement discrete CKKS. We use the parameters $N = 2^{16}, \log QP \approx 1200$, so that a single protocol creates $2^{16}$ bit shares. We also set the parameters so that after the protocol $157$ bits of modulus is left with $\log \Delta \approx 60$ and $\approx 2^{-47}$ bits of precision.
+For the multi-party case, we use Lattigo library to implement discrete CKKS. We use the parameters $N = 2^{16}, \log QP \approx 1200,$ so that a single protocol creates $2^{16}$ bit shares. We also set the parameters so that after the protocol $157$ bits of modulus is left with $\log \Delta \approx 60$ and $\approx 2^{-47}$ bits of precision.
 Hence, we can set $\log q \approx 90$ and support up to $2^7 = 128$ parties with 40 bits of statistical security.
 We also note that we only implement the bootstrapping and the cleaning part, as it is the main bottleneck of the protocol.
 
@@ -268,13 +268,13 @@ We also note that we only implement the bootstrapping and the cleaning part, as 
 We also investigate a relaxed, alternative security framework termed **liberal security**, inspired by [8]. Unlike the standard definition, in which the simulator relies solely on the ideal functionality's output, the liberal definition grants the simulator access to auxiliary information.
 
 **Definition**
-Let $\Pi$ be an $n$-party protocol realizing a functionality $f$. We also define auxiliary information $\hat{f}$ for the functionality $f$. We say $\Pi$ is liberally secure if there exists a PPT simulator $\text{Sim}^\Pi$ such that for every corrupted subset of parties $$A \subseteq \{1, \dots, n\}$$ and every input vector $\mathbf{x}$, the following holds:
+Let $\Pi$ be an $n$-party protocol realizing a functionality $f$. We also define auxiliary information $\hat{f}$ for the functionality $f$. We say $\Pi$ is liberally secure if there exists a PPT simulator $\text{Sim}^\Pi$ such that for every corrupted subset of parties $$A \subseteq \{1, \dots, n\}$$ and every input vector $\mathbf{x},$ the following holds:
 
 $$
 \{ (\text{Sim}^{\Pi}(A, (x_i)_{i \in A}, f_A(\mathbf{x}), \hat{f}_A(\mathbf{x})), f(\mathbf{x})) \} \approx_c \{ (\text{view}_A^{\Pi}(\mathbf{x}), \text{output}^{\Pi}(\mathbf{x})) \}
 $$
 
-Liberal security guarantees that the adversary cannot obtain more information than the adversary that is given access to both the ideal functionality $f$ and the auxiliary information $\hat{f}$. It is the main difference between liberal security and standard MPC security notion. More precisely, liberal security guarantees that the protocol reveals no additional private information beyond that already disclosed by the pair $(f, \hat{f})$, whereas the standard simulation-based definition restricts leakage solely to the information revealed by the ideal functionality $f$.
+Liberal security guarantees that the adversary cannot obtain more information than the adversary that is given access to both the ideal functionality $f$ and the auxiliary information $\hat{f}$. It is the main difference between liberal security and standard MPC security notion. More precisely, liberal security guarantees that the protocol reveals no additional private information beyond that already disclosed by the pair $(f, \hat{f}),$ whereas the standard simulation-based definition restricts leakage solely to the information revealed by the ideal functionality $f$.
 
 <br />
 ### Security Analysis of Existing 2PC protocol ###
@@ -291,7 +291,7 @@ To prove the security of the existing 2PC protocol, we assume the case where the
    
 4) Output $$(x, r_1, sk, pk, \text{ct}_\text{in}, \text{ct}'_\text{out})$$.
 
-Unlike the definition of standard security, the simulator also obtains the exact computation result as auxiliary information for the inputs. Therefore, the simulator can extract approximation error by subtracting $\hat{z}$ from $z$, and it enables to generate the adversary's view satisfying the desired condition of the security notion.
+Unlike the definition of standard security, the simulator also obtains the exact computation result as auxiliary information for the inputs. Therefore, the simulator can extract approximation error by subtracting $\hat{z}$ from $z,$ and it enables to generate the adversary's view satisfying the desired condition of the security notion.
 This security proof guarantees that existing 2PC protocol leaks no more information than can be derived from $(f, \hat{f})$ where $\hat{f}$ returns the exact evaluation result for a certain circuit $C$.
 
 As such, the satisfaction of existing protocols with liberal security provides a theoretical justification for widely deployed protocols, showing that they are not completely insecure but rather offer a minimum security guarantee.
