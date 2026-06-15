@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/software/";
           },
-        },{id: "post-modern-construction-of-moduli-chain-in-heaan2",
+        },{id: "post-on-the-in-security-of-approximate-computation-protocols-from-ckks",
+        
+          title: "On the (In)security of Approximate Computation Protocols from CKKS",
+        
+        description: "TL;DR: Recent advances in approximate HE, particularly CKKS, have significantly advanced the practicality of secure computation involving approximate arithmetic. However, the inherent errors introduced by CKKS pose substantial challenges in the security analysis and protocol design.  We investigate the correctness and security of existing CKKS-based protocols relying on the noise smudging technique, in which each party independently samples exponentially large noise. We show that these constructions fail to achieve standard simulation-based security. To address this issue, we propose a collaborative sampling approach in which parties jointly generate additive shares of the smudging noise. We present concrete constructions for both asymmetric two-party and symmetric multiparty settings, together with formal ideal functionalities. Furthermore, we provide concrete implementations of round-efficient collaborative sampling protocols. As an alternative perspective, we show that existing protocols satisfy a weaker security notion called liberal security.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/Insecurity-ckks-protocol/";
+          
+        },
+      },{id: "post-modern-construction-of-moduli-chain-in-heaan2",
         
           title: "Modern Construction of Moduli Chain in HEaaN2",
         
@@ -195,17 +206,7 @@ ninja.data = [{
           section: "News",},{id: "news-damien-stehlé-is-stepping-down-his-role-as-a-co-editor-may-2025-may-2026-having-led-this-initiative-alongside-keewoo-from-the-very-beginning-we-are-deeply-grateful-for-his-immense-dedication",
           title: 'Damien Stehlé is stepping down his role as a co-editor (May 2025 –...',
           description: "",
-          section: "News",},{id: "test-faster-bootstrapping-for-ckks-with-less-modulus-consumption",
-          title: 'Faster Bootstrapping for CKKS with Less Modulus Consumption',
-          description: "TL;DR: To improve efficiency and reduce the modulus consumption in standard CKKS bootstrapping, we propose two novel core techniques: level-conserving rescaling (LCR) and aggregated key-switching (AKS), which act on the matrix-vector multiplications in linear transformations and can be further combined into the lossless LCR+AKS. The contributions enable bootstrapping that consumes one fewer modulus level, improves throughput by 20%–35%, and reduces CtS rotation key size by 11.9%–15.2%, while preserving identical precision and failure probability.",
-          section: "Test",handler: () => {
-              window.location.href = "/test/2026-06-01-less-mod-ckks/";
-            },},{id: "test-on-the-in-security-of-approximate-computation-protocols-from-ckks",
-          title: 'On the (In)security of Approximate Computation Protocols from CKKS',
-          description: "TL;DR: Recent advances in approximate HE, particularly CKKS, have significantly advanced the practicality of secure computation involving approximate arithmetic. However, the inherent errors introduced by CKKS pose substantial challenges in the security analysis and protocol design.  We investigate the correctness and security of existing CKKS-based protocols relying on the noise smudging technique, in which each party independently samples exponentially large noise. We show that these constructions fail to achieve standard simulation-based security. To address this issue, we propose a collaborative sampling approach in which parties jointly generate additive shares of the smudging noise. We present concrete constructions for both asymmetric two-party and symmetric multiparty settings, together with formal ideal functionalities. Furthermore, we provide concrete implementations of round-efficient collaborative sampling protocols. As an alternative perspective, we show that existing protocols satisfy a weaker security notion called liberal security.",
-          section: "Test",handler: () => {
-              window.location.href = "/test/2026-05-26-Insecurity-ckks-protocol/";
-            },},{
+          section: "News",},{
         id: 'social-email',
         title: 'email',
         section: 'Socials',
