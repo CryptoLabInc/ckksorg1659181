@@ -206,7 +206,12 @@ ninja.data = [{
           section: "News",},{id: "news-damien-stehlé-is-stepping-down-his-role-as-a-co-editor-may-2025-may-2026-having-led-this-initiative-alongside-keewoo-from-the-very-beginning-we-are-deeply-grateful-for-his-immense-dedication",
           title: 'Damien Stehlé is stepping down his role as a co-editor (May 2025 –...',
           description: "",
-          section: "News",},{
+          section: "News",},{id: "test-fhe-for-simd-arithmetic-logic-units-with-amortized-o-1-bootstrapping-per-ciphertext",
+          title: 'FHE for SIMD Arithmetic Logic Units with Amortized O(1) Bootstrapping per Ciphertext',
+          description: "TL;DR: We propose a new CKKS-compatible encoding framework that uses multiple complex slots to represent one number in a trianglular form, enabling both arithmetic and Boolean operations for a vector of, for example, 64-bit integers with amortized O(1) bootstrapping when O(n) ciphertexts are batched. In particular, for integer-arithmetic-only workloads, each refresh requires only two bootstrapping operations, regardless of the bit-width. The prototype is available at .",
+          section: "Test",handler: () => {
+              window.location.href = "/test/2026-06-30-fhe-simd-alu/";
+            },},{
         id: 'social-email',
         title: 'email',
         section: 'Socials',
