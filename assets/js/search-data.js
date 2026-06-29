@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/software/";
           },
-        },{id: "post-on-the-in-security-of-approximate-computation-protocols-from-ckks",
+        },{id: "post-faster-bootstrapping-for-ckks-with-less-modulus-consumption",
+        
+          title: "Faster Bootstrapping for CKKS with Less Modulus Consumption",
+        
+        description: "TL;DR: To improve efficiency and reduce the modulus consumption in standard CKKS bootstrapping, we propose two novel core techniques: level-conserving rescaling (LCR) and aggregated key-switching (AKS), which act on the matrix-vector multiplications in linear transformations and can be further combined into the lossless LCR+AKS. The contributions enable bootstrapping that consumes one fewer modulus level, improves throughput by 20%–35%, and reduces CtS rotation key size by 11.9%–15.2%, while preserving identical precision and failure probability.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/less-mod-ckks/";
+          
+        },
+      },{id: "post-on-the-in-security-of-approximate-computation-protocols-from-ckks",
         
           title: "On the (In)security of Approximate Computation Protocols from CKKS",
         
