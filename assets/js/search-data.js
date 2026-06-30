@@ -219,7 +219,7 @@ ninja.data = [{
           description: "",
           section: "News",},{id: "test-fhe-for-simd-arithmetic-logic-units-with-amortized-o-1-bootstrapping-per-ciphertext",
           title: 'FHE for SIMD Arithmetic Logic Units with Amortized O(1) Bootstrapping per Ciphertext',
-          description: "TL;DR: We propose a new CKKS-compatible encoding framework that uses multiple complex slots to represent one number in a trianglular form, enabling both arithmetic and Boolean operations for a vector of, for example, 64-bit integers with amortized O(1) bootstrapping when O(n) ciphertexts are batched. In particular, for integer-arithmetic-only workloads, each refresh requires only two bootstrapping operations, regardless of the bit-width. The prototype is available at .",
+          description: "TL;DR: We propose a new CKKS-compatible encoding framework that supports both arithmetic and Boolean operations for a vector of, for example, 64-bit integers. The key idea is using multiple complex slots to represent one integer, with a special ring isomorphism to maintain the desired integer arithmetic. For arithmetic-only workloads, each refreshing requires only two bootstrapping operations for one ciphertext. For Boolean operations, the arithmetic-to-Boolean conversion can batch $O(n)$ ciphertexts, resulting in amortized $O(1)$ bootstrapping per ciphertext. The prototype is available at .",
           section: "Test",handler: () => {
               window.location.href = "/test/2026-06-30-fhe-simd-alu/";
             },},{
