@@ -6,21 +6,34 @@ nav: true
 nav_order: 2
 
 ---
+The links are listed in alphabetical order.<br>
+<small class="text-muted">*Are you developing CKKS-related software and would like it listed here? Please [contact the editors](/).*</small>
+
+### FHE Libraries for CKKS
+
+**Libraries**
+
+- [Cheddar](https://github.com/scale-snu/cheddar-fhe) <small class="text-muted">CKKS</small>
+- [Desilo FHE](https://fhe.desilo.dev/latest/install/) <small class="text-muted">CKKS, GL</small>
+- [FIDESlib](https://github.com/CAPS-UMU/FIDESlib) <small class="text-muted">CKKS</small>
+- [HEaaN](https://heaan.io) <small class="text-muted">CKKS</small>
+- [HElib](https://github.com/HomEnc/HElib) <small class="text-muted">CKKS, BGV</small>
+- [HEonGPU](https://github.com/Alisah-Ozcan/HEonGPU) <small class="text-muted">CKKS, BFV, DM/CGGI</small>
+- [Lattigo](https://github.com/tuneinsight/lattigo) <small class="text-muted">CKKS, BFV, BGV</small>
+- [OpenFHE](https://github.com/openfheorg/openfhe-development) <small class="text-muted">CKKS, BFV, BGV, DM/CGGI</small>
+- [SEAL](https://github.com/microsoft/SEAL) <small class="text-muted">CKKS, BFV, BGV</small>
+
+**Compilers**
+
+- [ACE compiler](https://github.com/ant-research/ace-compiler) <small class="text-muted">CKKS</small>
+- [EVA](https://github.com/microsoft/EVA) <small class="text-muted">CKKS</small>
+- [FHElipe](https://github.com/fhelipe-compiler/fhelipe) <small class="text-muted">CKKS, DM/CGGI</small>
+- [HEIR](https://github.com/google/heir) <small class="text-muted">CKKS, BFV, BGV, DM/CGGI</small>
+- [Orion](https://github.com/baahl-nyu/orion) <small class="text-muted">CKKS</small>
 
 <br>
 
-### [HEaaN Encrypted LLM Experience](https://iheaan.com/?target=heaan-llm) {#heaan-encrypted-llm}
+### FHE-powered Applications using CKKS
 
-The Encrypted LLM Experience enables developers to build their own encrypted LLM providing the flexibility to implement custom functions such as a tailored softmax, while leveraging homomorphic encryption for secure computations on sensitive data.
-
-<br>
-
-### [HEaaN.Stat SDK](https://iheaan.com/?target=heaan-stat) {#heaan.stat-sdk}
-
-Enabling encrypted statistical analysis, HEaaN.Stat SDK facilitates collaborative statistics by allowing operations like addition, subtraction, and statistical evaluations directly on encrypted data. The SDK provides robust tools for privacy-preserving data analytics, empowering secure collaboration in industries with stringent data protection requirements.
-
-<br>
-
-### [HEaaN Private AI Homomorphic Encryption Library](https://hub.docker.com/r/cryptolabinc/heaan) {#heaan-private-ai}
-
-Fully Homomorphic Encryption Library with CKKS scheme ([Documentation](https://cryptolab1.gabia.io/docs/heaan/namespaces.html)). This is not updated anymore. Please refer to [CODE.HEAAN](https://heaan.io/) for up-to-date binaries including GPU implementation. 
+- [HEaaN Encrypted LLM Experience](https://llm-doc.iheaan.com/) <small class="text-muted">LLM over homomorphically encrypted data</small>
+- [HEaaN.Stat SDK](https://stat-doc.iheaan.com/) <small class="text-muted">Privacy-preserving statistical analysis on encrypted data</small>
