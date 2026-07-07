@@ -46,7 +46,7 @@ In plaintext computation, it is relatively cheap to convert between the two para
   + CKKS: It is possible to directly embed 64-bit integers in CKKS complex slots. However, after one multiplication, we obtain 128-bit integers in complex slots, and we need more-than-128-bit-precision bootstrapping to keep the lower bits (resulting message) and truncate the higher bits (overflows) to allow further computation.
   + "Whole" paradigm are hard to convert to the "bit vector" paradigm: they either need polynomial evaluation to extract all bits, or use a series of bootstrappings.
 
-In this regard, the "bit-vector" paradigm is more natural for existing solutions, such as TFHE and RadixCKKS (Eurocrypt'26) [6]. However, these schemes then need to manage carries and overflows *iteratively*. A typical TFHE multiplication circuit uses $O(n^2)$ programmable bootstrapping operations. RadixCKKS requires $O(\log (n/4))$ CKKS bootstrapping operations after each multiplication.
+In this regard, the "bit-vector" paradigm is more natural for existing solutions, such as TFHE and RadixCKKS (Eurocrypt'26) [6]. However, these schemes then need to manage carries and overflows *iteratively*. A typical TFHE multiplication circuit uses $O(n^2)$ programmable bootstrapping operations. RadixCKKS requires $O(\log n)$ CKKS bootstrapping operations after each multiplication.
 
 <div align="center" markdown="1">
 
@@ -94,7 +94,7 @@ In this regard, the "bit-vector" paradigm is more natural for existing solutions
     </tr>
     <tr>
       <td style="border: 1px solid; padding: 6px 12px; min-width: 80px;">RadixCKKS [6]</td>
-      <td style="border: 1px solid; padding: 6px 12px;">$O(\log (n/4))$ BTS</td>
+      <td style="border: 1px solid; padding: 6px 12px;">$O(\log n)$ BTS</td>
       <td style="border: 1px solid; padding: 6px 12px;">$O(1)$ BTS</td>
     </tr>
     <tr>
@@ -212,7 +212,7 @@ The reason for managing the overflow $I$ is that, it contributes to the noise gr
 
 In the triangle encoding section, we have made the overflow $I$ into an expression that can be managed in a coefficient-wise manner in the ring $$\mathbb{R}[X]/\langle X^n-X+2\rangle$$. On the other hand, the encoding process through the homomorphism chain makes the encoded polynomial appear "irregular" in the ring $$\mathbb{Z}[X]/\langle X^N+1, Q\rangle$$. Note that in the RLWE ring, there is a modulo-by-Q structure that *natively* modulo  every coeffcient, and we want to exploit that. 
 
-The idea is to move the "regular" coefficients from one polynomial ring to another. In CKKS, there are linear transformations that move data between coefficients and slots. Here, we use linear transformations to move polynomial coefficients from $$(\mathbb{R}[X]/\langle X^n-X+2\rangle)^{N/n}$$ to $$\mathcal{R}_Q=\mathbb{Z}[X]/\langle X^N+1, Q\rangle$$. More technically, we first move from the coefficients from the first polynomial rings to $$\mathbb{C}^{N/2}$$ using linear transformation that costs $$O(2\sqrt{2n})$$ key-switching, then use CKKS-style SlotsToCoeffs to move them into the RLWE ring.
+The idea is to move the "regular" coefficients from one polynomial ring to another. In CKKS, there are linear transformations that move data between coefficients and slots. Here, we use linear transformations to move polynomial coefficients from $$(\mathbb{R}[X]/\langle X^n-X+2\rangle)^{N/n}$$ to $$\mathcal{R}_Q=\mathbb{Z}[X]/\langle X^N+1, Q\rangle$$. More technically, we first move from the coefficients from the first polynomial rings to $$\mathbb{C}^{N/2}$$ using linear transformation that costs $$O(\sqrt{n})$$ key-switching, then use CKKS-style SlotsToCoeffs to move them into the RLWE ring.
 
 After applying linear transformations, the ciphertext encrypts the $$\Delta (I + [m]_t/t) + e$$ coefficient structure in the RLWE ring $$\mathcal{R}$$. We can then reset the overflow $I$ using the "Truncate and ModRaise" operation. The "Truncate" operation is inspired by [7] which multiplies by $$Q_{\ell}/\Delta$$ to remove the higher bits, and then modulus switching back to $$q_0$$. The ModRaise operation then introduces another $I'$ while raising the modulus back to $$Q_{L}$$. By using a sparse key encapsulation technique, the norm of the coefficients of the new $I'$ can be very small.
 
@@ -229,7 +229,7 @@ After the "Truncate and ModRaise" operation, we again use linear transformations
 
 To manage the noise $e$, we follow the idea of bootstrapping the noise, like in META-BTS [8]. We first multiply by $t$ in the original ring to obtain $$\Delta (tI + [m]_t) + te$$, so that $$\Delta (tI + [m]_t)$$ can be truncated away using "Truncate and ModRaise" as $(tI + [m]_t)$ has integer coefficients. We then bootstrap $te$, recover $e$, and subtract it from the input ciphertext.
 
-Therefore, we only need two CKKS bootstrapping operations for arithmetic-to-arithmetic refreshing. We use $O(1)$ notation as the CKKS bootstrapping number does not change with the bit-width $n$, unlike previous works. We see CoeffsToSlots and SlotsToCoeffs as the major cost while seeing the $$O(2\sqrt{2n})$$ cost for linear transformation as minor because $n$ is moderate. We further remark that refreshing is needed only when $I$ or $e$ becomes large enough, so several multiplications can be performed before one refreshing ("leveled"), and both bootstrapping operations can be executed independently.
+Therefore, we only need two CKKS bootstrapping operations for arithmetic-to-arithmetic refreshing. We use $O(1)$ notation as the CKKS bootstrapping number does not change with the bit-width $n$, unlike previous works. We see CoeffsToSlots and SlotsToCoeffs as the major cost while seeing the $$O(\sqrt{n})$$ cost for linear transformation as minor because $n$ is moderate. We further remark that refreshing is needed only when $I$ or $e$ becomes large enough, so several multiplications can be performed before one refreshing ("leveled"), and both bootstrapping operations can be executed independently.
 
 As for the concrete number of multiplications that can be performed, it depends on the noise and overflow size of the operands, the remaining CKKS levels, and the scaling factor. In our parameter setting, we estimate 2 to 3 multiplications could be performed before a refreshing, depending on the whether the input operands are plaintext, fresh encryption or refreshed ciphertexts. 
 
@@ -275,7 +275,7 @@ In our concrete execution, the bit extraction is carried out in blocks (4 bits p
 
 In summary, we introduce the triangle encoding, a new encoding for machine words. In arithmetic mode, each refresh uses two bootstrapping-like operations, independent of the word size. When we want to mix in Boolean operations, we can achieve amortized $O(1)$ bootstrapping when there are a sufficient number of ciphertexts.
 
-Our scheme is most suitable for applications with heavy arithmetic and lightweight Boolean operations. The recommended word sizes for applications are $n=32$ and $n=64$, as these are common word sizes in modern computer. We also demonstrated the use of $n=256$ for high-precision arithmetic in the paper. In principle, we can support arbitrary bit-width $n$, but then the linear transformation cost between $$\mathbb{C}^{n/2}$$ and $$\mathbb{R}[X]/\langle X^n-X+2\rangle$$ grows in the order of $$O(2\sqrt{2n})$$, unlike in RadixCKKS where a DFT-like structure can be used.
+Our scheme is most suitable for applications with heavy arithmetic and lightweight Boolean operations. The recommended word sizes for applications are $n=32$ and $n=64$, as these are common word sizes in modern computer. We also demonstrated the use of $n=256$ for high-precision arithmetic in the paper. In principle, we can support arbitrary bit-width $n$, but then the linear transformation cost between $$\mathbb{C}^{n/2}$$ and $$\mathbb{R}[X]/\langle X^n-X+2\rangle$$ grows in the order of $$O(\sqrt{n})$$, unlike in RadixCKKS where a DFT-like structure can be used.
 
 This post focuses on the amortized conversion strategy presented in the paper. More direct arithmetic-to-Boolean conversion methods, without relying on the same amortization regime, will be discussed separately.
 
@@ -285,16 +285,16 @@ This post focuses on the amortized conversion strategy presented in the paper. M
 
 [1] Jeffrey Hoffstein and Joseph Silverman, "Optimizations for NTRU." Proc. the Conf. on Public Key Cryptography and Computational Number Theory, Warsaw. pp. 77–88 (2000)
 
-[2] Hao Chen, Kim Laine, Rachel Player, and Yuhou Xia, "High-Precision Arithmetic in Homomorphic Encryption." CT-RSA'18
+[2] Hao Chen, Kim Laine, Rachel Player, and Yuhou Xia, "High-Precision Arithmetic in Homomorphic Encryption." CT-RSA 2018
 
-[3] Robin Geelen and Frederik Vercauteren, "Fully Homomorphic Encryption for Cyclotomic Prime Moduli." EUROCRYPT'25
+[3] Robin Geelen and Frederik Vercauteren, "Fully Homomorphic Encryption for Cyclotomic Prime Moduli." EUROCRYPT 2025
 
-[4] Hyunho Cha, Intak Hwang, Seonhong Min, Jinyeong Seo, and Yongsoo Song, "MatriGear: Accelerating Authenticated Matrix Triple Generation with Scalable Prime Fields via Optimized HE Packing." IEEE S&P'25
+[4] Hyunho Cha, Intak Hwang, Seonhong Min, Jinyeong Seo, and Yongsoo Song, "MatriGear: Accelerating Authenticated Matrix Triple Generation with Scalable Prime Fields via Optimized HE Packing." IEEE S&P 2025
 
-[5] Zvika Brakerski, Offir Friedman, Daniel Golan, Alon Gurny, Dolev Mutzari, and Ohad Sheinfeld, "REFHE: Fully Homomorphic ALU." EUROCRYPT'26
+[5] Zvika Brakerski, Offir Friedman, Daniel Golan, Alon Gurny, Dolev Mutzari, and Ohad Sheinfeld, "REFHE: Fully Homomorphic ALU." EUROCRYPT 2026
 
-[6] Gyeongwon Cha, Dongjin Park, and Joon-Woo Lee, "Improved Radix-based Approximate Homomorphic Encryption for Large Integers via Lightweight Bootstrapped Digit Carry." EUROCRYPT'26
+[6] Gyeongwon Cha, Dongjin Park, and Joon-Woo Lee, "Improved Radix-based Approximate Homomorphic Encryption for Large Integers via Lightweight Bootstrapped Digit Carry." EUROCRYPT 2026
 
-[7] Jaehyung Kim and Taeyeong Noh, "Modular Reduction in CKKS." CIC'25
+[7] Jaehyung Kim and Taeyeong Noh, "Modular Reduction in CKKS." IACR CIC 2025 (2)
 
-[8] Youngjin Bae, Jung Hee Cheon, Wonhee Cho, Jaehyung Kim, and Taekyung Kim, "META-BTS: Bootstrapping Precision Beyond the Limit." CCS'22
+[8] Youngjin Bae, Jung Hee Cheon, Wonhee Cho, Jaehyung Kim, and Taekyung Kim, "META-BTS: Bootstrapping Precision Beyond the Limit." ACM CCS 2022
