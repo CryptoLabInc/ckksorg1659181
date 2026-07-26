@@ -15,7 +15,7 @@ giscus_comments: true
 ---
 
 - Written by [Hongren Zheng](https://hongrenzhe.ng) (Tsinghua University)
-- Based on [https://ia.cr/2026/233](https://eprint.iacr.org/2026/233)
+- Based on [https://ia.cr/2026/233](https://eprint.iacr.org/2026/233) (Crypto 2026)
 
 _TL;DR: We propose a new CKKS-compatible encoding framework that supports both arithmetic and Boolean operations for a vector of, for example, 64-bit integers. The key idea is using multiple complex slots to represent one integer, with a special ring isomorphism to maintain the desired integer arithmetic. For arithmetic-only workloads, each refreshing requires only two bootstrapping operations for one ciphertext. For Boolean operations, the arithmetic-to-Boolean conversion can batch $O(n)$ ciphertexts, resulting in amortized $O(1)$ bootstrapping per ciphertext. The prototype is available at <https://github.com/tsinghua-ideal/fhe-simd-alu>._
 
