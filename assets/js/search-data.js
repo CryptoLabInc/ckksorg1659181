@@ -222,6 +222,11 @@ ninja.data = [{
           description: "TL;DR: We propose a new CKKS-compatible encoding framework that supports both arithmetic and Boolean operations for a vector of, for example, 64-bit integers. The key idea is using multiple complex slots to represent one integer, with a special ring isomorphism to maintain the desired integer arithmetic. For arithmetic-only workloads, each refreshing requires only two bootstrapping operations for one ciphertext. For Boolean operations, the arithmetic-to-Boolean conversion can batch $O(n)$ ciphertexts, resulting in amortized $O(1)$ bootstrapping per ciphertext. The prototype is available at .",
           section: "Test",handler: () => {
               window.location.href = "/test/2026-06-30-fhe-simd-alu/";
+            },},{id: "test-accelerating-ckks-on-gpus-with-cheddar-and-theodosian",
+          title: 'Accelerating CKKS on GPUs with Cheddar and Theodosian',
+          description: "TL;DR: Modern GPUs provide enormous parallel compute capability, making them an attractive platform for accelerating CKKS. However, achieving high performance requires redesigning both the cryptographic algorithms and the GPU implementation together rather than simply porting CPU code. In this post, I introduce Cheddar, a GPU-native CKKS library based on a 32-bit RNS construction that achieves state-of-the-art performance, and Theodosian, which shows that modern GPU implementations are no longer compute-bound but instead limited by on-chip L2 cache bandwidth. Together, these works illustrate both how far GPU acceleration has come and where the next performance barriers lie.",
+          section: "Test",handler: () => {
+              window.location.href = "/test/2026-07-26-CKKS-on-GPU/";
             },},{
         id: 'social-email',
         title: 'email',
