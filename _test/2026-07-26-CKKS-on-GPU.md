@@ -90,7 +90,7 @@ Suppose the limb corresponding to $\mathcal{Q}_0$ is assigned index 0. Then nega
 Along with the 25-30 prime system, Cheddar incorporates several GPU-specific optimizations:
 
 * **Optimized INT32 kernels:** Core primitives such as the number-theoretic transform (NTT) and base conversion (BConv) are implemented using optimized INT32 arithmetic. In particular, Cheddar employs a signed Montgomery reduction that minimizes the number of integer instructions.
-* **Extensive Kernel Fusion:** Computational sequences are fused and reordered to avoid unnecessarily writing intermediate polynomial limbs back to global memory.
+* **Extensive kernel fusion:** Computational sequences are fused and reordered to avoid unnecessarily writing intermediate polynomial limbs back to global memory.
 
 Beyond these optimizations, Cheddar is a full-fledged CKKS library supporting the complete evaluation pipeline, from basic arithmetic to bootstrapping. The example below demonstrates how a CKKS computation can be implemented with only a few API calls.
 
@@ -204,7 +204,7 @@ Based on this analysis, Theodosian introduces several microarchitecture-aware op
 
 * **L2-aware multi-polynomial batching:** Batch multiple polynomials together to improve L2 cache utilization while keeping the working set small enough to avoid spilling into DRAM.
 * **Resource co-scheduling:** Execute L2-bound and DRAM-bound kernels together so they utilize complementary hardware resources and hide each other's latency.
-* **CUDA Graphs:** Reduce the overhead of increasingly complex execution schedules and kernel launches.
+* **CUDA graphs:** Reduce the overhead of increasingly complex execution schedules and kernel launches.
 
 Theodosian also includes additional kernel-level optimizations and further kernel fusion, which are described in detail in the paper.
 
@@ -264,7 +264,7 @@ Thanks to these optimizations, Theodosian achieves an additional 1.45–1.83$\ti
     Table 2. Theodosian performance on the RTX 5090. 
 </div>
 
-Notably, Theodosian is less than 2$\times$ away from the aforementioned absolute latency wall of 8.8ms, suggesting that relatively little performance remains to be gained through GPU optimization alone. Algorithmic advances can still push this limit further, however. For example, by incorporating several recent CKKS bootstrapping improvements, we further reduced the bootstrapping latency to 12.8 ms (using slightly different parameters).
+Notably, Theodosian is less than 2$\times$ away from the aforementioned absolute latency wall of 8.8ms, suggesting that relatively little performance remains to be gained through GPU optimization alone. Algorithmic advances can still push this limit further, however. For example, by incorporating several recent CKKS bootstrapping improvements, we further reduced the bootstrapping latency to 12.8ms (using slightly different parameters).
 
 ## Historic Trend and Future Work
 
