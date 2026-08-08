@@ -230,7 +230,7 @@ ninja.data = [{
           description: "",
           section: "News",},{id: "test-accelerating-ckks-on-gpus-with-cheddar-and-theodosian",
           title: 'Accelerating CKKS on GPUs with Cheddar and Theodosian',
-          description: "TL;DR: Modern GPUs provide enormous parallel compute capability, making them an attractive platform for accelerating CKKS. However, achieving high performance requires redesigning both the cryptographic algorithms and the GPU implementation together rather than simply porting CPU code. In this post, I introduce Cheddar, a GPU-native CKKS library based on a 32-bit RNS construction that achieves state-of-the-art performance, and Theodosian, which shows that modern GPU implementations are no longer compute-bound but instead limited by on-chip L2 cache bandwidth. Together, these works illustrate both how far GPU acceleration has come and where the next performance barriers lie.",
+          description: "TL;DR: Modern GPUs provide enormous parallel computation capability, making them an attractive platform for accelerating CKKS. However, achieving high performance requires redesigning both the cryptographic algorithms and the GPU implementation together rather than simply porting CPU code. In this post, I introduce Cheddar, a GPU-native CKKS library based on a 32-bit RNS construction that achieves state-of-the-art performance, and Theodosian, which shows that modern GPU implementations are no longer compute-bound but instead limited by on-chip L2 cache bandwidth. Together, these works illustrate both how far GPU acceleration has come and where the next performance barriers lie.",
           section: "Test",handler: () => {
               window.location.href = "/test/2026-07-26-CKKS-on-GPU/";
             },},{
