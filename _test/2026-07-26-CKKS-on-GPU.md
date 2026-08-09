@@ -264,9 +264,9 @@ Thanks to these optimizations, Theodosian achieves an additional 1.45–1.83$\ti
   <thead>
     <tr style="border-bottom: 2px solid ">
       <th style="border: 1px solid; padding: 6px 12px; min-width: 80px;">Implementation</th>
-      <th style="border: 1px solid; padding: 6px 12px;">log N</th>
-      <th style="border: 1px solid; padding: 6px 12px;">log PQ</th>
-      <th style="border: 1px solid; padding: 6px 12px;">log Q after boot</th>
+      <th style="border: 1px solid; padding: 6px 12px;">$\log N$</th>
+      <th style="border: 1px solid; padding: 6px 12px;">$\log PQ$</th>
+      <th style="border: 1px solid; padding: 6px 12px;">$\log Q$ after boot</th>
       <th style="border: 1px solid; padding: 6px 12px;">Boot precision</th>
       <th style="border: 1px solid; padding: 6px 12px;">Boot latency</th>
     </tr>
@@ -301,7 +301,7 @@ Thanks to these optimizations, Theodosian achieves an additional 1.45–1.83$\ti
 </div>
 
 <div class="caption">
-    Table 3. Comparing bootstrapping performance of Cheddar and Theodosian without or with additional algorithmic enhancements.
+    Table 3. Comparing bootstrapping performance of Cheddar and Theodosian with and without additional algorithmic enhancements.
 </div>
 
 
