@@ -253,7 +253,7 @@ Theodosian also includes additional kernel-level optimizations and further kerne
 </div>
 
 <div class="caption">
-    Table 2. Theodosian performance on the RTX 5090. 
+    Table 2. Theodosian performance on the RTX 5090. The scale target is log Δ = 40 for all the workloads. For each workload, Cheddar and Theodosian use the same parameters (refer to <a href="https://github.com/scale-snu/cheddar-ae/tree/main/parameters">GitHub link</a> for detailed parameters). 
 </div>
 
 Thanks to these optimizations, Theodosian achieves an additional 1.45–1.83$\times$ speedup over Cheddar on the RTX 5090. Notably, Theodosian is less than 2$\times$ away from the aforementioned absolute latency wall of 8.8ms, suggesting that relatively little performance remains to be gained through GPU optimization alone. 
@@ -278,7 +278,7 @@ Thanks to these optimizations, Theodosian achieves an additional 1.45–1.83$\ti
       <td style="border: 1px solid; padding: 6px 12px; text-align: center;">1711</td>
       <td style="border: 1px solid; padding: 6px 12px; text-align: center;">575</td>
       <td style="border: 1px solid; padding: 6px 12px; text-align: center;">18.57 bits</td>
-      <td style="border: 1px solid; padding: 6px 12px; text-align: center;">16.21ms</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: center;">23.18ms</td>
     </tr>
     <tr>
       <td style="border: 1px solid; padding: 6px 12px; min-width: 80px;">Theodosian</td>
@@ -286,7 +286,7 @@ Thanks to these optimizations, Theodosian achieves an additional 1.45–1.83$\ti
       <td style="border: 1px solid; padding: 6px 12px; text-align: center;">1711</td>
       <td style="border: 1px solid; padding: 6px 12px; text-align: center;">575</td>
       <td style="border: 1px solid; padding: 6px 12px; text-align: center;">18.57 bits</td>
-      <td style="border: 1px solid; padding: 6px 12px; text-align: center;">23.18ms</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: center;">16.21ms</td>
     </tr>
     <tr>
       <td style="border: 1px solid; padding: 6px 12px; min-width: 80px;"><strong>Theodosian (with CKKS bootstrapping algorithm enhancements)</strong></td>
@@ -301,7 +301,7 @@ Thanks to these optimizations, Theodosian achieves an additional 1.45–1.83$\ti
 </div>
 
 <div class="caption">
-    Table 3. Comparing bootstrapping performance of Cheddar and Theodosian with and without additional algorithmic enhancements.
+    Table 3. Comparing bootstrapping performance of Cheddar and Theodosian with and without additional algorithmic enhancements. Note that the scale target is log Δ = 35 here, contrary to what is used in Table 2.
 </div>
 
 
