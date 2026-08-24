@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/software/";
           },
-        },{id: "post-fhe-for-simd-arithmetic-logic-units-with-amortized-o-1-bootstrapping-per-ciphertext",
+        },{id: "post-accelerating-ckks-on-gpus-with-cheddar-and-theodosian",
+        
+          title: "Accelerating CKKS on GPUs with Cheddar and Theodosian",
+        
+        description: "TL;DR: Modern GPUs provide enormous parallel computation capability, making them an attractive platform for accelerating CKKS. However, achieving high performance requires redesigning both the cryptographic algorithms and the GPU implementation together rather than simply porting CPU code. In this post, I introduce Cheddar, a GPU-native CKKS library based on a 32-bit RNS construction that achieves state-of-the-art performance, and Theodosian, which shows that modern GPU implementations are no longer compute-bound but instead limited by on-chip L2 cache bandwidth. Together, these works illustrate both how far GPU acceleration has come and where the next performance barriers lie.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/CKKS-on-GPU/";
+          
+        },
+      },{id: "post-fhe-for-simd-arithmetic-logic-units-with-amortized-o-1-bootstrapping-per-ciphertext",
         
           title: "FHE for SIMD Arithmetic Logic Units with Amortized O(1) Bootstrapping per Ciphertext",
         
@@ -228,12 +239,7 @@ ninja.data = [{
           section: "News",},{id: "news-damien-stehlé-is-stepping-down-his-role-as-a-co-editor-may-2025-may-2026-having-led-this-initiative-alongside-keewoo-from-the-very-beginning-we-are-deeply-grateful-for-his-immense-dedication",
           title: 'Damien Stehlé is stepping down his role as a co-editor (May 2025 –...',
           description: "",
-          section: "News",},{id: "test-accelerating-ckks-on-gpus-with-cheddar-and-theodosian",
-          title: 'Accelerating CKKS on GPUs with Cheddar and Theodosian',
-          description: "TL;DR: Modern GPUs provide enormous parallel computation capability, making them an attractive platform for accelerating CKKS. However, achieving high performance requires redesigning both the cryptographic algorithms and the GPU implementation together rather than simply porting CPU code. In this post, I introduce Cheddar, a GPU-native CKKS library based on a 32-bit RNS construction that achieves state-of-the-art performance, and Theodosian, which shows that modern GPU implementations are no longer compute-bound but instead limited by on-chip L2 cache bandwidth. Together, these works illustrate both how far GPU acceleration has come and where the next performance barriers lie.",
-          section: "Test",handler: () => {
-              window.location.href = "/test/2026-07-26-CKKS-on-GPU/";
-            },},{
+          section: "News",},{
         id: 'social-email',
         title: 'email',
         section: 'Socials',
