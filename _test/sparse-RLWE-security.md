@@ -51,7 +51,7 @@ Suppose we are the adversary, and we want to recover the secret vector or polyno
 
 ### LWE
 
-Lets start by writing our LWE equation over the integers — $$\mathbf{b} = \mathbf{A}\mathbf{s} + \mathbf{e} + q\mathbf{w}$$ for some integer vector $\mathbf{w} \in \mathbb{Z}^m$. Now we can write the known vector $\begin{pmatrix}\mathbf{b} \\ \mathbf{0}\end{pmatrix}$ as follows.
+Lets start by writing our LWE equation over the integers — $$\mathbf{b} = \mathbf{A}\mathbf{s} + \mathbf{e} + q\mathbf{w}$$ for some integer vector $\mathbf{w} \in \mathbb{Z}^m$. Now we can write the known vector $$\begin{pmatrix}\mathbf{b} \\ \mathbf{0}\end{pmatrix}$$ as follows.
 
 $$
 \underbrace{
@@ -81,12 +81,14 @@ q\mathbf{I}_m & \mathbf{A} \\
 \end{pmatrix}
 }_{\color{#e07b00}{\substack{\text{unknown short}\\\text{displacement}}}}
 $$
+
 This means we have a target which is unusually close to a lattice for which we have a basis! If we could somehow *round* our target to the lattice, we'd recover the unknown short displacement, from which we'd discover the secret key. This is exactly the Bounded Distance Decoding lattice problem: we know the lattice and a target unusually close to a lattice point, and we want to find that point.
 
 ### RLWE
 
-We can also turn our ring equation into a lattice problem. First, we turn the ring polynomial $\mathbf{a}$ into a matrix $\mathbf{A}\in\mathbb{Z}_q^{n \times n}$ corresponding to ring multiplication by $\mathbf{A}$. In $\mathcal{R}$, this matrix is *negacyclic*:
-$$a(X)=a_0 + a_1X + \cdots + a_{n-1}X^{n-1}\quad\mapsto\quad\mathbf{A}=
+We can also turn our ring equation into a lattice problem. First, we turn the ring polynomial $\mathbf{a}$ into a matrix $\mathbf{A}\in\mathbb{Z}_q^{n \times n}$ corresponding to ring multiplication by $\mathbf{A}$. In $\mathcal{R}$, this matrix is *negacyclic:*
+
+$$\small a(X)=a_0 + a_1X + \cdots + a_{n-1}X^{n-1}\quad\mapsto\quad\mathbf{A}=
 \begin{pmatrix}
 a_0       & -a_{n-1} & -a_{n-2} & \cdots & -a_1 \\
 a_1       & a_0      & -a_{n-1} & \cdots & -a_2 \\
@@ -95,6 +97,7 @@ a_2       & a_1      & a_0      & \ddots & \vdots \\
 a_{n-1}   & a_{n-2}  & \cdots   & a_1    & a_0
 \end{pmatrix}.
 $$
+
 Writing $\mathbf{b}, \mathbf{s}, \mathbf{e}$ for the coefficient vectors of $b(X),s(X),e(X)$ gives exactly the same BDD instance as above, except that $\mathbf{A}$ is now negacyclic rather than uniform.
 
 This basis has a lot more structure than in the plain LWE case, where the $\mathbf{A}$ matrix has uniform entries. However, (at the time of writing), it is not known how to exploit this structure in lattice only attacks. Later in this article, we'll see that it is possible to leverage this structure in *hybrid* attacks.
@@ -124,7 +127,7 @@ These approximations are useful for understanding ordinary lattice reduction, bu
 <details>
 <summary><strong>Where do the two scaling laws come from?</strong></summary>
 
-From \[[3](https://eprint.iacr.org/2024/1895), Equation (8)\], if the secret and error distributions have standard deviations $\sigma_s$ and $\sigma_e$, respectively, then achieving a security level of $\lambda$ bits requires approximately
+From [<a href="https://eprint.iacr.org/2024/1895">3</a>, Equation (8)], if the secret and error distributions have standard deviations $\sigma_s$ and $\sigma_e$, respectively, then achieving a security level of $\lambda$ bits requires approximately
 
 $$
 n\approx
@@ -173,6 +176,7 @@ $$
 =
 (\mathbf{A}_1 \mid \mathbf{A}_2).
 $$
+
 so that
 
 $$
@@ -185,6 +189,7 @@ $$
 \mathbf{e}
 \pmod q.
 $$
+
 For a guess of $\mathbf{s}_1$, we obtain the target
 
 $$
@@ -197,6 +202,7 @@ $$
 \mathbf{e}
 \pmod q,
 $$
+
 which is a lower dimensional BDD instance.
 
 The important observation is that the lattice basis depends only on $\mathbf{A}_2$, not on the guessed value of $\mathbf{s}_1$. We can therefore perform the expensive lattice reduction needed for the BDD instance once, and reuse the reduced basis across many guesses.
@@ -331,9 +337,7 @@ Here is the same idea on a toy secret:
 
 We now turn to the security of sparse secret parameter sets used in practice. We consider two sources: the default bootstrapping parameters provided by HE libraries, and the CKKS submissions to the [FHE benchmarking suite](https://fhe-benchmarking.github.io/), which requires every submission to use parameters with at least 128 bits of security. We report estimates for our attack in Table 1.
 
-<div style="display: flex; justify-content: center;" markdown="1">
-
-
+<!--
 | Library | Use case | $\log n$ | $\log QP$ | $h$ | $\sigma_e$ | $\lambda$ | Estimate (bits) | Source |
 |---|---|:---:|:---:|:---:|:---:|:---:|:---:|---|
 | HEaaN | Library defaults for `FGb` | 16 | 1555 | 192 | 3.2 | 128 | <strong style="color:#d03b3b">122.3</strong> | [parameters](https://github.com/CryptoLabInc/deb/blob/f0af0000663e20666dd0ea091cf201a1522ae50b/prebuild/DebParamPreset.json#L31-L92) |
@@ -345,7 +349,125 @@ We now turn to the security of sparse secret parameter sets used in practice. We
 | Lattigo | Library defaults | 16 | 1553 | 192 | 3.2 | 128 | <strong style="color:#d03b3b">122.6</strong> | [parameters `N16QP1553H192H32`](https://github.com/tuneinsight/lattigo/blob/5dbffbdea05394de2ca3a432ed5318aa832e3f40/circuits/ckks/bootstrapping/default_parameters.go#L67-L88) |
 | Lattigo | Library defaults | 15 | 768 | 192 | 3.2 | 128 | <strong style="color:#d03b3b">123.3</strong> | [parameters `N15QP768H192H32`](https://github.com/tuneinsight/lattigo/blob/5dbffbdea05394de2ca3a432ed5318aa832e3f40/circuits/ckks/bootstrapping/default_parameters.go#L89-L110) |
 | Lattigo | Library defaults | 16 | 121 | 32 | 3.2 | 128 | 161.5 | [documentation](https://github.com/tuneinsight/lattigo/blob/5dbffbdea05394de2ca3a432ed5318aa832e3f40/circuits/ckks/bootstrapping/parameters_literal.go#L63), [default weight](https://github.com/tuneinsight/lattigo/blob/5dbffbdea05394de2ca3a432ed5318aa832e3f40/circuits/ckks/bootstrapping/parameters_literal.go#L165-L166) |
+-->
 
+<div style="overflow-x: auto; margin-bottom: 1.0em;">
+<table style="border-collapse: collapse; border: 1px solid; min-width: 100%; font-size: 0.9em;">
+  <thead>
+    <tr style="border-bottom: 2px solid ">
+      <th style="border: 1px solid; padding: 4px 8px; min-width: 80px;">Library</th>
+      <th style="border: 1px solid; padding: 4px 8px;">Use case</th>
+      <th style="border: 1px solid; padding: 4px 8px; text-align: center;">$\small \log n$</th>
+      <th style="border: 1px solid; padding: 4px 8px; text-align: center;">$\small \log QP$</th>
+      <th style="border: 1px solid; padding: 4px 8px; text-align: center;">$\small h$</th>
+      <th style="border: 1px solid; padding: 4px 8px; text-align: center;">$\small \sigma_e$</th>
+      <th style="border: 1px solid; padding: 4px 8px; text-align: center;">$\small \lambda$</th>
+      <th style="border: 1px solid; padding: 4px 8px; text-align: center;">Estimate (bits)</th>
+      <th style="border: 1px solid; padding: 4px 8px;">Source</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border: 1px solid; padding: 4px 8px; min-width: 80px;">HEaaN</td>
+      <td style="border: 1px solid; padding: 4px 8px;">Library defaults for <code style="font-size: 0.75em;">FGb</code></td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">16</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">1555</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">192</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">3.2</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">128</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;"><strong style="color:#d03b3b">122.3</strong></td>
+      <td style="border: 1px solid; padding: 4px 8px;"><a href="https://github.com/CryptoLabInc/deb/blob/f0af0000663e20666dd0ea091cf201a1522ae50b/prebuild/DebParamPreset.json#L31-L92">parameters</a></td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid; padding: 4px 8px; min-width: 80px;">HEaaN2</td>
+      <td style="border: 1px solid; padding: 4px 8px;">Fetch-by-similarity benchmark</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">16</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">1721</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">1024</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">3.2</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">128</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;"><strong style="color:#d03b3b">127.1</strong></td>
+      <td style="border: 1px solid; padding: 4px 8px;"><a href="https://github.com/CryptoLabInc/fhe-benchmark-fetch-by-similarity/blob/035ab234e6b9bfb94c93bb4b7fbe05e77588b70a/submission/README.md#L43-L60">README</a></td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid; padding: 4px 8px; min-width: 80px;">HEaaN2</td>
+      <td style="border: 1px solid; padding: 4px 8px;">Fetch-by-similarity benchmark</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">14</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">82</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">32</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">3.2</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">128</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;"><strong style="color:#d03b3b">125.8</strong></td>
+      <td style="border: 1px solid; padding: 4px 8px;"><a href="https://github.com/CryptoLabInc/fhe-benchmark-fetch-by-similarity/blob/035ab234e6b9bfb94c93bb4b7fbe05e77588b70a/submission/README.md#L43-L60">README</a></td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid; padding: 4px 8px; min-width: 80px;">OpenFHE</td>
+      <td style="border: 1px solid; padding: 4px 8px;">CIFAR-10 benchmark reference</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">16</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">1708</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">192</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">3.19</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">128</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;"><strong style="color:#d03b3b">113.0</strong></td>
+      <td style="border: 1px solid; padding: 4px 8px;"><a href="https://github.com/fhe-benchmarking/ml-inference/blob/739378698fc1f668aff7246724b45cff76f04a98/submissions/cifar10/src/client_key_generation.cpp#L33-L48">code</a>, <a href="https://github.com/fhe-benchmarking/ml-inference/blob/739378698fc1f668aff7246724b45cff76f04a98/submissions/cifar10/docs/README.md#L26-L35">README</a></td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid; padding: 4px 8px; min-width: 80px;">Lattigo</td>
+      <td style="border: 1px solid; padding: 4px 8px;">Library defaults</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">16</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">1546</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">192</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">3.2</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">128</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;"><strong style="color:#d03b3b">123.1</strong></td>
+      <td style="border: 1px solid; padding: 4px 8px;"><a href="https://github.com/tuneinsight/lattigo/blob/5dbffbdea05394de2ca3a432ed5318aa832e3f40/circuits/ckks/bootstrapping/default_parameters.go#L26-L43">parameters <code style="font-size: 0.75em;">N16QP1546H192H32</code></a></td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid; padding: 4px 8px; min-width: 80px;">Lattigo</td>
+      <td style="border: 1px solid; padding: 4px 8px;">Library defaults</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">16</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">1547</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">192</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">3.2</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">128</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;"><strong style="color:#d03b3b">123.0</strong></td>
+      <td style="border: 1px solid; padding: 4px 8px;"><a href="https://github.com/tuneinsight/lattigo/blob/5dbffbdea05394de2ca3a432ed5318aa832e3f40/circuits/ckks/bootstrapping/default_parameters.go#L44-L66">parameters <code style="font-size: 0.75em;">N16QP1547H192H32</code></a></td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid; padding: 4px 8px; min-width: 80px;">Lattigo</td>
+      <td style="border: 1px solid; padding: 4px 8px;">Library defaults</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">16</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">1553</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">192</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">3.2</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">128</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;"><strong style="color:#d03b3b">122.6</strong></td>
+      <td style="border: 1px solid; padding: 4px 8px;"><a href="https://github.com/tuneinsight/lattigo/blob/5dbffbdea05394de2ca3a432ed5318aa832e3f40/circuits/ckks/bootstrapping/default_parameters.go#L67-L88">parameters <code style="font-size: 0.75em;">N16QP1553H192H32</code></a></td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid; padding: 4px 8px; min-width: 80px;">Lattigo</td>
+      <td style="border: 1px solid; padding: 4px 8px;">Library defaults</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">15</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">768</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">192</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">3.2</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">128</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;"><strong style="color:#d03b3b">123.3</strong></td>
+      <td style="border: 1px solid; padding: 4px 8px;"><a href="https://github.com/tuneinsight/lattigo/blob/5dbffbdea05394de2ca3a432ed5318aa832e3f40/circuits/ckks/bootstrapping/default_parameters.go#L89-L110">parameters <code style="font-size: 0.75em;">N15QP768H192H32</code></a></td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid; padding: 4px 8px; min-width: 80px;">Lattigo</td>
+      <td style="border: 1px solid; padding: 4px 8px;">Library defaults</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">16</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">121</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">32</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">3.2</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">128</td>
+      <td style="border: 1px solid; padding: 4px 8px; text-align: center;">161.5</td>
+      <td style="border: 1px solid; padding: 4px 8px;"><a href="https://github.com/tuneinsight/lattigo/blob/5dbffbdea05394de2ca3a432ed5318aa832e3f40/circuits/ckks/bootstrapping/parameters_literal.go#L63">documentation</a>, <a href="https://github.com/tuneinsight/lattigo/blob/5dbffbdea05394de2ca3a432ed5318aa832e3f40/circuits/ckks/bootstrapping/parameters_literal.go#L165-L166">default weight</a></td>
+    </tr>
+  </tbody>
+</table>
 </div>
 
 <div class="caption">
