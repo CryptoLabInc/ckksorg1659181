@@ -239,7 +239,12 @@ ninja.data = [{
           section: "News",},{id: "news-damien-stehlé-is-stepping-down-his-role-as-a-co-editor-may-2025-may-2026-having-led-this-initiative-alongside-keewoo-from-the-very-beginning-we-are-deeply-grateful-for-his-immense-dedication",
           title: 'Damien Stehlé is stepping down his role as a co-editor (May 2025 –...',
           description: "",
-          section: "News",},{
+          section: "News",},{id: "test-reevaluating-the-security-of-sparse-secret-ring-learning-with-errors",
+          title: 'Reevaluating the Security of Sparse Secret Ring Learning with Errors',
+          description: "TL;DR: Sparse secret keys reduce noise growth and make bootstrapping cheaper in CKKS, and their security is usually estimated by treating RLWE as if it were plain LWE. We show that this overestimates security: an attacker can rotate a sparse RLWE secret, which makes hybrid guessing attacks much more effective and costs up to 14 bits of security. Under this attack, the default sparse parameters in HEaaN and Lattigo, and two benchmark submissions, fall below 128-bit security. In this post, we explain how hybrid attacks work, why the ring structure helps the attacker, and what this means for parameter selection.",
+          section: "Test",handler: () => {
+              window.location.href = "/test/sparse-RLWE-security/";
+            },},{
         id: 'social-email',
         title: 'email',
         section: 'Socials',
