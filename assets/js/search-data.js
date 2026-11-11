@@ -239,17 +239,7 @@ ninja.data = [{
           section: "News",},{id: "news-damien-stehlé-is-stepping-down-his-role-as-a-co-editor-may-2025-may-2026-having-led-this-initiative-alongside-keewoo-from-the-very-beginning-we-are-deeply-grateful-for-his-immense-dedication",
           title: 'Damien Stehlé is stepping down his role as a co-editor (May 2025 –...',
           description: "",
-          section: "News",},{id: "test-reevaluating-the-security-of-sparse-secret-ring-learning-with-errors",
-          title: 'Reevaluating the Security of Sparse Secret Ring Learning with Errors',
-          description: "TL;DR: Sparse secret keys reduce noise growth and make bootstrapping cheaper in CKKS, and their security is usually estimated by treating RLWE as if it were plain LWE. We show that this overestimates security: an attacker can rotate a sparse RLWE secret, which makes hybrid guessing attacks much more effective and costs up to 14 bits of security. Under this attack, the default sparse parameters in HEaaN and Lattigo, and two benchmark submissions, fall below 128-bit security. In this post, we explain how hybrid attacks work, why the ring structure helps the attacker, and what this means for parameter selection.",
-          section: "Test",handler: () => {
-              window.location.href = "/test/sparse-RLWE-security/";
-            },},{id: "test-recent-advances-in-threshold-fhe-t-out-of-n-decryption-and-distributed-key-generation",
-          title: 'Recent Advances in Threshold FHE: t-out-of-n Decryption and Distributed Key Generation',
-          description: "TL;DR: We study t-out-of-n threshold FHE, in which any t out of n parties can decrypt. When the set of decryptors is fixed before decryption (synchronous setting), we show that prior efficient schemes are vulnerable to key-recovery attacks when honest parties partially decrypt the same ciphertext for different sets of decryptors, e.g., when decryption is retried after a party drops out, and we fix them at essentially no cost using pseudorandom masks. When it is not (asynchronous setting), we give Shamir-based constructions over BFV, BGV and CKKS with significantly smaller moduli, as well as the first Shamir-based construction achieving strong simulation security. Finally, we show how to generate threshold-CKKS keys without a trusted dealer, while keeping bootstrapping as efficient as in single-key CKKS.",
-          section: "Test",handler: () => {
-              window.location.href = "/test/survey-threshold/";
-            },},{
+          section: "News",},{
         id: 'social-email',
         title: 'email',
         section: 'Socials',
