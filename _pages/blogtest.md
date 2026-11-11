@@ -2,6 +2,7 @@
 layout: default
 permalink: /test/
 title: test
+sitemap: false
 nav: false
 nav_order: 1
 pagination:

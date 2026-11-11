@@ -1,3 +1,7 @@
+{% assign url_head = page.url | slice: 0, 6 %}
+{% if url_head == '/test/' %}
+  <meta name="robots" content="noindex, nofollow">
+{% endif %}
 {% if site.enable_google_verification or site.enable_bing_verification %}
   <!-- Website verification -->
   {% if site.enable_google_verification %}
