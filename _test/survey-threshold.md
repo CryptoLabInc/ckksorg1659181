@@ -1,17 +1,32 @@
-# Recent Advances in Threshold FHE: t-out-of-n Decryption and Distributed Key Generation
+---
+layout: post
+title: >
+  Recent Advances in Threshold FHE: t-out-of-n Decryption and Distributed Key Generation
+date: 2026-11-04 00:00:00-0000
+description: >
+  TL;DR: We study t-out-of-n threshold FHE, in which any t out of n parties can decrypt. When the set of decryptors is fixed before decryption (synchronous setting), we show that prior efficient schemes are vulnerable to key-recovery attacks when honest parties partially decrypt the same ciphertext for different sets of decryptors, e.g., when decryption is retried after a party drops out, and we fix them at essentially no cost using pseudorandom masks. When it is not (asynchronous setting), we give Shamir-based constructions over BFV, BGV and CKKS with significantly smaller moduli, as well as the first Shamir-based construction achieving strong simulation security. Finally, we show how to generate threshold-CKKS keys without a trusted dealer, while keeping bootstrapping as efficient as in single-key CKKS.
+author: Alain Passelègue
+tags:
+categories:
+related_posts: false
+toc:
+  sidebar: right
+giscus_comments: true
+---
 
-- Written by [Alain Passelègue](https://perso.ens-lyon.fr/alain.passelegue/index.html)
+- Written by [Alain Passelègue](https://perso.ens-lyon.fr/alain.passelegue/index.html) (CryptoLab Inc.)
 - Based on [https://eprint.iacr.org/2026/031](https://ia.cr/2026/031) (CCS 2026), [https://eprint.iacr.org/2026/973](https://ia.cr/2026/973) (extended version of a CRYPTO 2026 paper), and [https://eprint.iacr.org/2025/2057](https://ia.cr/2025/2057) (CCS 2026)
 
-*TL;DR: We study t-out-of-n threshold FHE, in which any t out of n parties can decrypt. When the set of decryptors is fixed before decryption (synchronous setting), we show that prior efficient schemes are vulnerable to key-recovery attacks when honest parties partially decrypt the same ciphertext for different sets of decryptors, e.g., when decryption is retried after a party drops out, and we fix them at essentially no cost using pseudorandom masks. When it is not (asynchronous setting), we give Shamir-based constructions over BFV, BGV and CKKS with significantly smaller moduli, as well as the first Shamir-based construction achieving strong simulation security. Finally, we show how to generate threshold-CKKS keys without a trusted dealer, while keeping bootstrapping as efficient as in single-key CKKS.*
+_TL;DR: We study t-out-of-n threshold FHE, in which any t out of n parties can decrypt. When the set of decryptors is fixed before decryption (synchronous setting), we show that prior efficient schemes are vulnerable to key-recovery attacks when honest parties partially decrypt the same ciphertext for different sets of decryptors, e.g., when decryption is retried after a party drops out, and we fix them at essentially no cost using pseudorandom masks. When it is not (asynchronous setting), we give Shamir-based constructions over BFV, BGV and CKKS with significantly smaller moduli, as well as the first Shamir-based construction achieving strong simulation security. Finally, we show how to generate threshold-CKKS keys without a trusted dealer, while keeping bootstrapping as efficient as in single-key CKKS._
 
+---
 
 
 ## Threshold decryption, from n-out-of-n to t-out-of-n
 
 In a [previous post](https://ckks.org/blog/2025/threshold/), we discussed Threshold Fully Homomorphic Encryption (ThFHE) in the $n$-out-of-$n$ setting, in which all parties must take part in decryption. Here, we consider the more general $t$-out-of-$n$ setting: the decryption key is split between $n$ parties so that any $t$ of them can decrypt, while any coalition of at most $t-1$ parties learns nothing about encrypted data. This matters in practice: in the $n$-out-of-$n$ setting, a single party that is offline or uncooperative suffices to block decryption. We present three recent works: two on threshold decryption, depending on whether decryptors are synchronized or not, and one on generating the keys without a trusted dealer.
 
-We recall that a ThFHE scheme is a tuple *(KeyGen, Enc, Eval, PartDec, FinDec)*, except that *KeyGen* now outputs $n$ secret key shares $s_1, \dots, s_n$, and that *FinDec* combines partial decryptions from any $t$ distinct parties. We focus on RLWE-based schemes such as BFV, BGV and CKKS, whose ciphertexts are, up to the encoding of the plaintext, pairs $(a,b)$ of elements of $R_q = Z_q[X]/(X^N+1)$ satisfying 
+We recall that a ThFHE scheme is a tuple *(KeyGen, Enc, Eval, PartDec, FinDec)*, except that *KeyGen* now outputs $n$ secret key shares $s_1, \dots, s_n$, and that *FinDec* combines partial decryptions from any $t$ distinct parties. We focus on RLWE-based schemes such as BFV, BGV and CKKS, whose ciphertexts are, up to the encoding of the plaintext, pairs $(a,b)$ of elements of $R_q = \mathbb{Z}_q[X]/(X^N+1)$ satisfying 
 
 $$as+b = \Delta m + e,$$ 
 
@@ -32,7 +47,14 @@ How to escape this dilemma depends on the decryption model:
 - in the **synchronous** setting, the set $S$ of $t$ decryptors is known to the parties when they compute their partial decryptions, e.g., because they agreed on it beforehand or because a coordinator selected them;
 - in the **asynchronous** setting, which is the one considered in [BGG+18] and in most subsequent works, each party computes its partial decryption without knowing who else will participate, and any $t$ partial decryptions can be combined.
 
-ADD FIGURE 1
+<div class="row mt-3">
+    <div class="col-sm-12 mt-3 mt-md-0 mx-auto d-block">
+        {% include figure.liquid loading="eager" path="assets/img/blog/2611_Alain/1.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+<div class="caption">
+    Figure 1: Synchronous vs. asynchronous threshold decryption with $t = 3$ out of $n = 5$ parties.
+</div>
 
 ## The synchronous setting
 
@@ -70,7 +92,14 @@ $$
 
 Each PRF value $F_{k_{i,j}}(S, \mathsf{ct})$ appears with a plus sign in the mask of party $i$ and with a minus sign in the mask of party $j$, so that $\sum_{i \in S} r_i^{S,\mathsf{ct}} = 0$: the masks vanish when the $t$ partial decryptions for $S$ are added up, and *FinDec* is unchanged.
 
-ADD FIGURE 2
+<div class="row mt-3">
+    <div class="col-sm-12 mt-3 mt-md-0 mx-auto d-block">
+        {% include figure.liquid loading="eager" path="assets/img/blog/2611_Alain/2.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+<div class="caption">
+    Figure 2: Pairwise PRF masks for $S = \lbrace 2, 3, 4 \rbrace$: the masks cancel out in the final decryption, but hide each partial decryption.
+</div>
 
 Now, consider an adversary that corrupts $t-1$ parties and obtains the partial decryption $p_i^S$ of an honest party $i$ (and, for simplicity, no other partial decryption of $\mathsf{ct}$). If all the other parties of $S$ are corrupted, the adversary can compute the mask of party $i$ by itself, but it can then decrypt anyway, and the classical flooding argument applies. Otherwise, $S$ contains another honest party $\ell$, and $p_i^S$ contains the term $F_{k_{i,\ell}}(S, \mathsf{ct}) - F_{k_{\ell,i}}(S, \mathsf{ct})$, computed with two keys unknown to the adversary: $p_i^S$ then looks uniformly random. Extending this argument, we prove that the scheme is secure in the strong model, assuming that the PRF is secure and that the FHE scheme is IND-CPA secure. In particular, partial decryptions for different sets are independent, so that churn is no longer an issue.
 
@@ -106,12 +135,63 @@ Our experiments indicate that this bound is close to tight. It can be further im
 
 **Results.** The table below gives the modulus overhead $\log(B_2 B_3)$, in bits, for $n = 512$ parties and various thresholds (for the integer points used in [BGG+18], we report our own, improved, bound).
 
+<!--
 | Bound | $t = 12$ | $t = 128$ | $t = 256$ | $t = 384$ | $t = 500$ |
 |:--|--:|--:|--:|--:|--:|
 | [BGG+18] (integer points) | 7918 | 8696 | 9016 | 8951 | 8403 |
 | [BFM+25] | 412 | 528 | 656 | 784 | 900 |
 | [CLW25] | 189 | 1938 | 3862 | 5784 | 7524 |
 | This work (monomial points) | 81 | 361 | 438 | 363 | 86 |
+-->
+
+<div style="overflow-x: auto; margin-bottom: 1.0em;">
+<table style="border-collapse: collapse; border: 1px solid; min-width: 100%;">
+  <thead>
+    <tr style="border-bottom: 2px solid ">
+      <th style="border: 1px solid; padding: 6px 12px;">Bound</th>
+      <th style="border: 1px solid; padding: 6px 12px; text-align: center;">$t = 12$</th>
+      <th style="border: 1px solid; padding: 6px 12px; text-align: center;">$t = 128$</th>
+      <th style="border: 1px solid; padding: 6px 12px; text-align: center;">$t = 256$</th>
+      <th style="border: 1px solid; padding: 6px 12px; text-align: center;">$t = 384$</th>
+      <th style="border: 1px solid; padding: 6px 12px; text-align: center;">$t = 500$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border: 1px solid; padding: 6px 12px;">[BGG+18] (integer points)</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">7918</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">8696</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">9016</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">8951</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">8403</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid; padding: 6px 12px;">[BFM+25]</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">412</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">528</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">656</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">784</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">900</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid; padding: 6px 12px;">[CLW25]</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">189</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">1938</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">3862</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">5784</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">7524</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid; padding: 6px 12px;">This work (monomial points)</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">81</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">361</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">438</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">363</td>
+      <td style="border: 1px solid; padding: 6px 12px; text-align: right;">86</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 Compared to the best prior bound [BFM+25], the overhead is reduced by about 33% for $t = n/2$, and by up to 90% for $t$ close to $n$. Unlike the bounds of [BFM+25] and [CLW25], which increase with $t$, ours are almost symmetric in $t$ and $n-t$. These constructions are proven secure under the standard simulation-based notion of [BGG+18], against a static adversary corrupting $t-1$ parties. 
 
@@ -127,7 +207,7 @@ $$
 
 where $H$ is a hash function onto $R_q$, modeled as a random oracle, and $e_i'$ is a small error. The masks cancel out upon reconstruction, since $\sum_{i \in S} \lambda_i^S z_i = 0$. Before that, at most $t-1$ parties (corrupted ones included) are involved, so that the zero-shares of the honest ones are jointly uniform from the adversary's point of view, and the masks are pseudorandom under the RLWE assumption, with $H(\mathsf{ct})$ playing the role of the public uniform element. This is the first Shamir-based construction with strong simulation security, and it applies to BFV, BGV and CKKS.
 
-Each party only stores two ring elements, but the modulus is larger, as the simulator must now absorb interpolation errors at every interpolation point, not only at $0$: for $N = 2^{14}$ and 128-bit security, our bounds give a sufficient modulus of 219 bits for $(n, t) = (16, 8)$, and of 1589 bits for $(n, t) = (1024, 512)$. In comparison, [EY24] has a smaller modulus, but requires about 79 GB of storage per party for $(n, t) = (16, 8)$, against 897 KB for our construction, and about $4.2*10^9$ GB for $(n, t) = (1024, 512)$, against 6.5 MB.
+Each party only stores two ring elements, but the modulus is larger, as the simulator must now absorb interpolation errors at every interpolation point, not only at $0$: for $N = 2^{14}$ and 128-bit security, our bounds give a sufficient modulus of 219 bits for $(n, t) = (16, 8)$, and of 1589 bits for $(n, t) = (1024, 512)$. In comparison, [EY24] has a smaller modulus, but requires about 79 GB of storage per party for $(n, t) = (16, 8)$, against 897 KB for our construction, and about $4.2 \times 10^9$ GB for $(n, t) = (1024, 512)$, against 6.5 MB.
 
 Strong simulation security is the asynchronous counterpart of the strong notion we introduced for synchronized decryptors, and comparing both settings is instructive: with synchronized decryptors, PRF masks provide strong security at essentially no cost, whereas without synchronization, strong security comes at the price of a larger modulus. The techniques do not transfer either: our PRF masks require knowing the set of decryptors, while adapting the key-homomorphic masks of [EY24] to the synchronous setting leads to an insecure scheme.
 
@@ -138,44 +218,51 @@ So far, we assumed that *KeyGen* is run by a trusted dealer. For CKKS, the stand
 
 In [MHP+25], we use a temporary ThFHE scheme to homomorphically run the key generation algorithm of the target scheme, in the spirit of the universal thresholdizer of [BGG+18]. Parties first run [MTBH21] to obtain temporary keys, with a dense secret key. They then contribute encrypted random bits, which are summed and bootstrapped, and used to homomorphically sample a sparse and a less-sparse ternary secret key. These encrypted keys are decrypted "into shares" (each party masks its partial decryption with a large random term, which directly yields an additive sharing of the key), and parties use their shares to generate the final public and evaluation keys. The main challenge is to homomorphically sample a uniform ternary vector of dimension $N$ (e.g., $N = 2^{16}$) with Hamming weight *exactly* $h$ (e.g., $h = 32$). Our sampler combines integer indicator functions evaluated with Chebyshev polynomials, a new sampler of one-hot vectors (a matrix-vector product followed by an indicator function, with lower depth and fewer rotations than prior approaches [BEHG20]), and a rejection step which adds up random one-hot vectors one by one, and keeps the first partial sum with exactly $h$ non-zero entries ($45$ one-hot vectors suffice for $h = 32$). The whole process requires only two bootstraps.
 
-ADD FIGURE 3
+<div class="row mt-3">
+    <div class="col-sm-12 mt-3 mt-md-0 mx-auto d-block">
+        {% include figure.liquid loading="eager" path="assets/img/blog/2611_Alain/3.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+<div class="caption">
+    Figure 3: Distributed key generation for threshold-CKKS with sparse secret keys.
+</div>
 
 The main protocol has 4 rounds (variants with 2 and 3 rounds are also given), and it is secure against semi-honest adversaries corrupting all parties but one. It outputs an $n$-out-of-$n$ sharing of the key, which can be turned into a $t$-out-of-$n$ Shamir sharing by re-sharing, without any additional round. Its bottleneck, the homomorphic key sampling, is a public computation which takes less than 2 seconds on an RTX 4090 GPU for up to 1024 parties, and the communication per party is within a small factor of the size of the final key material. With the resulting keys, homomorphic computations, including bootstrapping, are as fast as in single-key CKKS, at the cost of about 1.28 bits of precision. The same techniques also allow a lightweight client to delegate the generation of its (large) evaluation keys to non-colluding servers.
 
 ## References
 
-[AL21] Subtractive Sets over Cyclotomic Rings: Limits of Schnorr-like Arguments over Lattices, M. R. Albrecht and R. W. F. Lai, CRYPTO 2021
+[AL21] M. R. Albrecht and R. W. F. Lai, "Subtractive Sets over Cyclotomic Rings: Limits of Schnorr-like Arguments over Lattices." CRYPTO 2021
 
-[BBN+25] Context-Dependent Threshold Decryption and its Applications, D. Boneh, B. Bünz, K. Nayak, L. Rotem, V. Shoup, ASIACRYPT 2025
+[BBN+25] D. Boneh, B. Bünz, K. Nayak, L. Rotem, and V. Shoup, "Context-Dependent Threshold Decryption and its Applications." ASIACRYPT 2025
 
-[BEHG20] Single Secret Leader Election, D. Boneh, S. Eskandarian, L. Hanzlik, N. Greco, AFT 2020
+[BEHG20] D. Boneh, S. Eskandarian, L. Hanzlik, and N. Greco, "Single Secret Leader Election." ACM AFT 2020
 
-[BFM+25] Threshold FHE with Efficient Asynchronous Decryption, Z. Brakerski, O. Friedman, A. Marmor, D. Mutzari, Y. Spiizer, N. Trieu, ePrint 2025/712
+[BFM+25] Z. Brakerski, O. Friedman, A. Marmor, D. Mutzari, Y. Spiizer, and N. Trieu, "Threshold FHE with Efficient Asynchronous Decryption." ePrint 2025/712
 
-[BGG+18] Threshold Cryptosystems from Threshold Fully Homomorphic Encryption, D. Boneh, R. Gennaro, S. Goldfeder, A. Jain, S. Kim, P. M. R. Rasmussen, A. Sahai, CRYPTO 2018
+[BGG+18] D. Boneh, R. Gennaro, S. Goldfeder, A. Jain, S. Kim, P. M. R. Rasmussen, and A. Sahai, "Threshold Cryptosystems from Threshold Fully Homomorphic Encryption." CRYPTO 2018
 
-[BTH22] Bootstrapping for Approximate Homomorphic Encryption with Negligible Failure-Probability by Using Sparse-Secret Encapsulation, J.-P. Bossuat, J. R. Troncoso-Pastoriza, J.-P. Hubaux, ACNS 2022
+[BTH22] J.-P. Bossuat, J. R. Troncoso-Pastoriza, and J.-P. Hubaux, "Bootstrapping for Approximate Homomorphic Encryption with Negligible Failure-Probability by Using Sparse-Secret Encapsulation." ACNS 2022
 
-[CCP+24] Attacks Against the IND-CPA-D Security of Exact FHE Schemes, J. H. Cheon, H. Choe, A. Passelègue, D. Stehlé, E. Suvanto, CCS 2024
+[CCP+24] J. H. Cheon, H. Choe, A. Passelègue, D. Stehlé, and E. Suvanto, "Attacks Against the IND-CPA-D Security of Exact FHE Schemes." ACM CCS 2024
 
-[CLW25] Pilvi: Lattice Threshold PKE with Small Decryption Shares and Improved Security, V. Cini, R. W. F. Lai, I. K. Y. Woo, ASIACRYPT 2025
+[CLW25] V. Cini, R. W. F. Lai, and I. K. Y. Woo, "Pilvi: Lattice Threshold PKE with Small Decryption Shares and Improved Security." ASIACRYPT 2025
 
-[CPS26] On Threshold Fully Homomorphic Encryption with Synchronized Decryptors, F. Colin de Verdière, A. Passelègue, D. Stehlé, CCS 2026
+[CPS26] F. Colin de Verdière, A. Passelègue, and D. Stehlé, "On Threshold Fully Homomorphic Encryption with Synchronized Decryptors." ACM CCS 2026
 
-[dPKM+24] Threshold Raccoon: Practical Threshold Signatures from Standard Lattice Assumptions, R. del Pino, S. Katsumata, M. Maller, F. Mouhartem, T. Prest, M.-J. Saarinen, EUROCRYPT 2024
+[dPKM+24] R. del Pino, S. Katsumata, M. Maller, F. Mouhartem, T. Prest, and M.-J. Saarinen, "Threshold Raccoon: Practical Threshold Signatures from Standard Lattice Assumptions." EUROCRYPT 2024
 
-[EY24] Strongly Secure Universal Thresholdizer, E. Ebrahimi and A. Yadav, ASIACRYPT 2024
+[EY24] E. Ebrahimi and A. Yadav, "Strongly Secure Universal Thresholdizer." ASIACRYPT 2024
 
-[GKS24] Two-Round Threshold Lattice-Based Signatures from Threshold Homomorphic Encryption, K. D. Gur, J. Katz, T. Silde, PQCrypto 2024
+[GKS24] K. D. Gur, J. Katz, and T. Silde, "Two-Round Threshold Lattice-Based Signatures from Threshold Homomorphic Encryption." PQCrypto 2024
 
-[KLL+26] Asynchronous Shamir-Based Threshold FHE: Smaller Moduli and Strong Simulation Security, W. Kim, C. Lee, J. Lee, A. Passelègue, D. Stehlé, ePrint 2026/973 (extended version of a CRYPTO 2026 paper)
+[KLL+26] W. Kim, C. Lee, J. Lee, A. Passelègue, and D. Stehlé, "Asynchronous Shamir-Based Threshold FHE: Smaller Moduli and Strong Simulation Security." IACR ePrint 2026/973 (extended version of a CRYPTO 2026 paper)
 
-[MBH23] An Efficient Threshold Access-Structure for RLWE-Based Multiparty Homomorphic Encryption, C. Mouchet, E. Bertrand, J.-P. Hubaux, Journal of Cryptology 2023
+[MBH23] C. Mouchet, E. Bertrand, and J.-P. Hubaux, "An Efficient Threshold Access-Structure for RLWE-Based Multiparty Homomorphic Encryption." Journal of Cryptology, 36(2), 2023
 
-[MCPT24] Helium: Scalable MPC among Lightweight Participants and under Churn, C. Mouchet, S. Chatel, A. Pyrgelis, C. Troncoso, CCS 2024
+[MCPT24] C. Mouchet, S. Chatel, A. Pyrgelis, and C. Troncoso, "Helium: Scalable MPC among Lightweight Participants and under Churn." ACM CCS 2024
 
-[MHP+25] Distributed Key Generation for Efficient Threshold-CKKS, S. Min, G. Hanrot, J. H. Park, A. Passelègue, D. Stehlé, CCS 2026
+[MHP+25] S. Min, G. Hanrot, J. H. Park, A. Passelègue, and D. Stehlé, "Distributed Key Generation for Efficient Threshold-CKKS." ACM CCS 2026
 
-[MTBH21] Multiparty Homomorphic Encryption from Ring-Learning-with-Errors, C. Mouchet, J. R. Troncoso-Pastoriza, J.-P. Bossuat, J.-P. Hubaux, PETS 2021
+[MTBH21] C. Mouchet, J. R. Troncoso-Pastoriza, J.-P. Bossuat, and J.-P. Hubaux, "Multiparty Homomorphic Encryption from Ring-Learning-with-Errors." PETS 2021
 
-[OT25] Low Communication Threshold FHE from Standard (Module-)LWE, H. Okada and T. Takagi, ASIACRYPT 2025
+[OT25] H. Okada and T. Takagi, "Low Communication Threshold FHE from Standard (Module-)LWE." ASIACRYPT 2025
