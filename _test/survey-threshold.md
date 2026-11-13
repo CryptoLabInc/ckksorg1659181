@@ -123,11 +123,11 @@ from which the plaintext is recovered by rounding and removing the factor $C_{de
 
 - For security, a simulator must produce partial decryptions of honest parties without knowing their shares. To do so, it uses the plaintext and the $t-1$ corrupted shares: by Lagrange interpolation, the share of an honest party $i$ can be written as $s_i = \lambda_0 s + \sum_{k \in S_{cor}} \lambda_k s_k$, where $S_{cor}$ is the set of corrupted parties and $\lambda_0, \lambda_k$ are Lagrange coefficients (now interpolating at $\alpha_i$). This gives:
 
-$$
-a s_i = \lambda_0 (\Delta m - b + e) + \sum_{k \in S_{cor}} \lambda_k a s_k ,
-$$
+  $$
+  a s_i = \lambda_0 (\Delta m - b + e) + \sum_{k \in S_{cor}} \lambda_k a s_k ,
+  $$
 
-in which everything is known to the simulator, except the ciphertext error $e$, which is multiplied by the coefficient $\lambda_0$. The flooding error must hide this term, so its magnitude must be about $2^\lambda N B_{eval} B_3$, where $B_{eval}$ bounds the coefficients of $e$ and $B_3$ bounds the norm of $(C_{dec}/C_{sim}) \lambda_0$. 
+  in which everything is known to the simulator, except the ciphertext error $e$, which is multiplied by the coefficient $\lambda_0$. The flooding error must hide this term, so its magnitude must be about $2^\lambda N B_{eval} B_3$, where $B_{eval}$ bounds the coefficients of $e$ and $B_3$ bounds the norm of $(C_{dec}/C_{sim}) \lambda_0$. 
 
 Overall, the modulus must be larger than roughly $t \cdot 2^\lambda \cdot N \cdot B_{eval} \cdot B_2 B_3$: compared to the $n$-out-of-$n$ case, Lagrange interpolation costs about $\log(B_2 B_3)$ extra bits, a quantity which only depends on the choice of interpolation points.
 
