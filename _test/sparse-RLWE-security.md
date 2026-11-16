@@ -4,7 +4,7 @@ title: >
   Reevaluating the Security of Sparse Secret Ring Learning with Errors
 date: 2026-10-13 00:00:00-0000
 description: >
-  TL;DR: Sparse secret keys reduce noise growth and make bootstrapping cheaper in CKKS, and their security is usually estimated by treating RLWE as if it were plain LWE. We show that this overestimates security: an attacker can rotate a sparse RLWE secret, which makes hybrid guessing attacks much more effective and costs up to 14 bits of security. Under this attack, the default sparse parameters in HEaaN and Lattigo, and two benchmark submissions, fall below 128-bit security. In this post, we explain how hybrid attacks work, why the ring structure helps the attacker, and what this means for parameter selection.
+  TL;DR: Sparse secret keys reduce noise growth and make bootstrapping cheaper in CKKS, and their security is usually estimated by treating RLWE as if it were plain LWE. We show that this overestimates security: an attacker can rotate a sparse RLWE secret, which makes hybrid guessing attacks much more effective and costs up to 14 bits of security. Under this attack, the sparse parameters used by default in HEaaN and Lattigo, and in two benchmark submissions, fell below 128-bit security at the time of our analysis. In this post, we explain how hybrid attacks work, why the ring structure helps the attacker, and what this means for parameter selection.
 author: Tabitha Ogilvie 
 tags: 
 categories: 
@@ -17,7 +17,7 @@ giscus_comments: true
 * Written by [Tabitha Ogilvie](https://scholar.google.com/citations?user=XEVjf0gAAAAJ&hl) (King's College London)
 * Based on [Careful with the Ring! Concrete Hardness Gaps between LWE and MLWE](https://doi.org/10.1007/978-3-032-35377-1_15) (CRYPTO 2026). This publication is the result of a merge of two independent concurrent submissions: you can find [full version (a) here](https://eprint.iacr.org/2026/279) and [full version (b) here](https://eprint.iacr.org/2026/366).
 
-*TL;DR: Sparse secret keys reduce noise growth and make bootstrapping cheaper in CKKS, and their security is usually estimated by treating RLWE as if it were plain LWE. We show that this overestimates security: an attacker can rotate a sparse RLWE secret, which makes hybrid guessing attacks much more effective and costs up to 14 bits of security. Under this attack, the default sparse parameters in HEaaN and Lattigo, and two benchmark submissions, fall below 128-bit security. In this post, we explain how hybrid attacks work, why the ring structure helps the attacker, and what this means for parameter selection.*
+*TL;DR: Sparse secret keys reduce noise growth and make bootstrapping cheaper in CKKS, and their security is usually estimated by treating RLWE as if it were plain LWE. We show that this overestimates security: an attacker can rotate a sparse RLWE secret, which makes hybrid guessing attacks much more effective and costs up to 14 bits of security. Under this attack, the sparse parameters used by default in HEaaN and Lattigo, and in two benchmark submissions, fell below 128-bit security at the time of our analysis. In this post, we explain how hybrid attacks work, why the ring structure helps the attacker, and what this means for parameter selection.*
 
 ## Introduction
 
@@ -27,7 +27,7 @@ A sparse key has much less entropy than a dense one, so it is also easier to att
 
 In our recent work, we show that this assumption does not hold for sparse secrets. In a power-of-two cyclotomic ring, multiplying by $X$ rotates the coefficients of the secret. An attacker can use these rotations to try their best guess against many different parts of the secret, all for the cost of a single lattice reduction. The resulting attack reduces the security of sparse RLWE by up to 14 bits compared to the corresponding LWE estimate.
 
-In this post, we give an overview of how the security of LWE and RLWE is estimated, explain hybrid attacks and how the ring structure makes them stronger, and estimate the security of sparse parameter sets used in practice, including library defaults and submissions to the FHE benchmarking suite. We find that most of them fall below 128-bit security.
+In this post, we give an overview of how the security of LWE and RLWE is estimated, explain hybrid attacks and how the ring structure makes them stronger, and estimate the security of sparse parameter sets used in practice, including library defaults and submissions to the FHE benchmarking suite. We find that, at the time of our analysis, most of them fell below 128-bit security.
 
 ## LWE and RLWE
 
@@ -37,7 +37,7 @@ For efficient Homomorphic Encryption, we often need ciphertexts with more algebr
 
 The LWE and RLWE problems have many parameters that practitioners can tune for their application. For Homomorphic Encryption, the most important settings are:
 
-* **The width of the error $e$**: the larger the error, the less precision our HE scheme can achieve.
+* **The width (standard deviation) of the error $e$**: the larger the error, the less precision our HE scheme can achieve.
 * **The modulus $q$**: the larger the modulus, the more homomorphic operations we can perform before bootstrapping.
 * **The secret key dimension or polynomial degree $n$**: the larger the ring, the less efficient our homomorphic operations.
 
@@ -120,7 +120,7 @@ $$
 \frac{q}{\sigma_e}=\text{constant}.
 $$
 
-> Under a plain lattice attack, adding one bit to $\log q$ requires doubling the error width $\sigma_e$.
+> Under a plain lattice attack, adding one bit to $\log q$ requires doubling the error width (standard deviation) $\sigma_e$.
 
 These approximations are useful for understanding ordinary lattice reduction, but they should **not** be read as general rules for when the secret key is sparse. In fact, sparse secrets enable hybrid attacks which guess part of the secret and run lattice reduction only on what remains. The effective lattice dimension can therefore be substantially smaller than $n$, and these simple tradeoffs no longer describe the best known attack. We turn to those attacks next.
 
@@ -471,10 +471,10 @@ We now turn to the security of sparse secret parameter sets used in practice. We
 </div>
 
 <div class="caption">
-    Table 1. Estimated security of sparse secret CKKS parameter sets under our attack. $\lambda$ denotes the claimed security level. Estimates below the claimed security level are shown in red. For the HEaaN and HEaaN2 parameter sets, $\sigma_e$ is not stated in the source and we assume $3.2$.
+    Table 1. Estimated security of sparse secret CKKS parameter sets under our attack. $\lambda$ denotes the claimed security level. Estimates below the claimed security level are shown in red. For the HEaaN and HEaaN2 parameter sets, $\sigma_e$ is not stated in the source and we assume $3.2$. All parameter sets are taken as they appear at the commits linked in the Source column, before any update in response to this attack. Library developers are aware of the attack, and some have since updated their parameters; please refer to the latest release of each library for its current parameters.
 </div>
 
-Our attack reduces all but one of these parameter sets below their target security level. The default sparse parameters in HEaaN and Lattigo, which share very similar choices ($n = 2^{16}$, $h = 192$, and $\log_2 QP \approx 1550$), are estimated at between 122 and 124 bits. The HEaaN2 benchmark parameters were selected to achieve just over 128 bits using the standard [Lattice Estimator](https://github.com/malb/lattice-estimator); under our attack, both the main key and the bootstrapping key fall below this level.
+Our attack reduced all but one of these parameter sets below their target security level. The default sparse parameters in HEaaN and Lattigo, which shared very similar choices ($n = 2^{16}$, $h = 192$, and $\log_2 QP \approx 1550$), were estimated at between 122 and 124 bits. The HEaaN2 benchmark parameters were selected to achieve just over 128 bits using the standard [Lattice Estimator](https://github.com/malb/lattice-estimator); under our attack, both the main key and the bootstrapping key fell below this level.
 
 Table 1 is only a small subset of the sparse parameters for which our attack has an impact. In [our paper](https://doi.org/10.1007/978-3-032-35377-1_15), we give estimates for a wider range of parameter sets, including the sparse parameters proposed in recent publications at major cryptography venues.
 
