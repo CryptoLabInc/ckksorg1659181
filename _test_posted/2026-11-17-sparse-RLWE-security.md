@@ -286,7 +286,7 @@ To demonstrate the advantage, we sampled $10{,}000$ random secrets with $n = 2^{
 
 <div class="row mt-3">
     <div class="col-sm-12 mt-3 mt-md-0 mx-auto d-block">
-        {% include figure.liquid loading="eager" path="assets/img/blog/2610_Tabitha/hit_probability.svg" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.liquid loading="eager" path="assets/img/blog/2611_Tabitha/hit_probability.svg" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
 <div class="caption">
@@ -324,7 +324,7 @@ Here is the same idea on a toy secret:
 
 <div class="row mt-3">
     <div class="col-sm-12 mt-3 mt-md-0 mx-auto d-block">
-        {% include figure.liquid loading="eager" path="assets/img/blog/2610_Tabitha/rotations.gif" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.liquid loading="eager" path="assets/img/blog/2611_Tabitha/rotations.gif" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
 <div class="caption">
