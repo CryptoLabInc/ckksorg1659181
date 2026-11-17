@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/software/";
           },
-        },{id: "post-accelerating-ckks-on-gpus-with-cheddar-and-theodosian",
+        },{id: "post-reevaluating-the-security-of-sparse-secret-ring-learning-with-errors",
+        
+          title: "Reevaluating the Security of Sparse Secret Ring Learning with Errors",
+        
+        description: "TL;DR: Sparse secret keys reduce noise growth and make bootstrapping cheaper in CKKS, and their security is usually estimated by treating RLWE as if it were plain LWE. We show that this overestimates security: an attacker can rotate a sparse RLWE secret, which makes hybrid guessing attacks much more effective and costs up to 14 bits of security. Under this attack, the sparse parameters used by default in HEaaN and Lattigo, and in two benchmark submissions, fell below 128-bit security at the time of our analysis. In this post, we explain how hybrid attacks work, why the ring structure helps the attacker, and what this means for parameter selection.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/sparse-RLWE-security/";
+          
+        },
+      },{id: "post-accelerating-ckks-on-gpus-with-cheddar-and-theodosian",
         
           title: "Accelerating CKKS on GPUs with Cheddar and Theodosian",
         
